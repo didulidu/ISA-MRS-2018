@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <!--JavaScript-->
+    <!--library-->
+    <script type="text/javascript" src="lib/jQuery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
+    <!--custom-->
+    <script type="text/javascript" src="js/misc.js"></script>
+    <script type="text/javascript" src="js/registration.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
+    <link rel="stylesheet" href="css/bootstrap/bootstrap-theme.min.css"/>
+    <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
+    <!--custom-->
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <title>Registration</title>
+</head>
+<body>
+<div class="registration-image"></div>
+<div class="registration-content">
+    <div class="registration-page">
+        <div class="row" id="row-registration">
+            <div class="col-sm-6 col-sm-offset-3 form-box">
+                <div class="form-top" style="padding: 10px 10px 10px 10px">
+                    <h1>Welcome!</h1>
+                    <br />
+                    <p>Enter fields to register!</p>
+                </div>
+                <div class="form-bottom" style="padding: 10px 10px 10px 10px">
+                    <form id="registrationForm" accept-charset="UTF-8">
+                        <div class="form-group">
+                            <div class="inner-addon left-addon">
+                                <i class="glyphicon glyphicon-user"></i>
+                                <input type="text" name="name" id="registration-user-name" placeholder="Name..." class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="inner-addon left-addon">
+                                <i class="glyphicon glyphicon-user"></i>
+                                <input type="text" name="lastname" id="registration-user-lastname" placeholder="Last name..." class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="inner-addon left-addon">
+                                <i class="glyphicon glyphicon-envelope"></i>
+                                <input type="text" name="email" id="registration-user-email" placeholder="E-mail..." class="form-control">
+                            </div>
+                            <!--<small> Email adresa mora da sadrži simbol @, ispred i iza kog su dozvoljena mala i velika slova i cifre </small>-->
+                        </div>
+                        <div class="form-group">
+                            <div class="inner-addon left-addon">
+                                <i class="glyphicon glyphicon-pencil"></i>
+                                <input type="text" name="username" id="registration-user-username" placeholder="Username..." class="form-control">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <div class="inner-addon left-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                                <input type="password" name="password" id="registration-user-password" placeholder="Password..." class="form-control">
+                            </div>
+                            <!--<small> Lozinka mora da sadrži najmanje 3 karaktera </small>-->
+                        </div>
+                        <div class="form-group">
+                            <div class="inner-addon left-addon">
+                                <i class="glyphicon glyphicon-lock"></i>
+                                <input type="password" name="repeatedPassword" id="registration-user-password2" placeholder="Password..." class="form-control">
+                            </div>
+                        </div>
+
+                        <button type="button" class="btn" id="button-registration-user">Register now!</button>
+                        <div style="margin-top: 17px; font-size: inherit;">
+                            <a href="#" id="home" style="color: white; padding-top: 7px;">Back to home</a>
+                        </div>
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+</body>
+</html>
