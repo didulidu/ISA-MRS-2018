@@ -36,7 +36,7 @@ public class UserController {
         //this.regUserService.createNewUser(new RegisteredUser("steva", "123", UserType.RegisteredUser, "Stevan", "Stevanovic", "email@gmail.com"));
 
         Boolean userExist = this.userService.authenticate(userLoginDTO.getUsername(), userLoginDTO.getPassword());
-
+        // probavam komit iz itelliJa
         if(userExist){
             HttpHeaders headers = new HttpHeaders();
 
