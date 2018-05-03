@@ -3,10 +3,11 @@ package com.cinemas_theaters.cinemas_theaters.domain.entity;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
+import java.io.Serializable;
 
 @Entity
 @Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
-public class Item {
+public class Item  implements Serializable {
 
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)

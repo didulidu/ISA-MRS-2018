@@ -32,6 +32,14 @@ public class RegisteredUser extends User implements Serializable {
     @NotNull
     private boolean registrationConfirmed;
 
+    @Column(nullable = false)
+    @NotNull
+    private String town;
+
+    @Column(nullable = false)
+    @NotNull
+    private String telephoneNumber;
+
     @OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL)
     @JsonSerialize(using = CustomFriendshipSerializer.class)
     private Map<RegisteredUser, Friendship> friendships;
@@ -81,6 +89,22 @@ public class RegisteredUser extends User implements Serializable {
 
     public void setFriendships(Map<RegisteredUser, Friendship> friendships) {
         this.friendships = friendships;
+    }
+
+    public String getTown() {
+        return avatarUrl;
+    }
+
+    public void setTown(String town) {
+        this.town = town;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 
     //public List<Invite> getInvites() { return invites; }

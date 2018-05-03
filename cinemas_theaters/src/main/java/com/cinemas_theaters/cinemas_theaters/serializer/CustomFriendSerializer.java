@@ -7,9 +7,6 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 
 import java.io.IOException;
 
-/**
- * Created by Ivana Zeljkovic on 17-Apr-17.
- */
 public class CustomFriendSerializer extends StdSerializer<RegisteredUser> {
     public CustomFriendSerializer() {
         this(null);

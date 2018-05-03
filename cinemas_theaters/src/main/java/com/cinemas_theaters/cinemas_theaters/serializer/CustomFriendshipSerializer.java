@@ -12,9 +12,6 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Created by Ivana Zeljkovic on 17-Apr-17.
- */
 public class CustomFriendshipSerializer extends StdSerializer<Map<RegisteredUser, Friendship>>{
     public CustomFriendshipSerializer() {
         this(null);

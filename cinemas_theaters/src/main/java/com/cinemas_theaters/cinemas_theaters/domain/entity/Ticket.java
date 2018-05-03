@@ -1,4 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
-public class Ticket {
+import java.io.Serializable;
+
+public class Ticket  implements Serializable {
 }
