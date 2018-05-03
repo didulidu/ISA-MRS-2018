@@ -8,10 +8,10 @@ public class CinemaDTO {
 
     public CinemaDTO(){}
 
-    public CinemaDTO(String name, String address, String description) {
-        this.name = name;
-        this.address = address;
-        this.description = description;
+    public CinemaDTO(String _name, String _address, String _description) {
+        name = _name;
+        address = _address;
+        description = _description;
     }
 
     public String getName() {
