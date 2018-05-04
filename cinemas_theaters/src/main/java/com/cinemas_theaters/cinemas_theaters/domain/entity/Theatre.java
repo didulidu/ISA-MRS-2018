@@ -1,5 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.cinemas_theaters.cinemas_theaters.domain.enums.StructureType;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -7,7 +9,8 @@ import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Structure implements Serializable {
+@Entity
+public class Theatre implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
@@ -15,14 +18,6 @@ public class Structure implements Serializable {
     @Column(nullable = false)
     @NotNull
     private String avatarUrl;
-
-    @Column(nullable = false)
-    @NotNull
-    private Double averageRating;
-
-    @Column(nullable = false)
-    @NotNull
-    private Integer numberOfRates;
 
     @Column(nullable = false)
     @NotNull
@@ -44,27 +39,43 @@ public class Structure implements Serializable {
     @Size(min = 2)
     private String city;
 
-    @OneToMany(mappedBy = "structures", fetch = FetchType.LAZY)
-    private ArrayList<Show> repertoire;
+    @ManyToMany(mappedBy = "theatres", fetch = FetchType.LAZY)
+    private List<Show> repertoire;
 
-    @OneToMany(mappedBy = "structures", fetch = FetchType.LAZY)
-    private ArrayList<Projection> projections;
-
-    @OneToMany(mappedBy = "structures", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
     private List<Hall> halls;
 
-    @OneToMany(mappedBy = "structures", fetch = FetchType.LAZY)
-    private ArrayList<String> actors;
-
-    @OneToMany(mappedBy = "structures", fetch = FetchType.LAZY)
-    private ArrayList<String> directors;
 
     @Column(nullable = false)
-    @NotNull
-    @Size(min = 2)
-    private String genre;
+    @Enumerated(EnumType.STRING)
+    private StructureType type;
 
-    public ArrayList<Show> getShows() {
+
+    public Theatre(){
+        this.repertoire = new ArrayList<>();
+        this.halls = new ArrayList<>();
+    }
+
+    public Theatre(String _name, String _address, String _description){
+        name = _name;
+        address = _address;
+        description = _description;
+    }
+
+    public Theatre(Long id, @NotNull String avatarUrl, @NotNull @Size(min = 2) String name, @NotNull @Size(min = 2) String description,
+                   @NotNull @Size(min = 2) String address, @NotNull @Size(min = 2) String city, ArrayList<Show> repertoire, List<Hall> halls, StructureType type) {
+        this.id = id;
+        this.avatarUrl = avatarUrl;
+        this.name = name;
+        this.description = description;
+        this.address = address;
+        this.city = city;
+        this.repertoire = repertoire;
+        this.halls = halls;
+        this.type = type;
+    }
+
+    public List<Show> getShows() {
         return repertoire;
     }
 
@@ -80,14 +91,6 @@ public class Structure implements Serializable {
         this.halls = halls;
     }
 
-    public ArrayList<Projection> getProjections() {
-        return projections;
-    }
-
-    public void setProjections(ArrayList<Projection> projections) {
-        this.projections = projections;
-    }
-
     public String getAvatarUrl() {
         return avatarUrl;
     }
@@ -96,21 +99,6 @@ public class Structure implements Serializable {
         this.avatarUrl = avatarUrl;
     }
 
-    public Double getAverageRating() {
-        return averageRating;
-    }
-
-    public void setAverageRating(Double averageRating) {
-        this.averageRating = averageRating;
-    }
-
-    public Integer getNumberOfRates() {
-        return numberOfRates;
-    }
-
-    public void setNumberOfRates(Integer numberOfRates) {
-        this.numberOfRates = numberOfRates;
-    }
 
     public String getName() {
         return name;
@@ -142,29 +130,5 @@ public class Structure implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
-    }
-
-    public ArrayList<String> getActors() {
-        return actors;
-    }
-
-    public void setActors(ArrayList<String> actors) {
-        this.actors = actors;
-    }
-
-    public ArrayList<String> getDirectors() {
-        return directors;
-    }
-
-    public void setDirectors(ArrayList<String> directors) {
-        this.directors = directors;
-    }
-
-    public String getGenre() {
-        return genre;
-    }
-
-    public void setGenre(String genre) {
-        this.genre = genre;
     }
 }

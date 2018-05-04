@@ -44,6 +44,7 @@ public class RegisteredUser extends User implements Serializable {
     @JsonSerialize(using = CustomFriendshipSerializer.class)
     private Map<RegisteredUser, Friendship> friendships;
 
+
     //@OneToMany(mappedBy = "invited", fetch = FetchType.LAZY)
     //@JsonSerialize(using = CustomInviteUserSerializer.class)
     //private List<Invite> invites;

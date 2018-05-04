@@ -1,13 +1,11 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.Date;
 
+@Entity
 public class Projection  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -20,4 +18,11 @@ public class Projection  implements Serializable {
     @Column(nullable = false)
     @NotNull
     private Show show;
+
+    @ManyToOne
+    private Hall hall;
+
+    @Column(nullable = false)
+    @NotNull
+    private Integer price;
 }

@@ -55,7 +55,7 @@ public class RegisteredUserController {
                 /**try {
                     emailService.sendEmailNotification(newRegisteredUser);
                 }catch( Exception e ){
-                    System.out.println("Greska u slanju e-maila!");
+                    System.out.println("Error while when sending an email!");
                     return new ResponseEntity(HttpStatus.CONFLICT);
                 }**/
                 return new ResponseEntity(HttpStatus.CREATED);

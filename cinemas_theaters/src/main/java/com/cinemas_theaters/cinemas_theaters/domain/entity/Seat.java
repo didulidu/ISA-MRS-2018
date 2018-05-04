@@ -1,12 +1,11 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
-import javax.persistence.Column;
-import javax.persistence.GeneratedValue;
-import javax.persistence.GenerationType;
-import javax.persistence.Id;
+import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.List;
 
+@Entity
 public class Seat  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -16,5 +15,7 @@ public class Seat  implements Serializable {
     @NotNull
     private Integer chairNumber;
 
+    @ManyToOne
+    private Hall hall;
 
 }
