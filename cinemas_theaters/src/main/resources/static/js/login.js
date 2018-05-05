@@ -50,7 +50,7 @@ function login(){
             data: user,
             success: function(data, textStatus, response){
                 //localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
-                window.location.replace("home.html");
+                window.location.replace("index.html");
             },
             error: function (response) {
                 if(response.status == 401)

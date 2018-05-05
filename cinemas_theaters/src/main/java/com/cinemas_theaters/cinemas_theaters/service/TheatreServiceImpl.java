@@ -10,7 +10,7 @@ import org.springframework.transaction.annotation.Transactional;
 import java.util.List;
 import java.util.Optional;
 
-@Service("cinemaService")
+@Service("theatreService")
 public class TheatreServiceImpl implements TheatreService {
 
     @Autowired

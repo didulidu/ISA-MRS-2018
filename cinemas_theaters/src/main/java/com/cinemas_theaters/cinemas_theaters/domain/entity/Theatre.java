@@ -60,6 +60,11 @@ public class Theatre implements Serializable {
         name = _name;
         address = _address;
         description = _description;
+        avatarUrl = "Milojko"; // za sada jer ga nema u konstruktoru a nesme null, lako cemo dodati
+        city = "Novi Sad"; // za sada jer ga nema u konstruktoru a nesme null, lako cemo dodati
+        repertoire = new ArrayList<>();
+        halls = new ArrayList<>();
+        type = StructureType.Cinema;
     }
 
     public Theatre(Long id, @NotNull String avatarUrl, @NotNull @Size(min = 2) String name, @NotNull @Size(min = 2) String description,

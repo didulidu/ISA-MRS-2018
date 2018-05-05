@@ -15,7 +15,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 @RestController
-@RequestMapping(value = "/cinema")
+@RequestMapping(value = "/theatre")
 public class TheatreController {
 
     @Autowired

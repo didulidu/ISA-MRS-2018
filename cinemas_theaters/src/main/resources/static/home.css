@@ -1,0 +1,35 @@
+.card {
+    box-shadow: 0 4px 8px 0 rgba(0,0,0,0.2);
+    transition: 0.3s;
+    margin-left: 5px;
+    margin-right: 5px;
+    height: 200px;
+}
+
+.card-body{
+	height: 200px;
+	overflow-y:scroll;
+}
+
+
+.card:hover {
+    box-shadow: 0 8px 16px 0 rgba(0,0,0,0.2);
+}
+
+.container {
+    padding: 2px 16px;
+}
+
+.header {
+    padding: 5px;
+    height: 20px;
+    background-color: lightblue;
+}
+
+.header-button{
+    float:right;
+}
+
+.h1{
+	text-align: center;
+}
