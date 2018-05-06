@@ -34,7 +34,7 @@ public class RegisteredUser extends User implements Serializable {
 
     @Column(nullable = false)
     @NotNull
-    private String town;
+    private String address;
 
     @Column(nullable = false)
     @NotNull
@@ -92,12 +92,12 @@ public class RegisteredUser extends User implements Serializable {
         this.friendships = friendships;
     }
 
-    public String getTown() {
-        return avatarUrl;
+    public String getAddress() {
+        return address;
     }
 
-    public void setTown(String town) {
-        this.town = town;
+    public void setAddress(String address) {
+        this.address = address;
     }
 
     public String getTelephoneNumber() {

@@ -46,7 +46,13 @@ public class RegisteredUserController {
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
             RegisteredUser newRegisteredUser = convertDTOToRegisteredUser(newUser);
+
             newRegisteredUser.setType(UserType.RegisteredUser);
+
+            newRegisteredUser.setTelephoneNumber("");
+            newRegisteredUser.setAddress("");
+
+
             boolean userCreated = this.registeredUserService.createNewUser(newRegisteredUser);
             if(!userCreated)
                 // vec postoji korisnik sa istim korisnickim imenom

@@ -15,7 +15,7 @@ $(document).on('click', '#sign-up-button', function(e){
 $(document).ready(function(){
 
     $.ajax({
-                url: "/home",
+                url: "/theatre/getAllTheatres",
                 type: "GET",
                 dataType: "json",
                 success: function(data){
