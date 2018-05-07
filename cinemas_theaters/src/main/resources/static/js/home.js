@@ -10,21 +10,13 @@ $(document).on('click', '#sign-up-button', function(e){
 
 $(document).ready(function(){
     if(sessionStorage.getItem("show")==undefined){
-        $.ajax({
-                url: "/theatre/getAllTheatres",
-                type: "GET",
-                dataType: "json",
-                success: function(data){
-                    sessionStorage.setItem('cinemas', JSON.stringify(data));
-                    forward_theatres(JSON.stringify(data), showHomePage);
-                },
-                error: function (response) {
-                    alert("Ne radi: "+ response.status)
-                }
-            });                    
+        alert("prvi put uciavanje stranice");
+        getTheaters();
     }else if (sessionStorage.getItem("show") == "home"){
+        alert("nakon refresovanja home stranice");
         forward_theatres(sessionStorage.getItem("cinemas"), showHomePage);            
     }else if (sessionStorage.getItem("show") == "profile"){
+
         alert("Profil refresovan -> " + sessionStorage.getItem("profile"));
         forward_profile(sessionStorage.getItem("profile"), showProfile);
     }
@@ -57,25 +49,45 @@ $(document).ready(function(){
 
     $(document).on('click', '.card',function(e){
         e.preventDefault(); 
+        alert("Kliknuto na bioskop");
         var name = this.querySelector(".card-title").innerHTML;
         getProfileData(name, forward_profile);
         return false;
     });
 
-    $(document).on('click', '#home-btn',function(e){
-            e.preventDefault(); 
-            sessionStorage.setItem("profile", null); 
-            forward_theatres(sessionStorage.getItem("cinemas"), showHomePage);
-            return false;
-        });
+    
 
 
 });
 
+$(document).on('click', '#home-btn',function(e){
+            alert("Nazad na home page");
+            e.preventDefault(); 
+            sessionStorage.setItem("profile", null); 
+            getTheaters();
+            showHomePage();
+            return false;
+        });
+
+function getTheaters(){
+    $.ajax({
+                url: "/theatre/getAllTheatres",
+                type: "GET",
+                dataType: "json",
+                success: function(data){
+                    sessionStorage.setItem("cinemas", JSON.stringify(data));
+                    forward_theatres(JSON.stringify(data), showHomePage);
+                },
+                error: function (response) {
+                    alert("Ne radi: "+ response.status)
+                }
+            });        
+}
+
 
 function getProfileData(name, callback){
     
-    
+        alert("dobavljanje bioskopa iz baze");
         $.ajax({
         url: "theatre/visit/"+name,
         type: "GET",
@@ -92,14 +104,18 @@ function getProfileData(name, callback){
 
  function forward_profile(data, callback){
         sessionStorage.setItem('profile',data);
-        // Dodaj info u html, strpaj u funkciju
         dataJSON = JSON.parse(data);
-        document.getElementById("cinema-name").innerHTML=dataJSON["name"];
-        document.getElementById("cinema-text").innerHTML=dataJSON["description"];
-    
+        fillProfileWithInfo(dataJSON);    
         callback();
     }
 
+
+function fillProfileWithInfo(data){
+    document.getElementById("cinema-name").innerHTML=dataJSON["name"];
+    document.getElementById("cinema-text").innerHTML=dataJSON["description"];
+    document.getElementById("cinema-address").innerHTML=dataJSON["address"];
+
+}
 
 function showProfile(){
     sessionStorage.setItem("show","profile");
@@ -116,8 +132,11 @@ function showHomePage(){
 
 
 function forward_theatres(theaters, callback){
+    sessionStorage.setItem("cinemas",theaters);
     theatersJSON = JSON.parse(theaters);
+    alert("za prikaz: " + theaters);
     $card = $(".card").first();
+    $(".cards").empty();
     theatersJSON.forEach(function(element) {
         $card.find(".card-title").html(element["name"])
         $card.find(".card-text").html(element["description"])
