@@ -85,6 +85,30 @@ public class Theatre implements Serializable {
         this.type = type;
     }
 
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public List<Show> getRepertoire() {
+        return repertoire;
+    }
+
+    public void setRepertoire(List<Show> repertoire) {
+        this.repertoire = repertoire;
+    }
+
+    public StructureType getType() {
+        return type;
+    }
+
+    public void setType(StructureType type) {
+        this.type = type;
+    }
+
     public List<Show> getShows() {
         return repertoire;
     }

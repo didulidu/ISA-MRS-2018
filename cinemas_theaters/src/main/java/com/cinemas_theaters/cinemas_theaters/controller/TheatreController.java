@@ -7,6 +7,7 @@ import com.cinemas_theaters.cinemas_theaters.service.TheatreService;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
@@ -36,7 +37,7 @@ public class TheatreController {
         List<TheatreDTO> theatreDTOS = new ArrayList<>();
 
         for (Theatre t: theatres){
-            theatreDTOS.add(new TheatreDTO(t.getName(),  t.getAddress(), t.getDescription()));
+            theatreDTOS.add(new TheatreDTO(t.getId(), t.getName(),  t.getAddress(), t.getDescription()));
         }
 
         return new ResponseEntity<List<TheatreDTO>>(theatreDTOS, headers, HttpStatus.OK);
@@ -66,7 +67,7 @@ public class TheatreController {
         Theatre theatre = this.theatreService.findByName(name);
         if (theatre != null){
             System.out.println("VRAACA GA");
-            TheatreDTO theatreDTO = new TheatreDTO(theatre.getName(),theatre.getAddress(),theatre.getDescription());
+            TheatreDTO theatreDTO = new TheatreDTO(theatre.getId(),theatre.getName(),theatre.getAddress(),theatre.getDescription());
             return ResponseEntity.ok(theatreDTO);
         }
         else{
@@ -79,8 +80,15 @@ public class TheatreController {
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity add(@RequestBody TheatreDTO cinema){
-        this.theatreService.add(cinema.getName(), cinema.getAddress(), cinema.getDescription());
+    public ResponseEntity add(@RequestBody TheatreDTO theatreDTO){
+
+        this.theatreService.add(convertDTOToTheatre(theatreDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
+    }
+
+    private Theatre convertDTOToTheatre(TheatreDTO theatreDTO)
+    {
+        ModelMapper mapper = new ModelMapper();
+        return mapper.map(theatreDTO, Theatre.class);
     }
 }

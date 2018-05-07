@@ -18,8 +18,8 @@ public class TheatreServiceImpl implements TheatreService {
 
 
     @Override
-    public void add(String name, String address, String description){
-        this.theatreRepository.save(new Theatre(name, address, description));
+    public void add(Theatre theatre){
+        this.theatreRepository.save(theatre);
     }
 
     @Override

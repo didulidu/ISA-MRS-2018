@@ -6,7 +6,7 @@ import java.util.List;
 
 public interface TheatreService {
 
-    void add(String name, String address, String description);
+    void add(Theatre theatre);
 
     List<Theatre> getAllTheatres();
 

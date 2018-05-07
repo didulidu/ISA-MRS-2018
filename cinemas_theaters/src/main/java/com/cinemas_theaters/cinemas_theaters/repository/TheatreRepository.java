@@ -9,7 +9,7 @@ import java.util.Optional;
 
 @Component
 public interface TheatreRepository extends JpaRepository<Theatre, Long> {
-    Theatre save(Theatre restaurant);
+    Theatre save(Theatre theatre);
 
     List<Theatre> findAll();
 
