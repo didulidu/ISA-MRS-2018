@@ -9,6 +9,7 @@ import java.util.List;
 public class Seat  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "seat_id")
     private Long id;
 
     @Column(nullable = false)
@@ -16,6 +17,7 @@ public class Seat  implements Serializable {
     private Integer chairNumber;
 
     @ManyToOne
+    //@JoinColumn(name = "hall_id")
     private Hall hall;
 
 }

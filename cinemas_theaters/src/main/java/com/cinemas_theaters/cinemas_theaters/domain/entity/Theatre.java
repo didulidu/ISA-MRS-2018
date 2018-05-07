@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
 import com.cinemas_theaters.cinemas_theaters.domain.enums.StructureType;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -10,9 +11,11 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "theatre")
 public class Theatre implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "theatre_id")
     private Long id;
 
     @Column(nullable = false)
@@ -39,10 +42,12 @@ public class Theatre implements Serializable {
     @Size(min = 2)
     private String city;
 
-    @ManyToMany(mappedBy = "theatres", fetch = FetchType.LAZY)
+    @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("theatre")
     private List<Show> repertoire;
 
     @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("theatre")
     private List<Hall> halls;
 
 

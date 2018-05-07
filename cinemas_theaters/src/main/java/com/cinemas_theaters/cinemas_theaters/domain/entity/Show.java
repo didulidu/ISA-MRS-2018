@@ -1,5 +1,8 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
+import javax.jws.Oneway;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
@@ -8,9 +11,12 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "`show`")
+
 public class Show  implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "show_id")
     private Long id;
 
     @Column(nullable = false)
@@ -35,27 +41,37 @@ public class Show  implements Serializable {
     private Integer numberOfRates;
 
     @ElementCollection(targetClass=String.class)
+    @CollectionTable(name = "actors" )
+    @Column(name = "actor")
     private List<String> actors;
 
     @ElementCollection(targetClass=String.class)
+    @CollectionTable(name = "directors" )
+    @Column(name = "director")
     private List<String> directors;
 
     //@ManyToMany(mappedBy = "repertoire", fetch = FetchType.LAZY)
-    @ManyToMany(cascade = {
+    /*@ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
     @JoinTable(name = "theatre_show",
             joinColumns = @JoinColumn(name = "theatre_id"),
             inverseJoinColumns = @JoinColumn(name = "show_id")
-    )
-    private List<Theatre> theatres;
+    )*/
+    @ManyToOne(fetch = FetchType.LAZY)
+    //@JoinColumn(name = "theatre_id")
+    @JsonIgnore
+    private Theatre theatre;
 
     @OneToMany(mappedBy = "show", fetch = FetchType.LAZY)
     private List<Projection> projections;
 
-    @ManyToMany(mappedBy = "shows", fetch = FetchType.LAZY)
-    private List<Hall> halls;
+    //@Column(nullable = false)
+    //@ManyToMany(mappedBy = "shows", fetch = FetchType.LAZY)
+    //@JoinColumn(name = "hall_id")
+
+    //private Hall hall;
 
     @Column(nullable = false)
     @NotNull
@@ -64,16 +80,14 @@ public class Show  implements Serializable {
 
     public Show(){
         super();
-        this.theatres = new ArrayList<>();
         this.projections = new ArrayList<>();
         this.actors = new ArrayList<>();
         this.directors = new ArrayList<>();
-        this.halls = new ArrayList<>();
     }
 
     public Show(Long id, @NotNull @Size(min = 2) String title, @NotNull Integer duration, @NotNull Integer price, @NotNull Double averageRating,
-                @NotNull Integer numberOfRates, @NotNull List<String> actors, @NotNull List<String> directors, List<Theatre> theatres, List<Projection> projections,
-                List<Hall> halls, @NotNull @Size(min = 2) String genre) {
+                @NotNull Integer numberOfRates, @NotNull List<String> actors, @NotNull List<String> directors, Theatre theatre, List<Projection> projections,
+                Hall hall, @NotNull @Size(min = 2) String genre) {
         this.id = id;
         this.title = title;
         this.duration = duration;
@@ -82,9 +96,9 @@ public class Show  implements Serializable {
         this.numberOfRates = numberOfRates;
         this.actors = actors;
         this.directors = directors;
-        this.theatres = theatres;
+        this.theatre = theatre;
         this.projections = projections;
-        this.halls = halls;
+        //this.hall = hall;
         this.genre = genre;
     }
 
@@ -152,12 +166,12 @@ public class Show  implements Serializable {
         this.directors = directors;
     }
 
-    public List<Theatre> getTheatres() {
-        return theatres;
+    public Theatre getTheatre() {
+        return theatre;
     }
 
-    public void setTheatres(List<Theatre> theatres) {
-        this.theatres = theatres;
+    public void setTheatre(Theatre theatre) {
+        this.theatre = theatre;
     }
 
     public List<Projection> getProjections() {
@@ -168,13 +182,13 @@ public class Show  implements Serializable {
         this.projections = projections;
     }
 
-    public List<Hall> getHalls() {
-        return halls;
+    /*public Hall getHall() {
+        return hall;
     }
 
-    public void setHalls(List<Hall> halls) {
-        this.halls = halls;
-    }
+    public void setHall(Hall hall) {
+        this.hall = hall;
+    }*/
 
     public String getGenre() {
         return genre;

@@ -7,15 +7,20 @@ import java.util.ArrayList;
 import java.util.List;
 
 @Entity
+@Table(name = "`hall`")
 public class Hall  implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "hall_id")
     private Long id;
+
+    @Column(nullable = false)
+    private String name;
 
     @OneToMany(mappedBy = "hall",fetch = FetchType.LAZY)
     private List<Seat> seats;
 
-    @ManyToMany(cascade = {
+    /*@ManyToMany(cascade = {
             CascadeType.PERSIST,
             CascadeType.MERGE
     })
@@ -24,8 +29,9 @@ public class Hall  implements Serializable {
             inverseJoinColumns = @JoinColumn(name = "hall_id")
     )
     //tabela sa filmovima/predstavama i njihovim salama (salama i njihovim filmovima/predstavama)
-    private List<Show> shows;
+    private List<Show> shows;*/
 
     @ManyToOne
+    //@JoinColumn(name = "theatre_id")
     private Theatre theatre;
 }
