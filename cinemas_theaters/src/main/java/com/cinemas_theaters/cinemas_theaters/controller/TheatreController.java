@@ -66,7 +66,6 @@ public class TheatreController {
     public ResponseEntity findByName(@PathVariable final String name){
         Theatre theatre = this.theatreService.findByName(name);
         if (theatre != null){
-            System.out.println("VRAACA GA");
             TheatreDTO theatreDTO = new TheatreDTO(theatre.getId(),theatre.getName(),theatre.getAddress(),theatre.getDescription());
             return ResponseEntity.ok(theatreDTO);
         }

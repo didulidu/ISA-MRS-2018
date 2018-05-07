@@ -44,11 +44,9 @@ $(document).on('click', '#sign-up-button', function(e){
 
 $(document).ready(function(){
     if(sessionStorage.getItem("show")==undefined){
-        alert("prvi put uciavanje stranice");
         getTheaters();
     }else if (sessionStorage.getItem("show") == "home"){
-        alert("nakon refresovanja home stranice");
-        forward_theatres(sessionStorage.getItem("cinemas"), showHomePage);            
+        getTheaters();
     }else if (sessionStorage.getItem("show") == "profile"){
 
         alert("Profil refresovan -> " + sessionStorage.getItem("profile"));
@@ -181,6 +179,15 @@ function forward_theatres(theaters, callback){
         $card.find("#visit-btn").attr("value","")
         $card.attr("id", "theater_id_" + element["id"]);
         $card.data("id", element["id"]);
+        $card.find("#rateYo").rateYo({ // Sutra cu rate da ubacim u beanove, zasad su default vrednosti.
+        starWidth: "20px",
+        multiColor: {
+          "startColor": "#FF0000", //RED
+          "endColor"  : "#00FF00"  //GREEN
+        },
+        rating: 4.2,
+        readOnly: true
+    });   
         $(".cards").append($card)
         $card = $(".card").first().clone();
     });
