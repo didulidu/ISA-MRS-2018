@@ -44,8 +44,8 @@ public class TheatreController {
 
 
     @GetMapping(
-            value = "/{id}",
-            produces = MediaType.APPLICATION_JSON_VALUE
+        value = "/{id}",
+        produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity findById(@PathVariable final Long id){
         Theatre theatre = this.theatreService.findById(id);
@@ -56,6 +56,25 @@ public class TheatreController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+
+    @GetMapping(
+            value = "/visit/{name}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity findByName(@PathVariable final String name){
+        Theatre theatre = this.theatreService.findByName(name);
+        if (theatre != null){
+            System.out.println("VRAACA GA");
+            TheatreDTO theatreDTO = new TheatreDTO(theatre.getName(),theatre.getAddress(),theatre.getDescription());
+            return ResponseEntity.ok(theatreDTO);
+        }
+        else{
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        }
+    }
+
+
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE
