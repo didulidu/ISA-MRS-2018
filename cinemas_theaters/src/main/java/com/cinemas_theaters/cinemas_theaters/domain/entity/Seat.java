@@ -13,6 +13,9 @@ public class Seat  implements Serializable {
     private Long id;
 
     @Column(nullable = false)
+    private Integer chairRow;
+
+    @Column(nullable = false)
     @NotNull
     private Integer chairNumber;
 

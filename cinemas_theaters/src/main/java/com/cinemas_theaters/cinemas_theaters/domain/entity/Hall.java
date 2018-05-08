@@ -1,5 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -31,7 +33,13 @@ public class Hall  implements Serializable {
     //tabela sa filmovima/predstavama i njihovim salama (salama i njihovim filmovima/predstavama)
     private List<Show> shows;*/
 
+    @OneToMany(mappedBy = "hall",fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonBackReference
+    //@Column(insertable=false)
+    private List<Projection> projections;
+
     @ManyToOne
     //@JoinColumn(name = "theatre_id")
+    @JsonBackReference
     private Theatre theatre;
 }

@@ -24,6 +24,8 @@ public class ShowController {
     @Autowired
     private ShowService showService;
 
+
+    //{id} je id pozorista za koji se traze show-ovi
     @RequestMapping(
             value = "/getRepertoire/{id}",
             method = RequestMethod.PUT,

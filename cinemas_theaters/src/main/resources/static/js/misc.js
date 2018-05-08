@@ -49,7 +49,7 @@ function validateRegistrationData(data){
        var username = data["username"];
        var password = data["password"];
        var repeatedPassword = data["repeatedPassword"];
-       if(localStorage.getItem("registrationType") == null ||  localStorage.getItem("registrationType") == "restaurant-manager" ||
+       if(localStorage.getItem("registrationType") == null ||  localStorage.getItem("registrationType") == "theatre-manager" ||
                                                                localStorage.getItem("registrationType") == "system-manager")
            var email = data["email"];
 
