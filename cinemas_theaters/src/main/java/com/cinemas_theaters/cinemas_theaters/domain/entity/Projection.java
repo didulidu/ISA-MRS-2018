@@ -23,7 +23,7 @@ public class Projection  implements Serializable {
     @ManyToOne
     private Show show;
 
-    @ManyToOne(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     //@JoinColumn(name = "hall_hall_id")
 
     private Hall hall;

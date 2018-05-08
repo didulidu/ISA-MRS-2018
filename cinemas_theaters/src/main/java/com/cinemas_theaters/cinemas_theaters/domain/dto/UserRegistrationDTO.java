@@ -7,6 +7,8 @@ public class UserRegistrationDTO {
     private String password;
     private String repeatedPassword;
     private String email;
+    private String telephoneNumber;
+    private String address;
 
     public UserRegistrationDTO() { }
 
@@ -17,6 +19,17 @@ public class UserRegistrationDTO {
         this.password = password;
         this.repeatedPassword = repeatedPassword;
         this.email = email;
+    }
+
+    public UserRegistrationDTO(String name, String lastname, String username, String password, String repeatedPassword, String email, String telephoneNumber, String address) {
+        this.name = name;
+        this.lastname = lastname;
+        this.username = username;
+        this.password = password;
+        this.repeatedPassword = repeatedPassword;
+        this.email = email;
+        this.telephoneNumber = telephoneNumber;
+        this.address = address;
     }
 
     public String getName() {

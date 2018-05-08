@@ -42,4 +42,79 @@ public class Hall  implements Serializable {
     //@JoinColumn(name = "theatre_id")
     @JsonBackReference
     private Theatre theatre;
+
+    public Hall() {
+    }
+
+    public Hall(Long id, String name) {
+        this.id = id;
+        this.name = name;
+    }
+
+    public Hall(String name, Long id, List<Seat> seats) {
+        this.id = id;
+        this.name = name;
+        this.seats = seats;
+    }
+
+    public Hall(Long id, String name, List<Projection> projections) {
+        this.id = id;
+        this.name = name;
+        this.projections = projections;
+    }
+
+    public Hall(Long id, String name, List<Seat> seats, List<Projection> projections) {
+        this.id = id;
+        this.name = name;
+        this.seats = seats;
+        this.projections = projections;
+    }
+
+    public Hall(Long id, String name, List<Seat> seats, List<Projection> projections, Theatre theatre) {
+        this.id = id;
+        this.name = name;
+        this.seats = seats;
+        this.projections = projections;
+        this.theatre = theatre;
+    }
+
+    public Long getId() {
+        return id;
+    }
+
+    public void setId(Long id) {
+        this.id = id;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public List<Seat> getSeats() {
+        return seats;
+    }
+
+    public void setSeats(List<Seat> seats) {
+        this.seats = seats;
+    }
+
+    public List<Projection> getProjections() {
+        return projections;
+    }
+
+    public void setProjections(List<Projection> projections) {
+        this.projections = projections;
+    }
+
+    public Theatre getTheatre() {
+        return theatre;
+    }
+
+    public void setTheatre(Theatre theatre) {
+        this.theatre = theatre;
+    }
 }

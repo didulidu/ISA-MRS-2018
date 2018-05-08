@@ -40,6 +40,7 @@ public class ProjectionController {
 
         //s.getId()
         for (Projection p: projections){
+            System.out.println(p.getHall());
             projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getDate(), p.getPrice(), p.getHall()));
         }
 
