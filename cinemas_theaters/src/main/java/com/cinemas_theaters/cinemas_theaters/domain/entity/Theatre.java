@@ -42,6 +42,10 @@ public class Theatre implements Serializable {
     @Size(min = 2)
     private String city;
 
+    @Column(nullable = true)
+    private Double rate;
+
+
     @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("theatre")
     private List<Show> repertoire;
@@ -73,7 +77,7 @@ public class Theatre implements Serializable {
     }
 
     public Theatre(Long id, @NotNull String avatarUrl, @NotNull @Size(min = 2) String name, @NotNull @Size(min = 2) String description,
-                   @NotNull @Size(min = 2) String address, @NotNull @Size(min = 2) String city, ArrayList<Show> repertoire, List<Hall> halls, StructureType type) {
+                   @NotNull @Size(min = 2) String address, @NotNull @Size(min = 2) String city, ArrayList<Show> repertoire, List<Hall> halls, StructureType type, Double rate) {
         this.id = id;
         this.avatarUrl = avatarUrl;
         this.name = name;
@@ -83,7 +87,9 @@ public class Theatre implements Serializable {
         this.repertoire = repertoire;
         this.halls = halls;
         this.type = type;
+        this.rate = rate;
     }
+
 
     public Long getId() {
         return id;
@@ -164,5 +170,13 @@ public class Theatre implements Serializable {
 
     public void setAddress(String address) {
         this.address = address;
+    }
+
+    public Double getRate() {
+        return rate;
+    }
+
+    public void setRate(Double rate) {
+        this.rate = rate;
     }
 }

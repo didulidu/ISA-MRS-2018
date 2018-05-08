@@ -185,7 +185,7 @@ function forward_theatres(theaters, callback){
           "startColor": "#FF0000", //RED
           "endColor"  : "#00FF00"  //GREEN
         },
-        rating: 4.2,
+        rating: element["rate"],
         readOnly: true
     });   
         $(".cards").append($card)
