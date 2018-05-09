@@ -1,0 +1,7 @@
+.item-post{
+    width: 300px;
+    height: auto;
+    display: inline-block;
+    border: 2px solid black;
+    margin: 3px;
+}

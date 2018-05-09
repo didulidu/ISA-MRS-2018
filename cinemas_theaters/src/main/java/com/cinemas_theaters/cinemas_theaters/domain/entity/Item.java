@@ -4,26 +4,19 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
-@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
+@Table(name = "ITEM")
 public class Item  implements Serializable {
 
-    @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private Long id;
 
-    @Column(nullable = false)
-    @NotNull
-    @Size(max = 30)
     private String name;
 
-    @Column
-    @Size(max = 200)
     private String description;
 
-    @Column(nullable = false)
-    @NotNull
     private Double price;
 
     public Item(){}
@@ -34,6 +27,9 @@ public class Item  implements Serializable {
         price = _price;
     }
 
+    @Id
+    @Column(name = "ITEM_ID")
+    @GeneratedValue(strategy = GenerationType.AUTO)
     public Long getId() {
         return id;
     }
@@ -42,6 +38,9 @@ public class Item  implements Serializable {
         this.id = id;
     }
 
+    @Column(nullable = false)
+    @NotNull
+    @Size(max = 30)
     public String getName() {
         return name;
     }
@@ -50,6 +49,8 @@ public class Item  implements Serializable {
         this.name = name;
     }
 
+    @Column
+    @Size(max = 200)
     public String getDescription() {
         return description;
     }
@@ -58,6 +59,9 @@ public class Item  implements Serializable {
         this.description = description;
     }
 
+
+    @Column(nullable = false)
+    @NotNull
     public Double getPrice() {
         return price;
     }

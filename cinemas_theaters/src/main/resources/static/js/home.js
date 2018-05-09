@@ -11,6 +11,11 @@ $(document).on('click', '#sign-up-button', function(e){
     window.location.replace("registration.html")
 });
 
+$(document).on('click', '#shop-button', function(e){
+   e.preventDefault();
+   window.location.replace("shop.html")
+});
+
 $(document).ready(function(){
         getTheaters();
     });
