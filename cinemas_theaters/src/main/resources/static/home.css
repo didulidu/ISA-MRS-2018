@@ -26,9 +26,11 @@
     background-color: lightblue;
 }
 
-.header-button{
+.header button{
     float:right;
+    margin:20px;
 }
+
 
 .h1{
 	text-align: center;

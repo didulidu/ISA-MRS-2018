@@ -51,7 +51,9 @@ public class TheatreController {
     public ResponseEntity findById(@PathVariable final Long id){
         Theatre theatre = this.theatreService.findById(id);
         if (theatre != null){
-            return ResponseEntity.ok(theatre);
+            TheatreDTO theatreDTO = new TheatreDTO(theatre.getId(),theatre.getName(),theatre.getAddress(),theatre.getDescription(), theatre.getRate(), theatre.getType());
+
+            return ResponseEntity.ok(theatreDTO);
         }
         else{
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
