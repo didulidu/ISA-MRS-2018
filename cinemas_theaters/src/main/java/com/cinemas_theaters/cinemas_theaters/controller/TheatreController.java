@@ -37,7 +37,7 @@ public class TheatreController {
         List<TheatreDTO> theatreDTOS = new ArrayList<>();
 
         for (Theatre t: theatres){
-            theatreDTOS.add(new TheatreDTO(t.getId(), t.getName(),  t.getAddress(), t.getDescription()));
+            theatreDTOS.add(new TheatreDTO(t.getId(), t.getName(),  t.getAddress(), t.getDescription(), t.getRate(),t.getType()));
         }
 
         return new ResponseEntity<List<TheatreDTO>>(theatreDTOS, headers, HttpStatus.OK);
@@ -66,7 +66,7 @@ public class TheatreController {
     public ResponseEntity findByName(@PathVariable final String name){
         Theatre theatre = this.theatreService.findByName(name);
         if (theatre != null){
-            TheatreDTO theatreDTO = new TheatreDTO(theatre.getId(),theatre.getName(),theatre.getAddress(),theatre.getDescription());
+            TheatreDTO theatreDTO = new TheatreDTO(theatre.getId(),theatre.getName(),theatre.getAddress(),theatre.getDescription(), theatre.getRate(), theatre.getType());
             return ResponseEntity.ok(theatreDTO);
         }
         else{

@@ -167,12 +167,17 @@ function showHomePage(){
 
 
 function forward_theatres(theaters, callback){
+    // poceo da menjam da upacuje html u dom
+    // var newTheater = "<div class='card' style='width: 20%;'>"+
+    //     "<img class='card-img-top' src='images/Arena.jpg' alt='Card image cap'>"+
+    //     "<div class='card-body' style='height: 140px;'>"+
+    //     "<h5 class='card-title'>"+element["name"]+"</h5>"+
+    //     "<p class='card-text'>"+element["description"]+"</p></div>"
+    //     "<div id='rateYo'></div></div>"
     sessionStorage.setItem("cinemas",theaters);
     theatersJSON = JSON.parse(theaters);
-    alert("za prikaz: " + theaters);
     $card = $(".card").first();
     $(".cards").empty();
-    $("")
     theatersJSON.forEach(function(element) {
         $card.find(".card-title").html(element["name"])
         $card.find(".card-text").html(element["description"])
@@ -185,10 +190,15 @@ function forward_theatres(theaters, callback){
           "startColor": "#FF0000", //RED
           "endColor"  : "#00FF00"  //GREEN
         },
-        rating: 4.2,
+        rating: element["rate"],
         readOnly: true
-    });   
-        $(".cards").append($card)
+    });
+
+        if(element["type"] == "Cinema"){
+                    $("#cinemas").append($card);
+                }else{
+                    $("#theaters").append($card);
+                }
         $card = $(".card").first().clone();
     });
     callback();
