@@ -41,10 +41,28 @@ public class ProjectionController {
         //s.getId()
         for (Projection p: projections){
             System.out.println(p.getHall());
-            projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getDate(), p.getPrice(), p.getHall()));
+            projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall()));
         }
 
         return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, headers, HttpStatus.OK);
+    }
+
+    //pronalazi projekciju sa svojim id-jem
+    @RequestMapping(
+            value = "/findProjection/{id}",
+            method = RequestMethod.POST,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getProjection(@PathVariable("id") String id){
+        //JwtUser user = this.jwtService.getUser(userToken);
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.add("Authorization", this.jwtService.getToken(user));
+
+        HttpHeaders headers = new HttpHeaders();
+
+        Projection p = this.projectionServce.getById(Long.parseLong(id));
+        ProjectionDisplayDTO projectionDisplayDTO = new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall());
+
+        return new ResponseEntity<ProjectionDisplayDTO>(projectionDisplayDTO, headers, HttpStatus.OK);
     }
 
 }

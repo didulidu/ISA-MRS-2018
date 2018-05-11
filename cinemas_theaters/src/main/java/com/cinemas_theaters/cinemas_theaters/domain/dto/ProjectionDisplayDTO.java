@@ -7,6 +7,7 @@ import java.util.Date;
 public class ProjectionDisplayDTO {
 
     private Long id;
+    private String showTitle;
     private String date;
     private Integer price;
     private Hall hall;
@@ -14,8 +15,9 @@ public class ProjectionDisplayDTO {
     public ProjectionDisplayDTO() {
     }
 
-    public ProjectionDisplayDTO(Long id, String date, Integer price, Hall hall) {
+    public ProjectionDisplayDTO(Long id, String showTitle, String date, Integer price, Hall hall) {
         this.id = id;
+        this.showTitle = showTitle;
         this.date = date;
         this.price = price;
         this.hall = hall;
@@ -27,6 +29,14 @@ public class ProjectionDisplayDTO {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getShowTitle() {
+        return showTitle;
+    }
+
+    public void setShowTitle(String showTitle) {
+        this.showTitle = showTitle;
     }
 
     public String getDate() {

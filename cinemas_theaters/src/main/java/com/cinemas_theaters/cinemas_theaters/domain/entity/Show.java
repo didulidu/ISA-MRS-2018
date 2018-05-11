@@ -21,6 +21,10 @@ public class Show  implements Serializable {
 
     @Column(nullable = false)
     @NotNull
+    private String posterURL;
+
+    @Column(nullable = false)
+    @NotNull
     @Size(min = 2)
     private String title;
 
@@ -87,7 +91,7 @@ public class Show  implements Serializable {
 
     public Show(Long id, @NotNull @Size(min = 2) String title, @NotNull Integer duration, @NotNull Integer price, @NotNull Double averageRating,
                 @NotNull Integer numberOfRates, @NotNull List<String> actors, @NotNull List<String> directors, Theatre theatre, List<Projection> projections,
-                Hall hall, @NotNull @Size(min = 2) String genre) {
+                Hall hall, @NotNull @Size(min = 2) String genre, @NotNull String posterURL) {
         this.id = id;
         this.title = title;
         this.duration = duration;
@@ -100,6 +104,7 @@ public class Show  implements Serializable {
         this.projections = projections;
         //this.hall = hall;
         this.genre = genre;
+        this.posterURL = posterURL;
     }
 
     public Long getId() {
@@ -108,6 +113,14 @@ public class Show  implements Serializable {
 
     public void setId(Long id) {
         this.id = id;
+    }
+
+    public String getPosterURL() {
+        return posterURL;
+    }
+
+    public void setPosterURL(String posterURL) {
+        this.posterURL = posterURL;
     }
 
     public String getTitle() {

@@ -34,4 +34,9 @@ public class ProjectionServiceImpl implements ProjectionService {
     public Projection getById(Long id) {
         return this.projectionRepository.getById(id);
     }
+
+    @Override
+    public Projection findSpecificProjection(Long show_id, Long id) {
+        return this.projectionRepository.findSpecificProjection(show_id, id);
+    }
 }

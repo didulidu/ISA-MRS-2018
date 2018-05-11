@@ -8,7 +8,7 @@ $(document).ready(function(){
         alert("nakon dolaska: "+id);
         localStorage.setItem("theater", undefined);
         getProfileData(parseInt(id), forward_profile);
-        getAllShows(parseInt(id));
+        getAllShows(id);
 
 });
 
@@ -82,7 +82,18 @@ function fillProfileWithInfo(data){
 
 }
 
+$(document).on('click', '#button-show-details', function(){
+   var form = $(this).parents("form");
+   var show_id = form.find("input[type=hidden]").val();
+   if(localStorage.getItem("currentUserRole") == "Registered")
+       window.location.replace("seat_selection.html?id=" + show_id);
+   else if(localStorage.getItem("currentUserRole") == "Manager")
+       window.location.replace("seat_selection.html?id=" + show_id);
+});
+
 function showRepertoire(){
+    localStorage.setItem("currentUserRole", "Registered");
+
     var showsList = [];
     if(filterOn == false)
         showsList = (allShows == null) ? [] : (allShows instanceof Array ? allShows : [allShows]);
@@ -107,13 +118,14 @@ function showRepertoire(){
                 numberOfCardInRow = 0;
             }
             var newCard = "<div class='card col-sm-4' id='repertoire-card-" + showsList[j].id + "'>" +
-                    "<img class='card-img-top' src='" + showsList[j].avatarUrl + "' style='width: 100%'>" +
+                    "<img class='card-img-top' src='" + showsList[j].posterURL + "' style='height: 5%; width: 5%; vertical-align: left;'>" +
                     "<div class='card-block'>" +
+
                         "<h4 class='card-title'><b>" + showsList[j].title + "</b></h4>" +
                         "<p class='card-text'>" + showsList[j].genre + "</p>" +
                     "</div>" +
                     "<ul class='list-group list-group-flush'>" +
-                        "<li class='list-group-item'><b>Address: </b>" + showsList[j].duration + "</li>";
+                        "<li class='list-group-item'><b>Duration: </b>" + showsList[j].duration + "</li>";
             //provera da li je show ocenjen
             if(showsList[j].numberOfRates != 0) {
                 var averageRating = showsList[j].averageRating;
@@ -157,6 +169,7 @@ function showRepertoire(){
             else
                 newCard += "<li class='list-group-item'><b>Show rating: </b>Show not yet rated!</li>";
 
+            //newCard += "<button id = " + showsList[j].id + " class = 'show-profile-button'>  </button>";
 
             // ukoliko je registrovan korisnik, ispisuje se i ocena
             // koju su dali on i njegovi prijatelji
@@ -164,7 +177,7 @@ function showRepertoire(){
                 if(showsList[j].averageFriendRating != 0) {
                     var averageRatingFriends = showsList[j].averageFriendRating;
                     var rowFriends = "<div class='row' style='margin-left: 0px!important;'>" +
-                        "<b>Ocena Vaših prijatelja i Vas: </b>";
+                        "<b>Your and your friend's rating: </b>";
                     var starFull = true;
                     var starHalf = false;
                     for(var k=1; k<=5; k++)

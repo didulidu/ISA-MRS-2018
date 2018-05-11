@@ -36,12 +36,12 @@ public class ShowController {
         //headers.add("Authorization", this.jwtService.getToken(user));
 
         HttpHeaders headers = new HttpHeaders();
-
+        System.out.println(id);
         List<Show> shows = this.showService.getAllShows(Long.parseLong(id));
         List<ShowRepertoireDTO> showRepertoireDTOS = new ArrayList<>();
 
         for (Show s: shows){
-            showRepertoireDTOS.add(new ShowRepertoireDTO(s.getId(), s.getTitle(),  s.getGenre(), s.getDuration()));
+            showRepertoireDTOS.add(new ShowRepertoireDTO(s.getId(), s.getTitle(),  s.getGenre(), s.getDuration(), s.getPosterURL()));
         }
 
         return new ResponseEntity<List<ShowRepertoireDTO>>(showRepertoireDTOS, headers, HttpStatus.OK);
