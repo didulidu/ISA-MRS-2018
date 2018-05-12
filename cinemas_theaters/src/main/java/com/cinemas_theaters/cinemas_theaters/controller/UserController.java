@@ -1,7 +1,9 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.domain.entity.JwtUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
+import com.cinemas_theaters.cinemas_theaters.service.JwtService;
 import com.cinemas_theaters.cinemas_theaters.service.UserService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserLoginDTO;
@@ -24,8 +26,8 @@ public class UserController {
     @Autowired
     private RegisteredUserService regUserService;
 
-    //@Autowired
-    //private JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
 
     @RequestMapping(
             value = "/login",
@@ -40,8 +42,10 @@ public class UserController {
         if(userExist){
             HttpHeaders headers = new HttpHeaders();
 
-            //JwtUser jwtUser = new JwtUser(userLoginDTO.getUsername());
-            //headers.add("Authorization", this.jwtService.getToken(jwtUser));
+            JwtUser jwtUser = new JwtUser(userLoginDTO.getUsername());
+            headers.add("Authorization", this.jwtService.getToken(jwtUser));
+
+            System.out.println("                                                                                        " + this.jwtService.getToken(jwtUser).toUpperCase());
 
             return new ResponseEntity(headers, HttpStatus.OK);
         }

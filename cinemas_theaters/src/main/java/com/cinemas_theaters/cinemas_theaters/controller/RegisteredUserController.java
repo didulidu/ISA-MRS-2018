@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.service.JwtService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserDTO;
@@ -26,8 +27,8 @@ public class RegisteredUserController {
     @Autowired
     private RegisteredUserService registeredUserService;
 
-    //Autowired
-    //private JwtService jwtService;
+    @Autowired
+    private JwtService jwtService;
 
     @RequestMapping(
             value = "/registration",

@@ -40,3 +40,6 @@ insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) val
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1012, 2, 4, 5, true);
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1013, 3, 4, 5, true);
 
+
+
+

@@ -7,7 +7,7 @@ $(document).ready(function(){
         var id = localStorage.getItem("theater");
         alert("nakon dolaska: "+id);
         localStorage.setItem("theater", undefined);
-        getProfileData(parseInt(id), forward_profile);
+        getProfileData(id, forward_profile);
         getAllShows(id);
 
 });

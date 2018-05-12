@@ -1,5 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
@@ -21,6 +23,7 @@ public class Projection  implements Serializable {
     //@JoinColumn(name = "show_id")
     //@NotNull
     @ManyToOne
+    //@JsonIgnore
     private Show show;
 
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)

@@ -6,6 +6,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
 import com.cinemas_theaters.cinemas_theaters.serializer.CustomFriendshipSerializer;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
 
@@ -43,6 +44,10 @@ public class RegisteredUser extends User implements Serializable {
     @OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL)
     @JsonSerialize(using = CustomFriendshipSerializer.class)
     private Map<RegisteredUser, Friendship> friendships;
+
+    @OneToMany(fetch = FetchType.LAZY)
+    //@JsonBackReference(value = "buyer")
+    private List<Ticket> tickets;
 
 
     //@OneToMany(mappedBy = "invited", fetch = FetchType.LAZY)
@@ -108,13 +113,13 @@ public class RegisteredUser extends User implements Serializable {
         this.telephoneNumber = telephoneNumber;
     }
 
-    //public List<Invite> getInvites() { return invites; }
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
 
-    //public void setInvites(List<Invite> invites) {this.invites = invites;}
-
-    //public List<Reservation> getPersonalReservations() {return personalReservations;}
-
-    //public void setPersonalReservations(List<Reservation> personalReservations) { this.personalReservations = personalReservations; }
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
 
     public boolean getRegistrationConfirmed() {
         return registrationConfirmed;

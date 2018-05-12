@@ -8,7 +8,7 @@ import java.util.Optional;
 public interface ShowService {
     void add(Show show);
 
-    List<Show> getAllShows(Long theater_id);
+    List<Show> findAllShows(Long theater_id);
 
     Optional findById(Long id);
 

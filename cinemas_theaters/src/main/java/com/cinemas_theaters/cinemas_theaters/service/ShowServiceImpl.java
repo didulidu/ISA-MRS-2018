@@ -22,7 +22,7 @@ public class ShowServiceImpl implements ShowService {
     }
 
     @Override
-    public List<Show> getAllShows(Long theater_id) {
+    public List<Show> findAllShows(Long theater_id) {
         return showRepository.findAllShows(theater_id);
     }
 

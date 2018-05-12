@@ -27,4 +27,9 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
         }
         return false;
     }
+
+    @Override
+    public RegisteredUser findByUsername(String username){
+        return this.registeredUserRepository.findByUsername(username);
+    }
 }

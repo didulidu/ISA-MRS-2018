@@ -49,8 +49,11 @@ function login(){
             contentType: "application/json",
             data: user,
             success: function(data, textStatus, response){
-                //localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
-                window.location.replace("index.html");
+                console.log(response.getResponseHeader("Authorization"));
+                console.log("uspeh");
+                localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
+                //window.location.replace("index.html");
+                window.setTimeout(function() {window.location.replace("index.html");}, 4000);
             },
             error: function (response) {
                 if(response.status == 401)

@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -29,6 +30,11 @@ public class Seat  implements Serializable {
     //@JoinColumn(name = "hall_id")
     @JsonBackReference
     private Hall hall;
+
+    @OneToOne(fetch = FetchType.LAZY)
+    @JsonBackReference
+    @JsonIgnore
+    private Ticket ticket;
 
     public Seat(){this.available = true;}
 

@@ -36,8 +36,8 @@ public class ShowController {
         //headers.add("Authorization", this.jwtService.getToken(user));
 
         HttpHeaders headers = new HttpHeaders();
-        System.out.println(id);
-        List<Show> shows = this.showService.getAllShows(Long.parseLong(id));
+        System.out.println(Long.parseLong(id));
+        List<Show> shows = this.showService.findAllShows(Long.parseLong(id));
         List<ShowRepertoireDTO> showRepertoireDTOS = new ArrayList<>();
 
         for (Show s: shows){

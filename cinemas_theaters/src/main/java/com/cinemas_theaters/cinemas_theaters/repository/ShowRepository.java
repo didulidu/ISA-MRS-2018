@@ -14,7 +14,8 @@ public interface ShowRepository  extends JpaRepository<Show, Long> {
     @Query("SELECT s FROM Show s WHERE theatre_theatre_id = :theater_id")
     List<Show> findAllShows(@Param("theater_id") Long theater_id);
 
-    Show findByTitle(String title);
+
+    Show findByTitle(String name);
 
     Optional findById(Long id);
 

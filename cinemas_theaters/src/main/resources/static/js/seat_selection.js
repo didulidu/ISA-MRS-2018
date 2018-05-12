@@ -1,8 +1,10 @@
 var projection = {}
 
-$(document).ready(function(){
+var seatIds = []
+
+$(document).ready(function(){    if(index != -1){
     var index = document.URL.indexOf("?id=");
-    if(index != -1){
+
         id = document.URL.substring(index+4);
         id = 10;
         fetchProjectionData(id);
@@ -105,6 +107,68 @@ function formSeats(projection){
     return seats_array;
 }
 
+$(document).on("click", "#book-ticket-btn", function(){
+
+      console.log("clicked");
+
+      var ticket = {
+          "showTitle": projection.showTitle,
+          "projectionDate": projection.date,
+          "projectionId": projection.id + "",
+          //"issueDate": projection.date
+          "seatIds": seatIds
+      };
+
+
+
+      ticket = JSON.stringify(ticket);
+
+     $.ajax({
+         		url: "/ticket/reservation",
+         		type: "POST",
+         		contentType: "application/json",
+         		dataType: "json",
+         		data: ticket,
+         		beforeSend: function(request){
+                    request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+                },
+         		success: function(data){
+         			//localStorage.setItem("currentUserToken", response.getResponseHeader("Authorization"));
+                     alert("Great success!")
+         		},
+         		error: function(response){
+         			if(response.status == 401)
+         				getToastr("Not authorized for the selected activity!", "Error", 3);
+         			else
+         				getToastr("Seats couldn't be fetched! \nStatus: " + response.status, "", 3);
+         		}
+         	});
+
+
+});
+
+function addSeatId(row, num){
+    var seats = projection.hall.seats;
+
+    for (var s=0; s<seats.length; s++){
+
+        if (seats[s].chairRow == row + 1 && seats[s].chairNumber == num)
+            seatIds.push(seats[s].id + "");
+    }
+}
+
+function removeSeatId(row, num){
+    var seats = projection.hall.seats;
+
+    for (var s=0; s<seats.length; s++){
+
+        if (seats[s].chairRow == row + 1 && seats[s].chairNumber == num){
+            var index = seatIds.indexOf(seats[s].id + "");
+            seatIds.splice(index, 1);
+        }
+    }
+}
+
 function displaySeats(projection){
     var price = projection.price; //price
 				$(document).ready(function() {
@@ -150,6 +214,8 @@ function displaySeats(projection){
 									.data('seatId', this.settings.id)
 									.appendTo($cart);
 
+								addSeatId(this.settings.row, this.settings.label);
+
 								$counter.text(sc.find('selected').length+1);
 								$total.text(recalculateTotal(sc)+projection.price);
 											
@@ -163,6 +229,9 @@ function displaySeats(projection){
 									//Delete reservation
 									$('#cart-item-'+this.settings.id).remove();
 									//optional
+
+									 removeSeatId(this.settings.row, this.settings.label);
+
 									return 'available';
 							} else if (this.status() == 'unavailable') { //sold
 								return 'unavailable';
