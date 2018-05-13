@@ -91,6 +91,12 @@
 			<artifactId>jjwt</artifactId>
 			<version>  LATEST </version>
 		</dependency>
+
+		<dependency>
+			<groupId>commons-fileupload</groupId>
+			<artifactId>commons-fileupload</artifactId>
+			<version> LATEST </version>
+		</dependency>
 	</dependencies>
 
 	<build>
