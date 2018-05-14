@@ -45,8 +45,6 @@ public class UserController {
             JwtUser jwtUser = new JwtUser(userLoginDTO.getUsername());
             headers.add("Authorization", this.jwtService.getToken(jwtUser));
 
-            System.out.println("                                                                                        " + this.jwtService.getToken(jwtUser).toUpperCase());
-
             return new ResponseEntity(headers, HttpStatus.OK);
         }
         return new ResponseEntity(HttpStatus.UNAUTHORIZED);

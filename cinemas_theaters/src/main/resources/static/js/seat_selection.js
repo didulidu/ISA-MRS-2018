@@ -1,6 +1,6 @@
 var projection = {}
-
 var seatIds = []
+var unavailable_seats = [];
 
 $(document).ready(function(){    if(index != -1){
     var index = document.URL.indexOf("?id=");
@@ -75,6 +75,8 @@ function getMaxChairs(seats){
 
 function formSeats(projection){
     var seats = projection.hall.seats;
+    //var sc = $('#seat-map').seatCharts;
+
 
 
     seats_array = []
@@ -82,11 +84,15 @@ function formSeats(projection){
 
     for (var s=0; s<seats.length; s++){
 
+        if (seats[s].available == false){
+            unavailable_seats.push(seats[s].chairRow + "_" + seats[s].chairNumber);
+        }
+
         if (seats[s].id == seats[seats.length-1].id){
             seats_array[seats[s].chairRow-1] = "a".repeat(seats[s].chairNumber);
             if (seats[s].chairNumber < max_chairs){
                 for (var i = seats[s].chairNumber; i<max_chairs; i++){
-                    seats_array[seats[s].chairRow-1]+="_";
+                    seats_array[seats[s].chairRow-1] += "_";
                 }
             }
             break;
@@ -97,12 +103,14 @@ function formSeats(projection){
             seats_array[seats[s].chairRow-1] = "a".repeat(seats[s].chairNumber);
             if (seats[s].chairNumber < max_chairs){
                 for (var i = seats[s].chairNumber; i< max_chairs; i++){
-                    seats_array[seats[s].chairRow-1]+="_";
+                    seats_array[seats[s].chairRow-1] += "_";
                 }
 
             }
         }
     }
+
+    //$('#seat-map').seatCharts.get(unavailable_seats).status('unavailable');
 
     return seats_array;
 }
@@ -124,25 +132,26 @@ $(document).on("click", "#book-ticket-btn", function(){
       ticket = JSON.stringify(ticket);
 
      $.ajax({
-         		url: "/ticket/reservation",
-         		type: "POST",
-         		contentType: "application/json",
-         		dataType: "json",
-         		data: ticket,
-         		beforeSend: function(request){
-                    request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
-                },
-         		success: function(data){
-         			//localStorage.setItem("currentUserToken", response.getResponseHeader("Authorization"));
-                     alert("Great success!")
-         		},
-         		error: function(response){
-         			if(response.status == 401)
-         				getToastr("Not authorized for the selected activity!", "Error", 3);
-         			else
-         				getToastr("Seats couldn't be fetched! \nStatus: " + response.status, "", 3);
-         		}
-         	});
+        url: "/ticket/reservation",
+        type: "POST",
+        contentType: "application/json",
+        dataType: "json",
+        data: ticket,
+        beforeSend: function(request){
+            request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+        },
+        success: function(data){
+            //localStorage.setItem("currentUserToken", response.getResponseHeader("Authorization"));
+             alert("Great success!")
+             location.reload();
+        },
+        error: function(response){
+            if(response.status == 401)
+                getToastr("Not authorized for the selected activity!", "Error", 3);
+            else
+                getToastr("Seats couldn't be fetched! \nStatus: " + response.status, "", 3);
+        }
+    });
 
 
 });
@@ -241,7 +250,7 @@ function displaySeats(projection){
 						}
 					});
 					//sold seat
-					sc.get(['1_2', '4_4','4_5','6_6','6_7','8_5','8_6','8_7','8_8', '10_1', '10_2']).status('unavailable');
+					sc.get(unavailable_seats).status('unavailable');
 						
 				});
 				//sum total money

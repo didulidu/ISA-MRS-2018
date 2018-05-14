@@ -59,6 +59,9 @@ public class TicketController {
 
             for (String s: ticketReservationDTO.getSeatIds()){
                 Seat seat = this.seatService.getById(Long.parseLong(s));
+                seat.setAvailable(false);
+
+                this.seatService.save(seat);
 
                 Ticket ticket = new Ticket(ticketReservationDTO.getShowTitle(), ticketReservationDTO.getProjectionDate(), user, seat, p);
                 tickets.add(ticket);

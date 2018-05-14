@@ -92,7 +92,7 @@ $(document).on('click', '#button-show-details', function(){
 });
 
 function showRepertoire(){
-    localStorage.setItem("currentUserRole", "Registered");
+
 
     var showsList = [];
     if(filterOn == false)

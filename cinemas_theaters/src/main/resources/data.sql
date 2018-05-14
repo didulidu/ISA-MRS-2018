@@ -41,5 +41,21 @@ insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) val
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1013, 3, 4, 5, true);
 
 
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1014, 1, 1, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1015, 2, 1, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1016, 1, 2, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1017, 2, 2, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1018, 3, 2, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1019, 4, 2, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1020, 5, 2, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1021, 1, 3, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1022, 2, 3, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1023, 3, 3, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1024, 4, 3, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1025, 5, 3, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1026, 1, 4, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1027, 1, 4, 6, true);
+
+
 
 

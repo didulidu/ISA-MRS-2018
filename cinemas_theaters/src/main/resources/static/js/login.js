@@ -52,6 +52,7 @@ function login(){
                 console.log(response.getResponseHeader("Authorization"));
                 console.log("uspeh");
                 localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
+                localStorage.setItem("currentUserRole", "Registered");
                 //window.location.replace("index.html");
                 window.setTimeout(function() {window.location.replace("index.html");}, 4000);
             },
@@ -79,5 +80,5 @@ $(document).ready(function(){
         activateUser(token);
     }
     if(localStorage.getItem("currentUserToken") != null)
-        window.location.replace("home.html");
+        window.location.replace("index.html");
 });
