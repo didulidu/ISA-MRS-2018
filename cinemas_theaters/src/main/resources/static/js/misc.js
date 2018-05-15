@@ -73,7 +73,7 @@ function validateRegistrationData(data){
            return false;
        }
 
-       if(localStorage.getItem("registrationType") == null ||  localStorage.getItem("registrationType") == "restaurant-manager" ||
+       if(localStorage.getItem("registrationType") == null ||  localStorage.getItem("registrationType") == "theatre-manager" ||
                                                                localStorage.getItem("registrationType") == "system-manager"){
            if(!validateEmail(email.trim())) {
                getToastr("Invalid e-mail address format!", "Invalid registration data", 2);

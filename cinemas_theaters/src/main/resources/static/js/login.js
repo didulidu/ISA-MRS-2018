@@ -49,18 +49,14 @@ function login(){
             contentType: "application/json",
             data: user,
             success: function(data, textStatus, response){
-                console.log(response.getResponseHeader("Authorization"));
-                console.log("uspeh");
-                alert(JSON.stringify(data))
                 localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
                 localStorage.setItem("currentUser", JSON.stringify(data));
                 //window.location.replace("index.html");
                 if(data["type"] == "TheaterAndCinemaAdmin"){
                     alert("admin profil sledi")
-                window.setTimeout(function() {window.location.replace("cinema_admin_profile.html");}, 4000);                    
+                    window.setTimeout(function() {window.location.replace("cinema_admin_profile.html");}, 4000);
                 }else
-                    window.setTimeout(function() {window.location.replace("index.html");}, 4000);
-            },
+                    window.setTimeout(function() {window.location.replace("index.html");}, 4000);,
             error: function (response) {
                 if(response.status == 401)
                     getToastr("Unknown username/password!", "Error", 3);

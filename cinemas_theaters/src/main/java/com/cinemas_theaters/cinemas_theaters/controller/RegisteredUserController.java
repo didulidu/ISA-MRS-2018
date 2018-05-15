@@ -1,5 +1,9 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import ch.qos.logback.core.net.SyslogOutputStream;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendSocketDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.JwtUser;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
@@ -7,18 +11,20 @@ import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserRegistrationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.BindingResult;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/registeredUser")
@@ -68,6 +74,175 @@ public class RegisteredUserController {
                 return new ResponseEntity(HttpStatus.CREATED);
             }
         }
+    }
+
+    @RequestMapping(
+            value = "/addFriend",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegisteredUser> addFriend(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            RegisteredUser friend = this.registeredUserService.findByUsername(friendUsername);
+
+            if(friend != null){
+                boolean success = this.registeredUserService.addFriend(currentUser, friend);
+
+                if(success) {
+                    FriendSocketDTO message = new FriendSocketDTO(currentUser.getName(), currentUser.getUsername(),
+                            currentUser.getLastname(), "addFriend");
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String stringMessage = mapper.writeValueAsString(message);
+                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    return new ResponseEntity<>(currentUser, headers, HttpStatus.OK);
+                }
+                // korisnik koji je ulogovan i korisnik kom se salje zahtev za prijateljstvo
+                // su vec prijatelji
+                return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+            }
+            // dodavanje nepostojeceg korisnika za prijatelja
+            return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/acceptRequest",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegisteredUser> acceptFriendRequest(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            RegisteredUser friend = this.registeredUserService.findByUsername(friendUsername);
+
+            if(friend != null){
+                boolean success = this.registeredUserService.acceptFriendRequest(currentUser, friend);
+
+                if(success) {
+                    FriendSocketDTO message = new FriendSocketDTO(currentUser.getName(), currentUser.getUsername(),
+                            currentUser.getLastname(), "acceptRequest");
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String stringMessage = mapper.writeValueAsString(message);
+                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    return new ResponseEntity<>(currentUser, headers, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/getFriends",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<List<UserFriendsDTO>> getFriends(@RequestHeader("Authorization") String userToken){
+        System.out.println(userToken);
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        List<UserFriendsDTO> userFriendsDTOS = new ArrayList<>();
+
+        if(currentUser != null){
+            List<UserFriendsDTO> friends = this.registeredUserService.getFriends(currentUser.getId());
+
+
+            return new ResponseEntity<List<UserFriendsDTO>>(friends, headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @RequestMapping(
+            value = "/deleteFriend",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegisteredUser> deleteFriend(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            RegisteredUser friend = this.registeredUserService.findByUsername(friendUsername);
+
+            if(friend != null){
+                boolean success = this.registeredUserService.removeFriend(currentUser, friend);
+
+                if(success) {
+                    FriendSocketDTO message = new FriendSocketDTO(currentUser.getName(), currentUser.getUsername(),
+                            currentUser.getLastname(), "removeFriend");
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String stringMessage = mapper.writeValueAsString(message);
+                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    return new ResponseEntity<>(currentUser, headers, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/deleteRequest",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegisteredUser> deleteFriendRequest(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            RegisteredUser friend = this.registeredUserService.findByUsername(friendUsername);
+
+            if(friend != null){
+                boolean success = this.registeredUserService.deleteFriendRequest(currentUser, friend);
+                if(success) {
+                    FriendSocketDTO message = new FriendSocketDTO(currentUser.getName(), currentUser.getUsername(),
+                            currentUser.getLastname(), "declineRequest");
+                    ObjectMapper mapper = new ObjectMapper();
+                    try {
+                        String stringMessage = mapper.writeValueAsString(message);
+                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                    } catch (JsonProcessingException e) {
+                        e.printStackTrace();
+                    }
+                    return new ResponseEntity<>(currentUser, headers, HttpStatus.OK);
+                }
+                return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
+            }
+            return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
     }
 
     private RegisteredUserDTO convertRegisteredUserToDTO(RegisteredUser user){
