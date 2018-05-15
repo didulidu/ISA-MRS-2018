@@ -11,8 +11,8 @@ $(document).ready(function(){
 
 });
 
-$("#nav-repertoire-tab").on('click', function(){
-
+$("a[href='#nav-repertoire']").on('shown.bs.tab', function(){
+    alert("uso ovde")
     $("#nav-tabContent").hide();
     showRepertoire();
 
@@ -22,7 +22,10 @@ $(document).on('click', '#home-btn',function(e){
             e.preventDefault();
             if(localStorage.getItem("currentUser")!=undefined){
                 if(localStorage.getItem("currentUser")!=undefined)
-                    window.location.replace("cinema_admin_profile.html");
+                    if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "TheaterAndCinemaAdmin")
+                        window.location.replace("cinema_admin_profile.html");
+                    else
+                        window.location.replace("index.html");
             }
             else
                 window.location.replace("index.html");
@@ -86,10 +89,11 @@ function fillProfileWithInfo(data){
 $(document).on('click', '#button-show-details', function(){
    var form = $(this).parents("form");
    var show_id = form.find("input[type=hidden]").val();
-   if(localStorage.getItem("currentUserRole") == "Registered")
-       window.location.replace("seat_selection.html?id=" + show_id);
-   else if(localStorage.getItem("currentUserRole") == "Manager")
-       window.location.replace("seat_selection.html?id=" + show_id);
+   if(localStorage.getItem("currentUser")!=undefined){
+       if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "RegisteredUser")
+           window.location.replace("seat_selection.html?id=" + show_id);
+       
+    }
 });
 
 function showRepertoire(){
@@ -101,13 +105,13 @@ function showRepertoire(){
     else
         showsList = filterShowsList;
 
-    $('#repertoire-container-div').empty();
+    $('#nav-repertoire').empty();
 
     if(showsList.length){
         var numRows = Math.ceil(showsList.length/3);
         for(var i=0; i<numRows; i++)
         {
-            $('#repertoire-container-div').append("<div class='row " + i + "' style='padding-bottom: 2%'></div>");
+            $('#nav-repertoire').append("<div class='row " + i + "' style='padding-bottom: 2%'></div>");
         }
 
         var numberOfRow = 0;
@@ -223,10 +227,12 @@ function showRepertoire(){
                         "<form class='form-inline'>" +
                             "<input type='hidden' class='form-control' value='" + showsList[j].id + "'>" +
                             "<button type='button' class='btn btn-warning' id='button-show-details'>";
-            if(localStorage.getItem("currentUserRole") == "Registered")
+            if(localStorage.getItem("currentUser")!=undefined){
+            if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "RegisteredUser")
                 newCard += "<span class='glyphicon glyphicon-plus-sign'></span> Reservation";
             else if(localStorage.getItem("currentUserRole") == "Manager")
                 newCard += "<span class='glyphicon glyphicon-info-sign'></span> More info";
+            }
             newCard += "</button>" +
                         "</form>" +
                     "</div>" +
