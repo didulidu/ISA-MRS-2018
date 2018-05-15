@@ -1,10 +1,11 @@
-#registered users
+#projectionregistered users
 insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url) values ('Petar', 'Peric', 'pera', '123', 'pera@gmail.com', 'RegisteredUser', "Kikinda, Random ulica 2", "12312312", true, 151, 'url');
+insert into theater_admin_user(name, lastname, username, password, email, type, registration_confirmed, id) values ('Vladimir', 'Antonic', 'vlada', '1234', 'vlada@gmail.com', 'TheaterAndCinemaAdmin', true, 666);
 
 #cinemas/theatres
-insert into theatre(name, description, address, city, type, theatre_id, avatar_url, rate) values ("Arena Cineplex", "Dosta dobar bioskop.", "Ko ce ga znati", "Novi Sad", "Cinema", 132, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.mojnovisad.com%2Ffiles%2Fevent%2F0%2F4%2F9%2F22049%2F22049-arena-cineplex1.jpg&f=1", 2.5);
-insert into theatre(name, description, address, city, type, theatre_id, avatar_url, rate) values ("CineStar", "Ovo je fensi bioskop", "Tamo neka", "Novi Sad", "Cinema", 133, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.mojnovisad.com%2Ffiles%2Fevent%2F0%2F4%2F9%2F22049%2F22049-arena-cineplex1.jpg&f=1",4.5);
-insert into theatre(name, description, address, city, type, theatre_id, avatar_url, rate) values ("Amfiteatar", "Ovo je fensi teatar", "Tamo neka druga", "Novi Sad", "Theatre", 134, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.mojnovisad.com%2Ffiles%2Fevent%2F0%2F4%2F9%2F22049%2F22049-arena-cineplex1.jpg&f=1",3.5);
+insert into theatre(name, description, address, city, type, theatre_id, avatar_url, rate, owner_id) values ("Arena Cineplex", "Dosta dobar bioskop.", "Ko ce ga znati", "Novi Sad", "Cinema", 132, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.mojnovisad.com%2Ffiles%2Fevent%2F0%2F4%2F9%2F22049%2F22049-arena-cineplex1.jpg&f=1", 2.5,666);
+insert into theatre(name, description, address, city, type, theatre_id, avatar_url, rate, owner_id) values ("CineStar", "Ovo je fensi bioskop", "Tamo neka", "Novi Sad", "Cinema", 133, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.mojnovisad.com%2Ffiles%2Fevent%2F0%2F4%2F9%2F22049%2F22049-arena-cineplex1.jpg&f=1",4.5,666);
+insert into theatre(name, description, address, city, type, theatre_id, avatar_url, rate, owner_id) values ("Amfiteatar", "Ovo je fensi teatar", "Tamo neka druga", "Novi Sad", "Theatre", 134, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.mojnovisad.com%2Ffiles%2Fevent%2F0%2F4%2F9%2F22049%2F22049-arena-cineplex1.jpg&f=1",3.5,665);
 
 #movies, plays
 insert into `show`(title, genre, duration, price, average_rating, number_of_rates, show_id, theatre_theatre_id, posterurl) values ("Deadpool", "Comedy/Action", "110", 350, 4.1, 0, 231, 132, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.traileraddict.com%2Fcontent%2F20th-century-fox%2Fdeadpool-poster-9.jpg&f=1");
@@ -13,11 +14,11 @@ insert into `show`(title, genre, duration, price, average_rating, number_of_rate
 
 
 #projections
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(10, 350,"8/5/2018 20:00", 5, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(11, 450,"9/5/2018 20:00", 5, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(12, 400,"10/5/2018 20:00", 6, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(13, 250,"8/5/2018 20:00", 7, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(14, 350,"8/5/2018 20:00", 5, 231);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(10, 350,"08/05/2018 20:00", 5, 231);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(11, 450,"09/05/2018 20:00", 5, 231);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(12, 400,"10/05/2018 20:00", 6, 231);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(13, 250,"08/05/2018 20:00", 7, 231);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(14, 350,"08/05/2018 20:00", 5, 231);
 
 #halls
 insert into hall (hall_id, name, theatre_theatre_id) values (5, 1, 132);
@@ -39,23 +40,6 @@ insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) val
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1011, 1, 4, 5, true);
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1012, 2, 4, 5, true);
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1013, 3, 4, 5, true);
-
-
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1014, 1, 1, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1015, 2, 1, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1016, 1, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1017, 2, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1018, 3, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1019, 4, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1020, 5, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1021, 1, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1022, 2, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1023, 3, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1024, 4, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1025, 5, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1026, 1, 4, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1027, 1, 4, 6, true);
-
 
 
 
