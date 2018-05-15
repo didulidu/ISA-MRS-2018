@@ -10,6 +10,8 @@ public interface TheatreService {
 
     List<Theatre> getAllTheatres();
 
+    List<Theatre> getTheatersByAdmin(Long id);
+
     Theatre findById(Long id);
 
     Theatre findByName(String name);

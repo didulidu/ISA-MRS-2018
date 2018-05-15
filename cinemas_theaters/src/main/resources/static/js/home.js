@@ -23,13 +23,10 @@ $(document).ready(function(){
 
 $(document).on('click', '.card',function(e){
     e.preventDefault();
-    alert("Kliknuto na bioskop");
     var name = this.querySelector(".card-title").innerHTML;
     var id = this.id.split("theater_id_")[1];
-    alert("pre odlaska"+id);
     localStorage.setItem("theater",id);
     window.location.replace("profile.html")
-
 });
 
 
@@ -66,7 +63,6 @@ function forward_theatres(theaters){
         $card.find(".card-text").html(element["description"])
         $card.find("#visit-btn").attr("value","")
         $card.attr("id", "theater_id_" + element["id"]);
-        $card.data("id", element["id"]);
         $card.find("#rateYo").rateYo({ // Sutra cu rate da ubacim u beanove, zasad su default vrednosti.
         starWidth: "20px",
         multiColor: {

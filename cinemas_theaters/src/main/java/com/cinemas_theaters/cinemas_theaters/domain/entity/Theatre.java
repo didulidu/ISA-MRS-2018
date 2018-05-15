@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
 import com.cinemas_theaters.cinemas_theaters.domain.enums.StructureType;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
@@ -45,7 +46,6 @@ public class Theatre implements Serializable {
     @Column(nullable=true)
     private Double rate;
 
-
     @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("theatre")
     private List<Show> repertoire;
@@ -59,6 +59,10 @@ public class Theatre implements Serializable {
     @Enumerated(EnumType.STRING)
     private StructureType type;
 
+    @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
+    @JoinColumn(name = "owner_id")
+    private TheaterAdminUser theaterAdminUser;
 
     public Theatre(){
         this.repertoire = new ArrayList<>();
@@ -76,18 +80,18 @@ public class Theatre implements Serializable {
         type = StructureType.Cinema;
     }
 
-    public Theatre(Long id, @NotNull String avatarUrl, @NotNull @Size(min = 2) String name, @NotNull @Size(min = 2) String description,
-                   @NotNull @Size(min = 2) String address, @NotNull @Size(min = 2) String city, ArrayList<Show> repertoire, List<Hall> halls, StructureType type, Double rate) {
+    public Theatre(Long id, @NotNull String avatarUrl, @NotNull @Size(min = 2) String name, @NotNull @Size(min = 2) String description, @NotNull @Size(min = 2) String address, @NotNull @Size(min = 2) String city, Double rate, List<Show> repertoire, List<Hall> halls, StructureType type, TheaterAdminUser owner) {
         this.id = id;
         this.avatarUrl = avatarUrl;
         this.name = name;
         this.description = description;
         this.address = address;
         this.city = city;
+        this.rate = rate;
         this.repertoire = repertoire;
         this.halls = halls;
         this.type = type;
-        this.rate = rate;
+        this.theaterAdminUser = owner;
     }
 
     public Long getId() {
@@ -138,7 +142,6 @@ public class Theatre implements Serializable {
         this.avatarUrl = avatarUrl;
     }
 
-
     public String getName() {
         return name;
     }
@@ -174,7 +177,31 @@ public class Theatre implements Serializable {
     public Double getRate() {
         return rate;
     }
+
     public void setRate(Double rate) {
         this.rate = rate;
+    }
+
+    public TheaterAdminUser getTheaterAdminUser() {
+        return theaterAdminUser;
+    }
+
+    public void setTheaterAdminUser(TheaterAdminUser owner) {
+        this.theaterAdminUser = owner;
+    }
+
+    @Override
+    public String toString() {
+        return "Theatre{" +
+                "id=" + id +
+                ", avatarUrl='" + avatarUrl + '\'' +
+                ", name='" + name + '\'' +
+                ", description='" + description + '\'' +
+                ", address='" + address + '\'' +
+                ", city='" + city + '\'' +
+                ", rate=" + rate +
+                ", type=" + type +
+                ", theaterAdminUser=" + theaterAdminUser.getId() +
+                '}';
     }
 }

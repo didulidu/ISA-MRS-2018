@@ -51,10 +51,15 @@ function login(){
             success: function(data, textStatus, response){
                 console.log(response.getResponseHeader("Authorization"));
                 console.log("uspeh");
+                alert(JSON.stringify(data))
                 localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
-                localStorage.setItem("currentUserRole", "Registered");
+                localStorage.setItem("currentUser", JSON.stringify(data));
                 //window.location.replace("index.html");
-                window.setTimeout(function() {window.location.replace("index.html");}, 4000);
+                if(data["type"] == "TheaterAndCinemaAdmin"){
+                    alert("admin profil sledi")
+                window.setTimeout(function() {window.location.replace("cinema_admin_profile.html");}, 4000);                    
+                }else
+                    window.setTimeout(function() {window.location.replace("index.html");}, 4000);
             },
             error: function (response) {
                 if(response.status == 401)

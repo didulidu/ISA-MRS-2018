@@ -2,6 +2,7 @@ package com.cinemas_theaters.cinemas_theaters.tests;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserLoginDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserRegistrationDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.repository.RegisteredUserRepository;
 import com.cinemas_theaters.cinemas_theaters.service.UserService;
 import com.fasterxml.jackson.databind.ObjectMapper;
@@ -84,7 +85,7 @@ public class LoginAndRegistrationTest {
 
     @Test
     public void loginIncorrectTest() throws Exception {
-        UserLoginDTO userIncorrect = new UserLoginDTO("steva", "123456789");
+        UserLoginDTO userIncorrect = new UserLoginDTO("steva", "123456789", UserType.RegisteredUser, (long)4);
 
         String userJsonIncorrect = mapper.writeValueAsString(userIncorrect);
 
@@ -97,7 +98,7 @@ public class LoginAndRegistrationTest {
 
     @Test
     public void loginCorrectTest() throws Exception {
-        UserLoginDTO userCorrect = new UserLoginDTO("mare", "1234");
+        UserLoginDTO userCorrect = new UserLoginDTO("mare", "1234", UserType.RegisteredUser, (long) 2);
 
         String userJsonCorrect = mapper.writeValueAsString(userCorrect);
 

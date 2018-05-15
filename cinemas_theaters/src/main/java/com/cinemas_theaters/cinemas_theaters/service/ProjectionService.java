@@ -17,4 +17,6 @@ public interface ProjectionService {
     Projection getById(Long id);
 
     Projection findSpecificProjection(Long show_id, Long id);
+
+    List<Projection> findProjectionsByHall(Long hall_id);
 }

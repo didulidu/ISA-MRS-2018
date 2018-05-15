@@ -45,6 +45,7 @@ public class Projection  implements Serializable {
         this.price = price;
     }
 
+
     public Long getId() {
         return id;
     }

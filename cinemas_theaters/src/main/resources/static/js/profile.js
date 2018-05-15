@@ -5,7 +5,6 @@ var filterOn = false;
 
 $(document).ready(function(){
         var id = localStorage.getItem("theater");
-        alert("nakon dolaska: "+id);
         localStorage.setItem("theater", undefined);
         getProfileData(id, forward_profile);
         getAllShows(id);
@@ -20,9 +19,13 @@ $("#nav-repertoire-tab").on('click', function(){
 });
 
 $(document).on('click', '#home-btn',function(e){
-            alert("Nazad na home page");
             e.preventDefault();
-            window.location.replace("index.html");
+            if(localStorage.getItem("currentUser")!=undefined){
+                if(localStorage.getItem("currentUser")!=undefined)
+                    window.location.replace("cinema_admin_profile.html");
+            }
+            else
+                window.location.replace("index.html");
             return false;
         });
 
@@ -53,8 +56,6 @@ function getAllShows(id){
 }
 
 function getProfileData(id, callback){
-
-        alert("dobavljanje bioskopa iz baze");
         $.ajax({
         url: "theatre/"+id,
         type: "GET",

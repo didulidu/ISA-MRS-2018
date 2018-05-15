@@ -3,31 +3,44 @@ package com.cinemas_theaters.cinemas_theaters.domain.dto;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.StructureType;
 
 public class TheatreDTO {
-    private Long id;
     private String name;
     private String address;
     private String description;
     private Double rate;
     private StructureType type;
+    private Long id;
+    private String avatarUrl;
+    private String city;
+
 
     public TheatreDTO(){}
 
-    public TheatreDTO(Long _id, String _name, String _address, String _description, Double _rate, StructureType _type) {
-        id = _id;
+    public TheatreDTO( Long _id, String _name, String _address, String _description, Double _rate, StructureType _type, String _city, String _avatarUrl) {
         name = _name;
         address = _address;
         description = _description;
         rate = _rate;
         type = _type;
+        id = _id;
+        city = _city;
+        avatarUrl = _avatarUrl;
     }
 
-    public Long getId() {
-        return id;
+    public TheatreDTO( String _name, String _address, String _description, Double _rate, StructureType _type, String _city, String _avatarUrl){
+        name = _name;
+        address = _address;
+        description = _description;
+        rate = _rate;
+        type = _type;
+        city = _city;
+        avatarUrl = _avatarUrl;
     }
 
-    public void setId(Long id) {
-        this.id = id;
-    }
+
+
+    public Long getId(){ return id;}
+
+    public void setId(Long id){ this.id = id;}
 
     public String getName() {
         return name;
@@ -67,5 +80,21 @@ public class TheatreDTO {
 
     public void setType(StructureType type) {
         this.type = type;
+    }
+
+    public String getAvatarUrl() {
+        return avatarUrl;
+    }
+
+    public void setAvatarUrl(String avatarUrl) {
+        this.avatarUrl = avatarUrl;
+    }
+
+    public String getCity() {
+        return city;
+    }
+
+    public void setCity(String city) {
+        this.city = city;
     }
 }

@@ -28,6 +28,12 @@ public class TheatreServiceImpl implements TheatreService {
     }
 
     @Override
+    public List<Theatre> getTheatersByAdmin(Long id) {
+
+        return this.theatreRepository.getTheatersByAdmin(id);
+    }
+
+    @Override
     @Transactional(readOnly = true)
     public Theatre findByName(String name){
         return this.theatreRepository.findByName(name);

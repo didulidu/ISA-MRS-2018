@@ -19,6 +19,10 @@ public interface ProjectionRepository extends JpaRepository<Projection, Long> {
     @Query("SELECT p FROM Projection p WHERE show_show_id = :show_id and projection_id = :id")
     Projection findSpecificProjection(@Param("show_id") Long show_id, @Param("id") Long id);
 
+    @Query("SELECT p FROM Projection p WHERE hall_hall_id = :hall_id")
+    List<Projection> findProjectionsByHall(@Param("hall_id") Long hall_id);
+
+
     Optional findById(Long id);
 
     Projection getById(Long id);
