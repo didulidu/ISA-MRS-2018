@@ -1,0 +1,63 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <!--JavaScript-->
+    <!--library-->
+    <script type="text/javascript" src="lib/jQuery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="lib/webSocket/sockjs.min.js"></script>
+    <script type="text/javascript" src="lib/webSocket/stomp.min.js"></script>
+
+    <!--custom-->
+    <script type="text/javascript" src="js/misc.js"></script>
+    <script type="text/javascript" src="js/home.js"></script>
+    <script type="text/javascript" src="js/registeredUserFriends.js"></script>
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
+    <!--custom-->
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <title>Friends</title>
+</head>
+<body>
+
+
+<div class="header" id="header"></div>
+
+<div class="container friends-container" style="text-align: center; width: 70%">
+    <div style="text-align: center;">
+        <strong style="font-size: large;"> Friends list </strong>
+    </div>
+    <table class="table table-hover table-condesed" id="friend-table" border="1px">
+        <thead>
+        <th class="col-md-1"> Name
+        </th>
+        <th class="col-md-1"> Last name
+        </th>
+        <th class="col-md-1"> Username
+        </th>
+        <th class="col-md-1"> </th>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+
+<div class="container friend-request-container" style="text-align: center; width: 70%;">
+    <div style="text-align: center;">
+        <strong style="font-size: large;"> Friend requests </strong>
+    </div>
+    <table class="table table-hover table-condesed" id="friend-request-table" border="1px">
+        <thead>
+        <th class="col-md-1"> Name </th>
+        <th class="col-md-1"> Last name </th>
+        <th class="col-md-1"> Username</th>
+        <th class="col-lg-1"> </th>
+        </thead>
+        <tbody></tbody>
+    </table>
+</div>
+</body>
+</html>

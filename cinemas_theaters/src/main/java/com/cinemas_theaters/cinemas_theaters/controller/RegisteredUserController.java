@@ -19,6 +19,7 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
@@ -35,6 +36,9 @@ public class RegisteredUserController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private SimpMessagingTemplate template;
 
     @RequestMapping(
             value = "/registration",
@@ -99,7 +103,7 @@ public class RegisteredUserController {
                     ObjectMapper mapper = new ObjectMapper();
                     try {
                         String stringMessage = mapper.writeValueAsString(message);
-                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                        this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
@@ -138,7 +142,7 @@ public class RegisteredUserController {
                     ObjectMapper mapper = new ObjectMapper();
                     try {
                         String stringMessage = mapper.writeValueAsString(message);
-                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                        this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
@@ -197,7 +201,7 @@ public class RegisteredUserController {
                     ObjectMapper mapper = new ObjectMapper();
                     try {
                         String stringMessage = mapper.writeValueAsString(message);
-                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                        this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
@@ -232,7 +236,7 @@ public class RegisteredUserController {
                     ObjectMapper mapper = new ObjectMapper();
                     try {
                         String stringMessage = mapper.writeValueAsString(message);
-                        //this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
+                        this.template.convertAndSend("/topic/friend" + friendUsername, stringMessage);
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }

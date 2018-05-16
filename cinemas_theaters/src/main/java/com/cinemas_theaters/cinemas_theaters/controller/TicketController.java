@@ -55,13 +55,14 @@ public class TicketController {
             String username = this.jwtService.getUser(userToken).getUsername();
             RegisteredUser user = this.registeredUserService.findByUsername(username);
 
+            p.setReservedSeats(ticketReservationDTO.getSeatIds());
+
+            this.projectionService.add(p);
+
             ArrayList<Ticket> tickets = new ArrayList<>();
 
             for (String s: ticketReservationDTO.getSeatIds()){
                 Seat seat = this.seatService.getById(Long.parseLong(s));
-                seat.setAvailable(false);
-
-                this.seatService.save(seat);
 
                 Ticket ticket = new Ticket(ticketReservationDTO.getShowTitle(), ticketReservationDTO.getProjectionDate(), user, seat, p);
                 tickets.add(ticket);

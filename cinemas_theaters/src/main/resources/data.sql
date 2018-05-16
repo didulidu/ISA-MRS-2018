@@ -31,33 +31,33 @@ insert into hall (hall_id, name, theatre_theatre_id) values (6, 6, 132);
 insert into hall (hall_id, name, theatre_theatre_id) values (7, 7, 132);
 
 #seats
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1000, 1, 1, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1001, 2, 1, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1002, 3, 1, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1003, 1, 2, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1004, 2, 2, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1005, 3, 2, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1006, 4, 2, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1007, 1, 3, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1008, 2, 3, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1009, 3, 3, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1010, 4, 3, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1011, 1, 4, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1012, 2, 4, 5, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1013, 3, 4, 5, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1000, 1, 1, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1001, 2, 1, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1002, 3, 1, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1003, 1, 2, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1004, 2, 2, 5 );
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1005, 3, 2, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1006, 4, 2, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1007, 1, 3, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1008, 2, 3, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1009, 3, 3, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1010, 4, 3, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1011, 1, 4, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1012, 2, 4, 5);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1013, 3, 4, 5);
 
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1014, 1, 1, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1015, 2, 1, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1016, 1, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1017, 2, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1018, 3, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1019, 4, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1020, 5, 2, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1021, 1, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1024, 4, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1025, 5, 3, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1026, 1, 4, 6, true);
-insert into seat (seat_id, chair_number, chair_row, hall_hall_id, available) values(1027, 1, 4, 6, true);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1014, 1, 1, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1015, 2, 1, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1016, 1, 2, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1017, 2, 2, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1018, 3, 2, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1019, 4, 2, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1020, 5, 2, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1021, 1, 3, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1022, 2, 3, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1023, 3, 3, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1024, 1, 4, 6);
+insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1025, 2, 4, 6);
 
 
 #friendships

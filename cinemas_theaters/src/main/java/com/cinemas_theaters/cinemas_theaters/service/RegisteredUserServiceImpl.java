@@ -54,10 +54,10 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
         if(user.getFriendships().containsKey(friend))
             return false;
         else {
-            Friendship friendship = new Friendship(user, friend, FriendshipStatus.Pending);
-            Friendship inverse = new Friendship(friend, user, null);
-            user.getFriendships().put(friend, friendship);
-            friend.getFriendships().put(user, inverse);
+            Friendship user_friend_friendsip = new Friendship(user, friend, FriendshipStatus.Pending);
+            Friendship friend_user_friendsip = new Friendship(friend, user, null);
+            user.getFriendships().put(friend, user_friend_friendsip);
+            friend.getFriendships().put(user, friend_user_friendsip);
 
             this.registeredUserRepository.save(user);
             this.registeredUserRepository.save(friend);
@@ -102,15 +102,15 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Transactional(readOnly = false)
     public boolean removeFriend(RegisteredUser user, RegisteredUser friend){
         if(user.getFriendships().containsKey(friend) && friend.getFriendships().containsKey(user)) {
-            Friendship friendship = user.getFriendships().get(friend);
-            Friendship inverse = friend.getFriendships().get(user);
+            Friendship user_friend_friendsip = user.getFriendships().get(friend);
+            Friendship friend_user_friendsip = friend.getFriendships().get(user);
 
             user.getFriendships().remove(friend);
 
             friend.getFriendships().remove(user);
 
-            this.friendshipRepository.delete(friendship);
-            this.friendshipRepository.delete(inverse);
+            this.friendshipRepository.delete(user_friend_friendsip);
+            this.friendshipRepository.delete(friend_user_friendsip);
             this.registeredUserRepository.save(user);
             this.registeredUserRepository.save(friend);
 

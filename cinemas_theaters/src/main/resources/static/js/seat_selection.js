@@ -84,7 +84,7 @@ function formSeats(projection){
 
     for (var s=0; s<seats.length; s++){
 
-        if (seats[s].available == false){
+        if (projection.reservedSeats.includes(seats[s].id + "")){
             unavailable_seats.push(seats[s].chairRow + "_" + seats[s].chairNumber);
         }
 
@@ -142,7 +142,7 @@ $(document).on("click", "#book-ticket-btn", function(){
         },
         success: function(data){
             //localStorage.setItem("currentUserToken", response.getResponseHeader("Authorization"));
-             alert("Great success!")
+             alert("Reservation successful!")
              location.reload();
         },
         error: function(response){

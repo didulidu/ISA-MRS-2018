@@ -3,6 +3,7 @@ package com.cinemas_theaters.cinemas_theaters.domain.dto;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Hall;
 
 import java.util.Date;
+import java.util.List;
 
 public class ProjectionDisplayDTO {
 
@@ -10,17 +11,19 @@ public class ProjectionDisplayDTO {
     private String showTitle;
     private String date;
     private Integer price;
+    private List<String> reservedSeats;
     private Hall hall;
 
     public ProjectionDisplayDTO() {
     }
 
-    public ProjectionDisplayDTO(Long id, String showTitle, String date, Integer price, Hall hall) {
+    public ProjectionDisplayDTO(Long id, String showTitle, String date, Integer price, List<String> reservedSeats, Hall hall) {
         this.id = id;
         this.showTitle = showTitle;
         this.date = date;
         this.price = price;
         this.hall = hall;
+        this.reservedSeats = reservedSeats;
     }
 
     public Long getId() {
@@ -53,6 +56,14 @@ public class ProjectionDisplayDTO {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public List<String> getReservedSeats() {
+        return reservedSeats;
+    }
+
+    public void setReservedSeats(List<String> reservedSeats) {
+        this.reservedSeats = reservedSeats;
     }
 
     public Hall getHall() {

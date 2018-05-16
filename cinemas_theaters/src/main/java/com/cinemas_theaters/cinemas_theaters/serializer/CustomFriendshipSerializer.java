@@ -30,8 +30,8 @@ public class CustomFriendshipSerializer extends StdSerializer<Map<RegisteredUser
 
         List<FriendDTO> ids = new ArrayList<FriendDTO>();
         for (Friendship friendship : friendships.values()) {
-            ids.add(new FriendDTO(friendship.getSecondUser().getName(), friendship.getSecondUser().getLastname(),
-                    friendship.getSecondUser().getUsername(), friendship.getStatus()));
+            ids.add(new FriendDTO( friendship.getSecondUser().getUsername(), friendship.getSecondUser().getName(),
+                    friendship.getSecondUser().getLastname(), friendship.getStatus()));
         }
         generator.writeObject(ids);
     }

@@ -5,15 +5,15 @@ import com.cinemas_theaters.cinemas_theaters.domain.enums.FriendshipStatus;
 public class FriendDTO {
 
     String username;
-    String fistname;
+    String firstname;
     String lastname;
     FriendshipStatus status;
 
     public FriendDTO() { }
 
-    public FriendDTO(String username, String fistname, String lastname, FriendshipStatus status) {
+    public FriendDTO(String username, String firstname, String lastname, FriendshipStatus status) {
         this.username = username;
-        this.fistname = fistname;
+        this.firstname = firstname;
         this.lastname = lastname;
         this.status = status;
     }
@@ -26,12 +26,12 @@ public class FriendDTO {
         this.username = username;
     }
 
-    public String getFistname() {
-        return fistname;
+    public String getFirstname() {
+        return firstname;
     }
 
-    public void setFistname(String fistname) {
-        this.fistname = fistname;
+    public void setFirstname(String firstname) {
+        this.firstname = firstname;
     }
 
     public String getLastname() {

@@ -22,10 +22,6 @@ public class Seat  implements Serializable {
     @NotNull
     private Integer chairNumber;
 
-    @Column(nullable = false)
-    @NotNull
-    private boolean available;
-
     @ManyToOne
     //@JoinColumn(name = "hall_id")
     @JsonBackReference
@@ -36,14 +32,13 @@ public class Seat  implements Serializable {
     @JsonIgnore
     private Ticket ticket;
 
-    public Seat(){this.available = true;}
+    public Seat(){}
 
     public Seat(Long id, Integer chairRow, @NotNull Integer chairNumber, Hall hall) {
         this.id = id;
         this.chairRow = chairRow;
         this.chairNumber = chairNumber;
         this.hall = hall;
-        this.available = true;
     }
 
     public Long getId() {
@@ -78,11 +73,4 @@ public class Seat  implements Serializable {
         this.hall = hall;
     }
 
-    public boolean isAvailable() {
-        return available;
-    }
-
-    public void setAvailable(boolean available) {
-        this.available = available;
-    }
 }

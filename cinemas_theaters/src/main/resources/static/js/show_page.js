@@ -7,7 +7,6 @@ $(document).ready(function(){
         type: "GET",
         dataType: "json",
         success: function(data){
-        	alert(JSON.stringify(data));
         	forward_projections(data);
         },
         error: function (response) {
@@ -42,7 +41,6 @@ function forward_projections(data){
 
 // Izmeniti da ne radi sa show id nego sa projection id. Dodati projection id i hall id u tabelu
  function foo(id){
-	alert("buja")
 	if(localStorage.getItem("currentUser")!=undefined){
         if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "RegisteredUser")
             window.location.replace("seat_selection.html?id=" + id);  

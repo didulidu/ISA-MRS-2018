@@ -22,9 +22,7 @@ import javax.validation.Valid;
 import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
-import java.util.ArrayList;
-import java.util.Date;
-import java.util.List;
+import java.util.*;
 
 @RestController
 @RequestMapping(value = "/projection")
@@ -82,7 +80,10 @@ public class ProjectionController {
         HttpHeaders headers = new HttpHeaders();
 
         Projection p = this.projectionService.getById(Long.parseLong(id));
-        ProjectionDisplayDTO projectionDisplayDTO = new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall());
+
+        //Collections.reverse(p.getHall().getSeats());
+
+        ProjectionDisplayDTO projectionDisplayDTO = new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats() , p.getHall());
 
         return new ResponseEntity<ProjectionDisplayDTO>(projectionDisplayDTO, headers, HttpStatus.OK);
     }

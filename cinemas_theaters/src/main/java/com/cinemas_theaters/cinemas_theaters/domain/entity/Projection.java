@@ -5,7 +5,9 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
+import java.util.ArrayList;
 import java.util.Date;
+import java.util.List;
 
 @Entity
 @Table(name = "`projection`")
@@ -26,16 +28,21 @@ public class Projection  implements Serializable {
     //@JsonIgnore
     private Show show;
 
+    @ElementCollection(targetClass=String.class)
+    @CollectionTable(name = "reserved_seats" )
+    @Column(name = "reserved_seats")
+    private List<String> reservedSeats;
+
     @ManyToOne(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     //@JoinColumn(name = "hall_hall_id")
-
     private Hall hall;
 
     @Column(nullable = false)
     @NotNull
     private Integer price;
 
-    public Projection(){}
+    public Projection(){reservedSeats = new ArrayList<>();
+    }
 
     public Projection(Long id, @NotNull String date, @NotNull Show show, Hall hall, @NotNull Integer price) {
         this.id = id;
@@ -43,6 +50,7 @@ public class Projection  implements Serializable {
         this.show = show;
         this.hall = hall;
         this.price = price;
+        reservedSeats = new ArrayList<>();
     }
 
 
@@ -84,6 +92,14 @@ public class Projection  implements Serializable {
 
     public void setPrice(Integer price) {
         this.price = price;
+    }
+
+    public List<String> getReservedSeats() {
+        return reservedSeats;
+    }
+
+    public void setReservedSeats(List<String> reservedSeats) {
+        this.reservedSeats = reservedSeats;
     }
 }
 

@@ -1,0 +1,347 @@
+#new-offer-text{
+    resize: none;
+}
+
+#navigation-bar {
+    background-color: #3c3c3c!important;
+}
+
+.navbar{
+    margin-bottom: 0!important;
+}
+
+.navbar-header img {
+    max-width:100px!important;
+    margin-top: -40px!important;
+}
+
+.navbar-inverse {
+    border-width: 0;
+    top: 0;
+}
+
+.btn-margin-left {
+    margin-left: 2px;
+    vertical-align: -15px;
+    background-color: #f89406;
+    color: white;
+}
+
+.btn-margin-right {
+    margin-right: 2px;
+    vertical-align: -15px;
+    background-color: #f89406;
+    color: white;
+}
+
+.sort-button {
+    width: 20px;
+    height: 20px;
+    background-color: transparent;
+    text-align: center;
+    vertical-align: middle;
+    padding: 0%;
+}
+
+.sort-button .glyphicon {
+    color: #222222;
+}
+
+#button-form-login, #button-registration-rest-manager,
+#button-registration-sys-manager, #button-registration-user, #button-registration-employee, #button-registration-restaurant,
+#button-registration-bidder, #add-bidder{
+    vertical-align: -15px;
+    background-color: #f89406;
+    color: white;
+}
+
+.btn-navbar {
+    vertical-align: -15px;
+    background-color: transparent;
+    color: white;
+}
+
+.btn-navbar .glyphicon {
+    color: #f89406;
+}
+
+#button-check-reservation-information {
+    background-color: #f89406;
+    color: white;
+}
+
+#link-registration-barman, #link-registration-chef, #link-registration-waiter, #link-registration-manager-system,
+#link-registration-manager-restaurant, #link-personal-reservations, #link-invited-reservations, #link-registration-bidder,
+#link-announce-offer, #link-user-registration, #link-logout, #link-registration-restaurant, #link-waiter-table-assign,
+#link-employee-schedule-assign, #link-restaurant-profile, #link-restaurant-tables, #link-new-waiter-reservation,
+ #link-all-offers, #link-restaurant-report, #link-menu-item-report, #link-waiter-report{
+    background-color: white;
+    color: #f89406;
+}
+
+#login-username, #login-password, #registration-user-name, #registration-user-lastname, #registration-user-email,
+#registration-user-username, #registration-user-password, #registration-user-password2 {
+    height: 50px;
+    margin: 0;
+    padding: 0 30px;
+    vertical-align: middle;
+    background: #f8f8f8;
+    border: 3px solid #ddd;
+    font-family: 'Roboto', sans-serif;
+    font-size: 16px;
+    font-weight: 300;
+    line-height: 50px;
+}
+
+#filter-restaurants-value{
+    margin: 0;
+    padding: 0 40px;
+    vertical-align: middle;
+    background: #f8f8f8;
+}
+
+#select-sorter-restaurants, #select-filter-restaurants
+{
+    width: 100%!important;
+}
+
+.input-group-addon {
+    background-color: #f89406;
+}
+
+btn .glyphicon, td .glyphicon, .input-group-addon .glyphicon{
+    color: white;
+}
+
+th, tr {
+    text-align: center;
+    vertical-align: middle;
+}
+
+td > strong {
+    vertical-align: middle;
+}
+
+td {
+    text-align: center;
+    vertical-align: middle;
+}
+
+.table tbody tr:hover td {
+    background-color: #f9f9f7;
+    border-color: #f9f9f7;
+}
+
+.form-add-friend, .form-delete-friend, .form-accept-request, .form-delete-request, .form-details-cancel-reservation {
+    margin-bottom: 0%;
+}
+
+.friends-container, .personal-reservation-information-container,
+.friend-reservation-information-container, #home-visits-container, #home-employees-container,#home-offers-container{
+    padding-top: 2%;
+}
+
+.friend-request-container, .restaurant-reservation-container, .personal-reservation-friends-container, .personal-reservation-orders-container,
+.friend-reservation-orders-container{
+    padding-top: 6%;
+}
+
+.btn-delete-friend, .btn-add-friend, .btn-accept-friend-request, .btn-delete-friend-request, .btn-visit-info{
+    height: 25px;
+    text-align: center;
+    vertical-align: middle;
+    padding-top: 1%;
+}
+
+.btn-accepted{
+    background-color: #8ff805;
+}
+
+.btn-denied{
+    background-color: #f82104;
+}
+
+button.btn:hover { opacity: 0.6; color: #fff; }
+
+button.btn:focus { outline: 0; opacity: 0.6; color: #fff; }
+
+button.btn:active:focus, button.btn.active:focus { outline: 0; opacity: 0.6; color: #fff; }
+
+#row-login, #row-registration {
+    max-width: 100%;
+    max-height: 100%;
+}
+
+#reservation-invited-friends-table, #reservation-friends-table {
+    margin: auto;
+    width: 90%;
+}
+
+.reservation-left, .reservation-right {
+    display: inline;
+    width: 48%;
+    text-align: center;
+    margin: auto;
+    float: left;
+}
+
+.reservation-left {
+    margin-right: 20px!important;
+}
+
+.inner-addon {
+    position: relative;
+}
+
+.inner-addon .glyphicon {
+    position: absolute;
+    padding: 15px;
+    height: 95%;
+    pointer-events: none;
+    color: #f89406;
+    -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
+}
+
+.left-addon .glyphicon {
+    left: 0px;
+}
+
+.form-top {
+    overflow: hidden;
+    margin-top: 15px;
+    padding: 15px 15px 15px 15px;
+    text-align: center;
+}
+
+.form-top h1 {
+    font-family: 'Satisfy', cursive, bold;
+    margin-top: 5px;
+    color: white;
+}
+
+.form-top p{
+    color: white;
+}
+
+.form-top img {
+    margin-left: 30px;
+}
+
+.form-bottom {
+    padding: 15px 25px 50px 25px;
+    text-align: center;
+}
+
+.form-bottom form button.btn {
+    width: 40%;
+    font-family: 'Satisfy', cursive, bold;
+}
+
+.form-bottom-text {
+    padding-top: 20px;
+    color: white;
+    font-size: 16px;
+}
+
+.form-bottom label {
+    padding-top: 20px;
+    color: white;
+}
+
+.form-bottom-text a span {
+    font-style: oblique;
+    color: #f89406;
+}
+
+.restaurant-reservation-container {
+    margin-top: 30px;
+}
+
+.scrollable-menu {
+    height: auto;
+    max-height: 200px;
+    overflow-x: hidden;
+    background-color: #3c3c3c;
+}
+
+#user-notifications li {
+    padding: 5px;
+    margin: 5px;
+}
+
+.notification-add-friend, .notification-add-invite{
+    background-color: #a1ccdf;
+    color: white;
+    padding: 2px;
+    -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
+}
+
+.notification-remove-friend, .notification-remove-invite {
+    background-color: #d36952;
+    color: white;
+    padding: 2px;
+    -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
+}
+
+.notification-accept-request, .notification-bid-accepted, .notification-accept-invite{
+    background-color: #b3d366;
+    color: white;
+    padding: 2px;
+    -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
+}
+
+.notification-decline-request, .notification-bid-denied, .notification-ignore-invite{
+    background-color: #d3b693;
+    color: white;
+    padding: 2px;
+    -moz-border-radius: 0 0 4px 4px; -webkit-border-radius: 0 0 4px 4px; border-radius: 0 0 4px 4px;
+}
+
+.login-content, .registration-content, .reservation-main-tab-content{
+    position:relative;
+    z-index:2;
+}
+
+.login-image{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    background:url('https://lh3.googleusercontent.com/MpCLvQtCWhtsRJnlSuOthoZMbZ9ZzjO1SAeYkuLpH3ImWDgqd0l5KeCecnVhKoh8_-qSBmGihVuDWmdcL61-6EPG8j0j7tzUHADS20tO7fXwDA0k5fPDvOSMvvM__M2IFRP2O1J7RIiCrsbIz3sn49LFHIFnuOxiVvRIdk7etXyRL7bDvuaV6l9sWRtZLINEtYUbIHakGgMzYrY1TydM6ubtKJwJJtkrF5kWSKp2MDBUkWZ53yCL03S9j49k04IFsdXL2Y4aHNxeZ-HBB2i36iYjjl-qMfrmB9u3uC3eob60gVCZbdUA7W9_82kLCuL8UcOhVJPHsow4YcxFGjVIrwCdVP-D5baFEz6UGbxZmJrcmmti-Rt417dAPAll_zdKYev9bArvTMrrbCkfmsU_zQkU0D6ZzPrjBr3hJvHnZnauKAMWAKkTCZTwl1spsq9py8CdSUDdvVM9njxQxL6zF2RZ9gRarSEqlrn5K-t3lOH_rQayIONrGydtjxQlQDquXSjT_G6kHZQrj2-3HdY8U3HC-mUG8i00xsv6dUV33Tm4hGx-b5P5WIWZsGtxIUXBFHY02ZBQ6sEOSAM6KXFdK4m7m-bh0CGgbQBDOKvKqKlI96SgOEvYafK2oze1oyHpjlJUHsgJxg4nP9tqOczu-hjPjeDwC7IJi1nJEh5S=w900-h465-no');
+    background-size:cover;
+    z-index:1;
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(2px);
+}
+
+.registration-image{
+    position:absolute;
+    left:0;
+    right:0;
+    top:0;
+    bottom:0;
+    background:url('https://lh3.googleusercontent.com/F66u-CpJCYyHOsYU9CruJjIxN_Zgdp3sE_B--12FeQdyI7rV_n5d_obOXmybCxtpXDx-CH1gn1Zody9GT1wbudkwUPW5D8w-DSZXIXE2S6ZCDqjoOOcUODDKK-4fhveWZOHjwXrL6kYqwjBMn4i5XOsE59vQngQHifU9DAuJqXRuylt3tOXZqiNt_uFF9w8RCFlJVCcE9iUgJUSee6On4W-mdk6YZ0jbogIotSifWHUeEj_OyrWjmLhKt6Swgwekmakfhs_QuMEKjQ2lfPl7ejh8QbofIiILI4xjo0jiMIlwN1iBTf5UQQk8uRBd8uGWcWwInljC7fGiiUAMnMR3OAhSZhEzW7BvumNY7bpIzG2j-6Xo-WU9MNgi_FDAvKO-D4rqZWg48P5Z5AwNwdzvbrrJLZldsD7XqoasnXnYbndTvFdNm8mPnwEL72rcQKZP1dEatsaEgbD3N08Ao8V2jn-8ZrD4_IioXuPeUuCdaUjYs4sRs3lwc2JgCf6ZGn_jJLHnQupb5lbFHsPKmG6XWgXmXuz-fWY4vNNzveg3h-c0feBGDqx6lQppwC5l7EaEm-pHPsORbFeOE5YZt4oBnXQRwQExN-v2sAGQDOGTYDalR_dhEwKqGdH-MY_lpr6KlpfJjNZJEm0RlnWBjb_HtcFu7oFdq6tcVhJMUbdO=w640-h428-no');
+    background-size:cover;
+    z-index:1;
+    -webkit-filter: blur(10px);
+    -moz-filter: blur(10px);
+    -o-filter: blur(10px);
+    -ms-filter: blur(10px);
+    filter: blur(2px);
+}
+
+.reservation-image{
+    position:absolute;
+    margin-top: 50px;
+    left:0;
+    right:0;
+    top:0;
+    height: 300px;
+    background:url('https://lh3.googleusercontent.com/uaX7XRetBjEDhfFpK9ymRHPh5zbPVbddRgAqq7Cn6-nKKgDX2GpE8g-gVO10C4ZmsUES8Q7eogUIZzrUhml0THNs2quGBGtjENc-QyML6mUZQtGDr0Y9srvoq_HVNSPkx5gUAim7kr-o0KH3qy2HD87xP9uK_OLjxfKiR3qDe24ISi3zhzyPCEuMNyEzK_vIiFlVt6rkG1v8g0ZHt9AfBFEGLqaDCbdX4ulS4_NrCBi3b2XYNlEfV7RzUe8s_Qndr4d-jOtRqV2Vj39bNbIyDfyGdZFAugEI8umGLgCj-gJYg0Cervmoo2HBAJoty4LTWbOQiDwRMBAngDDSPUlOl9EdiXlIiZ2B64-u_2cnOYNkd32MIUJ_XdU2I8fTeIGFd9nxRRZ0uylrwFDRsVkPS1VB6QuXgBA7CKdWd1C3Z6x1EWdHoRQyklOXEsYkHmbKqiOL_Qw8X_qd0Lup05Y5L2Ad2sE9wR9OQ_9GQxKouucvWnpUoIu-cO8vebNBPFJXt7JqdYeA7tb62jF9IYu-vOZAgrokr6GpT9WMyRee5Zxys-oK6KTE6Yu8JTrCNefrReHs0fKVPOEtaiTihsA5CHZWUEGKKr1SLpwlqYLN4308d7QWc255uv6DqlGp8PjkNg2bBn8-n3r81escfuYZ6AtZf-xhTD528Ho0GC9TPA=w953-h293-no');
+    background-size:cover;
+    filter: blur(2px);
+}
