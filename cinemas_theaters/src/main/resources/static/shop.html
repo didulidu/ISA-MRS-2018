@@ -11,6 +11,28 @@
 </head>
 <body>
     <h1>SHOP</h1>
+    <input type="text" name="search-field" id="search-field">
+    <button id="search-btn" onclick="searchItems()">SEARCH</button>
+
+    <script>
+        function searchItems() {
+            $.ajax({
+                url: "/items/search?search=name:" + $("#search-field").val(),
+                type: "GET",
+                contentType: "application/json",
+
+                success: function (data) {
+                    console.log(data);
+                },
+                error: function (response) {
+                    console.log(response.status);
+                }
+            })
+        }
+        
+    </script>
+
+
     <div id="items-container"></div>
 </body>
 </html>

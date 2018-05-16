@@ -2,6 +2,7 @@ $(document).ready(function () {
    getItems();
 });
 
+
 $(document).on('click', '.buy-btn', function(){
    var id = this.id.split("_")[1];
    $.ajax({

@@ -1,6 +1,10 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.domain.entity.TheatreItem;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.UserItem;
+import com.cinemas_theaters.cinemas_theaters.repository.ItemSpecificationsBuilder;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -12,6 +16,8 @@ import com.cinemas_theaters.cinemas_theaters.service.ItemService;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Item;
 
 import java.util.List;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 @RestController
 @RequestMapping(value = "/items")
@@ -24,12 +30,19 @@ public class ItemController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity add(@RequestBody ItemDTO item){
-        Boolean success = this.itemService.add(item.getName(), item.getDescription(), item.getPrice());
+        Boolean success;
+        if(item.getType().equals("user")) {
+            success = this.itemService.add(item.getName(), item.getDescription(), item.getDuration());
+        }else if (item.getType().equals("theatre")){
+            success = this.itemService.add(item.getName(), item.getDescription(), item.getPrice(), item.getQuantity());
+        }else{
+            success = false;
+        }
         if (success){
-            return new ResponseEntity(HttpStatus.CREATED);
+            return ResponseEntity.status(HttpStatus.CREATED).body(null);
         }
         else{
-            return new ResponseEntity(HttpStatus.BAD_REQUEST);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(item.getType());
         }
     }
 
@@ -76,16 +89,30 @@ public class ItemController {
         if(item != null){
             item.setName(itemDTO.getName());
             item.setDescription(itemDTO.getDescription());
-            item.setPrice(itemDTO.getPrice());
+            if (item instanceof TheatreItem) {
+                ((TheatreItem)item).setPrice(itemDTO.getPrice());
+            }
             this.itemService.modify(item);
 
             return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
         }
         else{
-            this.itemService.add(itemDTO.getName(), itemDTO.getDescription(), itemDTO.getPrice());
 
-            return ResponseEntity.status(HttpStatus.CREATED).body(null);
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
+    }
 
+    @GetMapping( value = "/search")
+    public ResponseEntity searchItems(@RequestParam(value = "search") String search){
+        ItemSpecificationsBuilder builder = new ItemSpecificationsBuilder();
+        Pattern pattern = Pattern.compile("(\\w+?)(:|<|>)(\\w+?),");
+        Matcher matcher = pattern.matcher(search + ",");
+        while (matcher.find()){
+            builder.with(matcher.group(1), matcher.group(2), matcher.group(3));
+        }
+        Specification<Item> spec = builder.build();
+
+
+        return ResponseEntity.ok(itemService.findAll(spec));
     }
 }

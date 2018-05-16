@@ -6,7 +6,6 @@ import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
-import sun.plugin2.message.Serializer;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;

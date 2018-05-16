@@ -1,13 +1,17 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Theatre;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.TheatreItem;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.UserItem;
+import com.cinemas_theaters.cinemas_theaters.repository.TheatreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.http.ResponseEntity;
+import org.springframework.data.jpa.domain.Specification;
 import org.springframework.stereotype.Service;
 
 import com.cinemas_theaters.cinemas_theaters.repository.ItemRepository;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Item;
-import org.springframework.web.bind.annotation.ResponseBody;
 
+import java.time.Duration;
 import java.util.List;
 import java.util.Optional;
 
@@ -17,17 +21,38 @@ public class ItemServiceImpl implements ItemService {
     @Autowired
     private ItemRepository itemRepository;
 
+    @Autowired
+    private TheatreRepository theatreRepository;
 
     @Override
-    public Boolean add(String name, String description, Double price){
-        this.itemRepository.save(new Item(name, description, price));
+    public Boolean add(String name, String description, Double price, Long quantity){
+        Optional<Theatre> theatreDB = theatreRepository.findById(Long.valueOf(132));
+        if(theatreDB.isPresent()){
+            this.itemRepository.save(new TheatreItem(name, description, price, quantity, theatreDB.get()));
+            return Boolean.TRUE;
+        }else{
+            return Boolean.FALSE;
+        }
+    }
+
+    @Override
+    public  Boolean add(String name, String description, String duration){
+        this.itemRepository.save(new UserItem(name, description, stringToDuration(duration)));
         return Boolean.TRUE;
     }
+
+    private Duration stringToDuration(String duration){
+        return Duration.ofDays(2);
+    }
+
 
     @Override
     public List<Item> findAll(){
         return this.itemRepository.findAll();
     }
+
+    @Override
+    public List<Item> findAll(Specification<Item> spec){ return this.itemRepository.findAll(spec);}
 
     @Override
     public Item findById(Long id){

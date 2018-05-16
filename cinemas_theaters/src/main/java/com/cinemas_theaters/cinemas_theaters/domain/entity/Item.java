@@ -9,6 +9,7 @@ import java.util.Set;
 
 @Entity
 @Table(name = "ITEM")
+@Inheritance(strategy = InheritanceType.JOINED)
 public class Item  implements Serializable {
 
     private Long id;
@@ -17,14 +18,11 @@ public class Item  implements Serializable {
 
     private String description;
 
-    private Double price;
-
     public Item(){}
 
-    public Item(String _name, String _description, Double _price){
-        name = _name;
-        description = _description;
-        price = _price;
+    public Item(String name, String description) {
+        this.name = name;
+        this.description = description;
     }
 
     @Id
@@ -59,14 +57,4 @@ public class Item  implements Serializable {
         this.description = description;
     }
 
-
-    @Column(nullable = false)
-    @NotNull
-    public Double getPrice() {
-        return price;
-    }
-
-    public void setPrice(Double price) {
-        this.price = price;
-    }
 }

@@ -10,22 +10,26 @@ public class Offer {
 
     private Long id;
 
-    //private RegisteredUser user;
+    private RegisteredUser user;
 
     private Item item;
 
     private Double bid;
 
-    public Offer() {    }
+    public Offer( RegisteredUser user, Item item, Double bid) {
 
-    /*public Offer(RegisteredUser user, Item item) {
         this.user = user;
         this.item = item;
+        this.bid = bid;
     }
-*/
-    public Offer(Item item, Double bid){
+
+    public Offer(UserItem item, Double bid){
         this.item = item;
         this.bid = bid;
+    }
+
+    public Offer(TheatreItem item){
+        this.item = item;
     }
 
     @Id
@@ -39,9 +43,8 @@ public class Offer {
         this.id = id;
     }
 
-/*
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.LAZY)
     @JoinColumn(name = "USER_ID")
     public RegisteredUser getUser() {
         return user;
@@ -50,7 +53,6 @@ public class Offer {
     public void setUser(RegisteredUser user) {
         this.user = user;
     }
-*/
 
     @ManyToOne
     @JoinColumn(name = "ITEM_ID")
@@ -64,7 +66,6 @@ public class Offer {
     }
 
     @Column
-    @NotNull
     public Double getBid() {
         return bid;
     }
