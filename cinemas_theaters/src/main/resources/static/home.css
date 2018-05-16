@@ -3,18 +3,18 @@
     transition: 0.3s;
     margin-left: 5px;
     margin-right: 5px;
-    height: 200px;
+    margin-top: 15px;
+    margin-bottom:5px;
     border: 2px solid red;
+    height:300px;
 }
 
 .card img{
-    height:50%;
+    height:60%;
 }
 
 .card-body{
-	height: 200px;
-
-	overflow-y:scroll;
+    overflow-y:scroll;
 }
 
 .cards{
@@ -44,5 +44,5 @@
 
 
 .h1{
-	text-align: center;
+    text-align: center;
 }
