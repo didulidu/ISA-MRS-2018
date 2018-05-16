@@ -6,7 +6,7 @@ $(document).ready(function(){    if(index != -1){
     var index = document.URL.indexOf("?id=");
 
         id = document.URL.substring(index+4);
-        id = 10;
+//        id = 10;
         fetchProjectionData(id);
     }
 });
