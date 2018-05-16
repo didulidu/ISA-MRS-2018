@@ -1,5 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
+
 import javax.persistence.*;
 
 @Entity
@@ -40,6 +42,7 @@ public class TheatreItem extends Item {
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     public Theatre getTheatre() {
         return theatre;
     }

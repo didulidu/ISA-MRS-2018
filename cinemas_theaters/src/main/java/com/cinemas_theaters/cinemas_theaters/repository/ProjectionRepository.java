@@ -23,6 +23,7 @@ public interface ProjectionRepository extends JpaRepository<Projection, Long> {
     List<Projection> findProjectionsByHall(@Param("hall_id") Long hall_id);
 
 
+
     Optional findById(Long id);
 
     Projection getById(Long id);

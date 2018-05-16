@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
@@ -28,6 +29,7 @@ public class UserItem extends Item {
     }
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     public User getUser() {
         return user;
     }

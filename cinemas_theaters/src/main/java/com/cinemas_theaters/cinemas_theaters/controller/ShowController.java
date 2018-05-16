@@ -1,9 +1,12 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.domain.dto.ProjectionDisplayDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.ShowRepertoireDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TheatreDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Projection;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Show;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Theatre;
+import com.cinemas_theaters.cinemas_theaters.service.ProjectionService;
 import com.cinemas_theaters.cinemas_theaters.service.ShowService;
 import com.cinemas_theaters.cinemas_theaters.service.TheatreService;
 import org.modelmapper.ModelMapper;
@@ -24,6 +27,8 @@ public class ShowController {
     @Autowired
     private ShowService showService;
 
+    @Autowired
+    private ProjectionService projectionService;
 
     //{id} je id pozorista za koji se traze show-ovi
     @RequestMapping(
@@ -48,6 +53,31 @@ public class ShowController {
     }
 
 
+    @RequestMapping(
+            value = "/getProjection/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<?> getProjections(@PathVariable("id") String id){
+        //JwtUser user = this.jwtService.getUser(userToken);
+        //HttpHeaders headers = new HttpHeaders();
+        //headers.add("Authorization", this.jwtService.getToken(user));
+
+        HttpHeaders headers = new HttpHeaders();
+
+        List<Projection> projections = this.projectionService.getAllProjections(Long.parseLong(id));
+        List<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<>();
+
+        //s.getId()
+        for (Projection p: projections){
+            System.out.println(p.getHall());
+            projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall()));
+        }
+
+        return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, headers, HttpStatus.OK);
+    }
+
+
+
     @GetMapping(
             value = "/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
@@ -61,6 +91,10 @@ public class ShowController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
         }
     }
+
+
+
+
 
     private Show convertDTOToTheatre(ShowRepertoireDTO showRepertoireDTO)
     {

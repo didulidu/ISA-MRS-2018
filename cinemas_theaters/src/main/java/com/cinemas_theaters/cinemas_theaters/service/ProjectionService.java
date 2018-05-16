@@ -10,13 +10,15 @@ public interface ProjectionService {
 
     void add(Projection show);
 
-    List<Projection> getAllProjections(Long theater_id);
+    List<Projection> getAllProjections(Long show_id);
 
     Optional findById(Long id);
 
     Projection getById(Long id);
 
     Projection findSpecificProjection(Long show_id, Long id);
+
+    List<Projection> findProjectionsByShow(Long show_id);
 
     List<Projection> findProjectionsByHall(Long hall_id);
 }

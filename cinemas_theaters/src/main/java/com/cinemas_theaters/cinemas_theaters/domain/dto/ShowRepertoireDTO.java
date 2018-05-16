@@ -8,6 +8,7 @@ public class ShowRepertoireDTO {
     private String genre;
     private Integer duration;
 
+
     public ShowRepertoireDTO() {}
 
     public ShowRepertoireDTO(Long id, String title, String genre, Integer duration, String posterURL) {

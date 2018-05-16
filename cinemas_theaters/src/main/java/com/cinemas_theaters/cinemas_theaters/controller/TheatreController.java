@@ -111,11 +111,9 @@ public class TheatreController {
             consumes = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity add(@RequestBody TheatreDTO theatreDTO){
-
         this.theatreService.add(convertDTOToTheatre(theatreDTO));
         return ResponseEntity.status(HttpStatus.CREATED).body(null);
     }
-
     private Theatre convertDTOToTheatre(TheatreDTO theatreDTO)
     {
         ModelMapper mapper = new ModelMapper();

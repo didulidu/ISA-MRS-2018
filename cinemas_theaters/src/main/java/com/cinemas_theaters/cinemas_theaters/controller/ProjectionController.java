@@ -46,28 +46,28 @@ public class ProjectionController {
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
-    @RequestMapping(
-            value = "/getProjection/{id}",
-            method = RequestMethod.PUT,
-            produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<?> getProjections(@PathVariable("id") String id){
-        //JwtUser user = this.jwtService.getUser(userToken);
-        //HttpHeaders headers = new HttpHeaders();
-        //headers.add("Authorization", this.jwtService.getToken(user));
-
-        HttpHeaders headers = new HttpHeaders();
-
-        List<Projection> projections = this.projectionService.getAllProjections(Long.parseLong(id));
-        List<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<>();
-
-        //s.getId()
-        for (Projection p: projections){
-            System.out.println(p.getHall());
-            projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall()));
-        }
-
-        return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, headers, HttpStatus.OK);
-    }
+//    @RequestMapping(
+//            value = "/getProjection/{id}",
+//            method = RequestMethod.PUT,
+//            produces = MediaType.APPLICATION_JSON_VALUE)
+//    public ResponseEntity<?> getProjections(@PathVariable("id") String id){
+//        //JwtUser user = this.jwtService.getUser(userToken);
+//        //HttpHeaders headers = new HttpHeaders();
+//        //headers.add("Authorization", this.jwtService.getToken(user));
+//
+//        HttpHeaders headers = new HttpHeaders();
+//
+//        List<Projection> projections = this.projectionService.getAllProjections(Long.parseLong(id));
+//        List<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<>();
+//
+//        //s.getId()
+//        for (Projection p: projections){
+//            System.out.println(p.getHall());
+//            projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall()));
+//        }
+//
+//        return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, headers, HttpStatus.OK);
+//    }
 
     //pronalazi projekciju sa svojim id-jem
     @RequestMapping(
@@ -86,6 +86,9 @@ public class ProjectionController {
 
         return new ResponseEntity<ProjectionDisplayDTO>(projectionDisplayDTO, headers, HttpStatus.OK);
     }
+
+
+
 
     public LocalDateTime str2Date(String dateS){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");

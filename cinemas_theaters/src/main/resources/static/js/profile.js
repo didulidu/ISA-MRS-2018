@@ -10,8 +10,9 @@ function addTheaterAdminWidgets(){
     }
 }
 
-$(document).on('click', ".card", function(){
-    alert("Saimaaaa");
+$(document).on('click', ".show-card", function(){
+    var show_id = $(this).attr('id');
+    window.location.replace("show_page.html?id="+show_id);
 });
 
 $("#add-show").on('click', function(){
@@ -131,18 +132,21 @@ function showRepertoire(){
 function addCards(showsList){
         var Kartice = "<div class=\"cards\" id = \"shows\" style=\"display:flex; flex-wrap: wrap;\">"
            showsList.forEach(function(show){
-            alert(JSON.stringify(show));
-            var Kartica = "<div class=\"card\" style=\"width: 20%;\" id=\""+show["id"]+"\">"
+            var Kartica = "<div class=\"card show-card\" style=\"width: 20%;\" id=\""+show["id"]+"\">"
             +"<img class=\"card-img-top\" src=\""+show["posterURL"]+"\" alt=\"Card image cap\">"
             +"<div class=\"card-body\" style=\"height: 140px;\">"
-            +"<h5 class=\"card-title\">"+show["title"]+"</h5>"
-            +"<p class=\"card-text\">"+show["genre"]+"</p>"
-            +"<p class=\"card-duration\">"+show["duration"]+"</p>"
+            +"<h5 class=\"card-title\"><h7>Title:</h7> "+show["title"]+"</h5>"
+            +"<p class=\"card-text\"><h7>Genre:</h7>"+show["genre"]+"</p>"
+            +"<p class=\"card-duration\"><h7>Duration:</h7>"+show["duration"]+"</p>"
             +"</div>"
             +"<div id=\"rateYo\"></div>"
+            +"<button type='button' class='btn btn-success' id='add-show'>Add Projection</button>"
             +"</div>";
             Kartice+=Kartica;
         });
         Kartice+="</div>";
         $("#nav-repertoire").append(Kartice);
 }
+
+
+

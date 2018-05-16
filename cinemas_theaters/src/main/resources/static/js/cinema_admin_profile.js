@@ -1,6 +1,9 @@
 $(document).ready(function(){
 	getAdminTheaters();
 });
+
+
+
 function getAdminTheaters(){
     $.ajax({
                 url: "/theatre/getTheatersByAdmin",
@@ -19,7 +22,7 @@ function getAdminTheaters(){
 }
 
 function forward_admins_theaters(theaters){
-	$card = $(".card").first();
+	$card = $(".theater-card").first();
     $(".cards").empty();
     theaters.forEach(function(element) {
         $card.find(".card-title").html(element["name"])
