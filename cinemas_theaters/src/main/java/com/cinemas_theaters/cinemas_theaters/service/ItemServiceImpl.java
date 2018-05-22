@@ -3,6 +3,7 @@ package com.cinemas_theaters.cinemas_theaters.service;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Theatre;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.TheatreItem;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.UserItem;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.Category;
 import com.cinemas_theaters.cinemas_theaters.repository.TheatreRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
@@ -12,8 +13,7 @@ import com.cinemas_theaters.cinemas_theaters.repository.ItemRepository;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Item;
 
 import java.time.Duration;
-import java.util.List;
-import java.util.Optional;
+import java.util.*;
 
 @Service("itemService")
 public class ItemServiceImpl implements ItemService {
@@ -28,7 +28,9 @@ public class ItemServiceImpl implements ItemService {
     public Boolean add(String name, String description, Double price, Long quantity){
         Optional<Theatre> theatreDB = theatreRepository.findById(Long.valueOf(132));
         if(theatreDB.isPresent()){
-            this.itemRepository.save(new TheatreItem(name, description, price, quantity, theatreDB.get()));
+            Set set = new LinkedHashSet();
+            
+            this.itemRepository.save(new TheatreItem(name, description, price, quantity, theatreDB.get(),  set));
             return Boolean.TRUE;
         }else{
             return Boolean.FALSE;

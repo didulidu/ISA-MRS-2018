@@ -1,10 +1,14 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.cinemas_theaters.cinemas_theaters.domain.enums.Category;
+
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import javax.validation.constraints.Size;
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.HashSet;
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 @Entity
@@ -18,12 +22,22 @@ public class Item  implements Serializable {
 
     private String description;
 
+    private Set categories = new LinkedHashSet();
+
     public Item(){}
 
     public Item(String name, String description) {
         this.name = name;
         this.description = description;
+
     }
+
+    public Item(String name, String description, Set categories) {
+        this.name = name;
+        this.description = description;
+        this.categories = categories;
+    }
+
 
     @Id
     @Column(name = "ITEM_ID")
@@ -57,4 +71,11 @@ public class Item  implements Serializable {
         this.description = description;
     }
 
+    @ElementCollection(targetClass = Category.class)
+    @JoinTable(name = "categories", joinColumns = @JoinColumn(name = "item_id"))
+    @Column(name = "category", nullable = false)
+    @Enumerated(EnumType.ORDINAL)
+    public Set getCategories(){   return categories;  }
+
+    public void setCategories(Set categories){    this.categories = categories;   }
 }

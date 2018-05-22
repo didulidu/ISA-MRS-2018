@@ -1,12 +1,10 @@
 package com.cinemas_theaters.cinemas_theaters.repository;
 
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Item;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.Category;
 import org.springframework.data.jpa.domain.Specification;
 
-import javax.persistence.criteria.CriteriaBuilder;
-import javax.persistence.criteria.CriteriaQuery;
-import javax.persistence.criteria.Predicate;
-import javax.persistence.criteria.Root;
+import javax.persistence.criteria.*;
 
 public class ItemSpecification implements Specification<Item> {
 
@@ -36,6 +34,10 @@ public class ItemSpecification implements Specification<Item> {
             else{
                 return criteriaBuilder.equal(root.get(searchCriteria.getKey()), searchCriteria.getValue());
             }
+        }
+        else if (searchCriteria.getOperation().equalsIgnoreCase("::")){
+
+            return criteriaBuilder.isMember(Category.valueOf(searchCriteria.getValue().toString()),root.get(searchCriteria.getKey()));
         }
 
         return null;

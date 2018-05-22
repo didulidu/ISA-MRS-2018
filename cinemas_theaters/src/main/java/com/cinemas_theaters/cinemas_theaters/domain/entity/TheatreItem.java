@@ -1,8 +1,11 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.cinemas_theaters.cinemas_theaters.domain.enums.Category;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.HashSet;
+import java.util.Set;
 
 @Entity
 @Table(name = "THEATRE_ITEM")
@@ -14,9 +17,9 @@ public class TheatreItem extends Item {
 
     public TheatreItem(){}
 
-    public TheatreItem(String name, String description, Double price, Long quantity, Theatre theatre) {
+    public TheatreItem(String name, String description, Double price, Long quantity, Theatre theatre, Set categories) {
 
-        super(name, description);
+        super(name, description, categories);
         this.price = price;
         this.theatre = theatre;
         this.quantity = quantity;
