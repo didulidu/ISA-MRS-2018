@@ -9,10 +9,10 @@ function addTheaterAdminWidgets(){
         }
     }
 }
-
 $(document).on('click', ".show-card", function(){
     var show_id = $(this).attr('id');
-    window.location.replace("show_page.html?id="+show_id);
+    var title = $(this).find('.card-title').html();
+    window.location.replace("show_page.html?id="+show_id+"&title="+title);
 });
 
 $("#add-show").on('click', function(){
@@ -97,15 +97,6 @@ function fillProfileWithInfo(data){
 
 }
 
-$(document).on('click', '#button-show-details', function(){
-   var form = $(this).parents("form");
-   var show_id = form.find("input[type=hidden]").val();
-   if(localStorage.getItem("currentUser")!=undefined){
-       if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "RegisteredUser")
-           window.location.replace("seat_selection.html?id=" + show_id);
-       
-    }
-});
 
 function showRepertoire(){
 
@@ -128,19 +119,17 @@ function showRepertoire(){
 
 }
 
-
 function addCards(showsList){
         var Kartice = "<div class=\"cards\" id = \"shows\" style=\"display:flex; flex-wrap: wrap;\">"
            showsList.forEach(function(show){
             var Kartica = "<div class=\"card show-card\" style=\"width: 20%;\" id=\""+show["id"]+"\">"
             +"<img class=\"card-img-top\" src=\""+show["posterURL"]+"\" alt=\"Card image cap\">"
             +"<div class=\"card-body\" style=\"height: 140px;\">"
-            +"<h5 class=\"card-title\"><h7>Title:</h7> "+show["title"]+"</h5>"
-            +"<p class=\"card-text\"><h7>Genre:</h7>"+show["genre"]+"</p>"
-            +"<p class=\"card-duration\"><h7>Duration:</h7>"+show["duration"]+"</p>"
+            +"<h5 class=\"card-title\">"+show["title"]+"</h5>"
+            +"<p class=\"card-text\"><h7>Genre: </h7>"+show["genre"]+"</p>"
+            +"<p class=\"card-duration\"><h7>Duration: </h7>"+show["duration"]+"</p>"
             +"</div>"
             +"<div id=\"rateYo\"></div>"
-            +"<button type='button' class='btn btn-success' id='add-show'>Add Projection</button>"
             +"</div>";
             Kartice+=Kartica;
         });

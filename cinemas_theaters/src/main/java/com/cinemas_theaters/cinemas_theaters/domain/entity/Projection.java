@@ -41,16 +41,22 @@ public class Projection  implements Serializable {
     @NotNull
     private Integer price;
 
+    @Column(nullable = false)
+    private Boolean exist;
+
+
     public Projection(){reservedSeats = new ArrayList<>();
     }
 
-    public Projection(Long id, @NotNull String date, @NotNull Show show, Hall hall, @NotNull Integer price) {
-        this.id = id;
+
+
+    public Projection(@NotNull String date, @NotNull Show show, Hall hall, @NotNull Integer price) {
         this.date = date;
         this.show = show;
         this.hall = hall;
         this.price = price;
         reservedSeats = new ArrayList<>();
+        this.exist = true;
     }
 
 
@@ -101,5 +107,15 @@ public class Projection  implements Serializable {
     public void setReservedSeats(List<String> reservedSeats) {
         this.reservedSeats = reservedSeats;
     }
+
+    public Boolean getExist() {
+        return exist;
+    }
+
+    public void setExist(Boolean exist) {
+        this.exist = exist;
+    }
+
+
 }
 

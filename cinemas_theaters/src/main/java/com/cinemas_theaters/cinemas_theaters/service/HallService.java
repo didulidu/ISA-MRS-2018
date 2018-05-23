@@ -10,4 +10,5 @@ public interface HallService {
     Boolean deleteById(Long id);
     void modify(Hall item);
     Hall add(Hall hall);
+    List<Hall> findByTheatre(Long theatre_id);
 }

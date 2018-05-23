@@ -51,4 +51,9 @@ public class HallServiceImpl implements HallService{
         this.hallRepository.save(hall);
         return hall;
     }
+
+    @Override
+    public List<Hall> findByTheatre(Long theatre_id) {
+        return hallRepository.findByTheatre(theatre_id);
+    }
 }

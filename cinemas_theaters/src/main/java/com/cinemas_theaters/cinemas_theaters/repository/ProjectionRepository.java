@@ -11,7 +11,6 @@ import java.util.Optional;
 
 public interface ProjectionRepository extends JpaRepository<Projection, Long> {
 
-    Projection save(Projection projection);
 
     @Query("SELECT p FROM Projection p WHERE show_show_id = :show_id")
     List<Projection> findAllProjections(@Param("show_id") Long show_id);
@@ -21,6 +20,7 @@ public interface ProjectionRepository extends JpaRepository<Projection, Long> {
 
     @Query("SELECT p FROM Projection p WHERE hall_hall_id = :hall_id")
     List<Projection> findProjectionsByHall(@Param("hall_id") Long hall_id);
+
 
 
 

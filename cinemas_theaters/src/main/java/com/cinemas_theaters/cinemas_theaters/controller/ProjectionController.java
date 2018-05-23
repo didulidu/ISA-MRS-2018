@@ -1,12 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
-import com.cinemas_theaters.cinemas_theaters.domain.dto.ProjectionDTO;
-import com.cinemas_theaters.cinemas_theaters.domain.dto.ProjectionDisplayDTO;
-import com.cinemas_theaters.cinemas_theaters.domain.dto.ShowRepertoireDTO;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Hall;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Projection;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Show;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.service.*;
 import org.modelmapper.ModelMapper;
@@ -40,7 +35,7 @@ public class ProjectionController {
     @Autowired
     private RegisteredUserService registeredUserService;
 
-
+    @Autowired TheatreCinemaAdminService theatreCinemaAdminService;
 
     DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
 
@@ -92,7 +87,7 @@ public class ProjectionController {
 
 
     public LocalDateTime str2Date(String dateS){
-        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
         LocalDateTime date;
         try{
@@ -111,43 +106,130 @@ public class ProjectionController {
     )
     public ResponseEntity add(@RequestHeader("Authorization") String userToken, @RequestBody @Valid ProjectionDTO projDTO, BindingResult result ){
         String username = this.jwtService.getUser(userToken).getUsername();
-        RegisteredUser user = this.registeredUserService.findByUsername(username);
+        TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
         if(!user.getType().equals(UserType.TheaterAndCinemaAdmin)){
-            System.out.println("Nisi admin koji bi trebalo da budes (poz/bio)");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-
         Show film = showService.getById(projDTO.getShowId());
         Hall sala = hallService.findById(projDTO.getHallId());
         List<Projection> projekcijeSale = projectionService.findProjectionsByHall(sala.getId());
         LocalDateTime pocetak, kraj;
         boolean ok = true;
-
         for(Projection p : projekcijeSale){
             pocetak = str2Date(p.getDate());
-            System.out.println(p.getDate());
-            if (pocetak==null){
-                System.out.println("GRESKA");
-                continue;
-            }
+            if (pocetak==null) continue;
             kraj = pocetak.plusMinutes(p.getShow().getDuration());
             LocalDateTime pocetakNovog = str2Date(projDTO.getDate());
             LocalDateTime krajNovog = pocetakNovog.plusMinutes(film.getDuration());
-            if  ( (krajNovog.isAfter(pocetak) && krajNovog.isBefore(kraj)) || (pocetakNovog.isBefore(kraj) && pocetakNovog.isAfter(pocetak))){
-                ok = false;
+            if  ( (!krajNovog.isBefore(pocetak) && !krajNovog.isAfter(kraj)) || (!pocetakNovog.isAfter(kraj) && !pocetakNovog.isBefore(pocetak))){
+                if(p.getExist()) ok = false;
             }
         }
         if (ok) {
-            System.out.println("Dodaje");
-            Projection nova = new Projection(projDTO.getId(),projDTO.getDate(), film, sala, projDTO.getPrice());
+            Projection nova = new Projection(projDTO.getDate(), film, sala, projDTO.getPrice());
             this.projectionService.add(nova);
             projekcijeSale.add(nova);
-            return new ResponseEntity<List<Projection>>(projekcijeSale, HttpStatus.CREATED);
+            ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
+            for (Projection p: projectionService.getAllProjections(film.getId())){
+                if (p.getExist())
+                    projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
+            }
+            return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);
         }
         else
-            System.out.println("Nije dodao");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
     }
+
+    @PostMapping(
+            value = "/edit/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity editProjection(@RequestHeader("Authorization") String userToken, @RequestBody @Valid ProjectionDTO projDTO,@PathVariable("id") Long id, BindingResult result ) {
+        String username = this.jwtService.getUser(userToken).getUsername();
+        TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
+        if (!user.getType().equals(UserType.TheaterAndCinemaAdmin)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        Show film = showService.getById(projDTO.getShowId());
+        Hall sala = hallService.findById(projDTO.getHallId());
+        Projection choosen = projectionService.getById(id);
+        if (!choosen.getReservedSeats().isEmpty()) {
+            System.out.println("Postoji rezervacija");
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        } else {
+            List<Projection> projekcijeSale = projectionService.findProjectionsByHall(sala.getId());
+            LocalDateTime pocetak, kraj;
+            boolean ok = true;
+            for (Projection p : projekcijeSale) {
+                pocetak = str2Date(p.getDate());
+                if (pocetak == null) continue;
+                kraj = pocetak.plusMinutes(p.getShow().getDuration());
+                LocalDateTime pocetakNovog = str2Date(projDTO.getDate());
+                LocalDateTime krajNovog = pocetakNovog.plusMinutes(film.getDuration());
+                if ((!krajNovog.isBefore(pocetak) && !krajNovog.isAfter(kraj)) || (!pocetakNovog.isAfter(kraj) && !pocetakNovog.isBefore(pocetak))) {
+                    if(p.getExist()) ok = false;
+                }
+            }
+            if (ok) {
+                choosen.setDate(projDTO.getDate());
+                choosen.setHall(sala);
+                choosen.setPrice(projDTO.getPrice());
+                this.projectionService.save(choosen);
+                ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
+                for (Projection p : projectionService.getAllProjections(film.getId())) {
+                    if (p.getExist())
+                        projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
+                }
+                return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);
+            } else
+                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+    }
+
+    @PostMapping(
+            value = "/remove/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity remove(@RequestHeader("Authorization") String userToken,@RequestBody Map<String, Long> map,@PathVariable Long id, BindingResult result ){
+        String username = this.jwtService.getUser(userToken).getUsername();
+        TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
+        if(!user.getType().equals(UserType.TheaterAndCinemaAdmin)){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        Projection chosen = projectionService.getById(id);
+        if(chosen.getReservedSeats().isEmpty()) {
+            chosen.setExist(false);
+            projectionService.save(chosen);
+            ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
+            for (Projection p : projectionService.getAllProjections(map.get("showId"))) {
+                if (p.getExist())
+                    projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
+            }
+            return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);
+        }
+        else return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(null);
+
+    }
+
+
+    @RequestMapping(
+            value = "/getHalls/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getHalls(@PathVariable Long id){
+        HttpHeaders headers = new HttpHeaders();
+        List<Hall> halls = this.hallService.findByTheatre(id);
+        List<HallDTO> hallDTOS = new ArrayList<>();
+        for (Hall h : halls) {
+
+            hallDTOS.add(new HallDTO(h.getId(), h.getName()));
+        }
+        return new ResponseEntity<List<HallDTO>>(hallDTOS, headers, HttpStatus.OK);
+    }
+
 
     public Projection convertDTOToProjection(ProjectionDTO projectionDTO){
         ModelMapper mapper = new ModelMapper();
