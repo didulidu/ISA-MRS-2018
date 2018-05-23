@@ -1,7 +1,8 @@
 table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
-    width: 100%;
+    width: 80%;
+    border-radius:15;
 }
 
 td, th {
@@ -11,5 +12,32 @@ td, th {
 }
 
 tr:nth-child(even) {
-    background-color: #dddddd;
+    background-color: lightblue;
+}
+
+tr:nth-child(odd) {
+    background-color: lightgreen;
+}
+
+
+table tr:last-child td:first-child {
+    border-bottom-left-radius: 30px;
+}
+
+table tr:first-child td:first-child {
+    border-bottom-right-radius: 30px;
+}
+
+h1 h2{
+	color:white;
+}
+
+
+.projections{
+    margin-top:10px;
+}
+
+
+body{
+	background: url('https://i0.wp.com/gumi-gumi.com/wp/wp-content/uploads/2014/04/wood_texture_2_by_rifificz-d38h5m7-1.jpg');
 }

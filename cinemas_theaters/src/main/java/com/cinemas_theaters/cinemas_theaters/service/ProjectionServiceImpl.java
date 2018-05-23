@@ -21,6 +21,11 @@ public class ProjectionServiceImpl implements ProjectionService {
     }
 
     @Override
+    public Projection save(Projection projection) {
+        return projectionRepository.saveAndFlush(projection);
+    }
+
+    @Override
     public List<Projection> getAllProjections(Long show_id) {
         return this.projectionRepository.findAllProjections(show_id);
     }
@@ -41,12 +46,12 @@ public class ProjectionServiceImpl implements ProjectionService {
     }
 
     @Override
-    public List<Projection> findProjectionsByShow(Long show_id) {
-        return this.findProjectionsByShow(show_id);
+    public List<Projection> findProjectionsByHall(Long hall_id) {
+        return this.projectionRepository.findProjectionsByHall(hall_id);
     }
 
     @Override
-    public List<Projection> findProjectionsByHall(Long hall_id) {
-        return this.projectionRepository.findProjectionsByHall(hall_id);
+    public List<Projection> findAll() {
+        return projectionRepository.findAll();
     }
 }

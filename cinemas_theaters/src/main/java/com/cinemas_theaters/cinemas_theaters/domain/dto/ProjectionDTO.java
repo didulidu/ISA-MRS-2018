@@ -3,9 +3,6 @@ package com.cinemas_theaters.cinemas_theaters.domain.dto;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Hall;
 
 public class ProjectionDTO {
-
-    private Long id;
-    private String showTitle;
     private String date;
     private Integer price;
     private Long hallId;
@@ -14,29 +11,11 @@ public class ProjectionDTO {
     public ProjectionDTO() {
     }
 
-    public ProjectionDTO(Long id, String showTitle, String date, Integer price, Long hallId, Long showId) {
-        this.id = id;
-        this.showTitle = showTitle;
+    public ProjectionDTO(String date, Integer price, Long hallId, Long showId) {
         this.date = date;
         this.price = price;
         this.hallId = hallId;
         this.showId = showId;
-    }
-
-    public Long getId() {
-        return id;
-    }
-
-    public void setId(Long id) {
-        this.id = id;
-    }
-
-    public String getShowTitle() {
-        return showTitle;
-    }
-
-    public void setShowTitle(String showTitle) {
-        this.showTitle = showTitle;
     }
 
     public String getDate() {

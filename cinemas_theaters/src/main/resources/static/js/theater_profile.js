@@ -4,5 +4,6 @@ $(document).on('click', '.theater-card',function(e){
     var id = this.id.split("theater_id_")[1];
     localStorage.setItem("theater",id);
     window.location.replace("profile.html")
+
 });
 

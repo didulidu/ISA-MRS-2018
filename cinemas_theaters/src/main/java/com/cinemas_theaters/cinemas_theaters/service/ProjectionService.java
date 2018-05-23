@@ -10,6 +10,8 @@ public interface ProjectionService {
 
     void add(Projection show);
 
+    Projection save(Projection projection);
+
     List<Projection> getAllProjections(Long show_id);
 
     Optional findById(Long id);
@@ -18,7 +20,8 @@ public interface ProjectionService {
 
     Projection findSpecificProjection(Long show_id, Long id);
 
-    List<Projection> findProjectionsByShow(Long show_id);
-
     List<Projection> findProjectionsByHall(Long hall_id);
+
+    List<Projection> findAll();
+
 }
