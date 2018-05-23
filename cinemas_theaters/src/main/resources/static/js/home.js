@@ -21,6 +21,11 @@ $(document).on('click', '#friends-button', function(e){
    window.location.replace("registeredUserFriends.html")
 });
 
+$(document).on('click', '#reservations-button', function(e){
+   e.preventDefault();
+   window.location.replace("registered_user_reservations.html")
+});
+
 $(document).ready(function(){
         if(document.URL.indexOf("friends.html") == -1)
             getTheaters();

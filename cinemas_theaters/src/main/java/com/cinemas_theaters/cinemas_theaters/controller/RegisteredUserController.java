@@ -1,14 +1,12 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
 import ch.qos.logback.core.net.SyslogOutputStream;
-import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendSocketDTO;
-import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.JwtUser;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
-import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserDTO;
-import com.cinemas_theaters.cinemas_theaters.domain.dto.UserRegistrationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -247,6 +245,42 @@ public class RegisteredUserController {
             return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/searchUsers/{parameter}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<SearchUsersDTO> searchUsers(@RequestHeader("Authorization") String userToken, @PathVariable String parameter) {
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            List<RegisteredUserSearchDTO> foundUsers = this.registeredUserService.findUsers(currentUser.getUsername(), parameter);
+            SearchUsersDTO usersDTO = new SearchUsersDTO(foundUsers, convertRegisteredUserToDTO(currentUser));
+            return new ResponseEntity<>(usersDTO, headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/getAllPersonalReservation",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<RegisteredUserReservationsDTO> getAllPersonalReservation(@RequestHeader("Authorization") String userToken){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            List<Ticket> reservations = this.registeredUserService.getAllPersonalReservation(currentUser);
+            return new ResponseEntity<RegisteredUserReservationsDTO>(new RegisteredUserReservationsDTO(reservations), headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<RegisteredUserReservationsDTO>(headers, HttpStatus.UNAUTHORIZED);
     }
 
     private RegisteredUserDTO convertRegisteredUserToDTO(RegisteredUser user){

@@ -9,7 +9,7 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
-@Table(uniqueConstraints = @UniqueConstraint(columnNames = {"first_user_id", "second_user_id"}))
+@Table(name = "friendship", uniqueConstraints = @UniqueConstraint(columnNames = {"first_user_id", "second_user_id"}))
 public class Friendship implements Serializable {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)

@@ -70,6 +70,21 @@ public class Ticket  implements Serializable {
         this.id = id;
     }
 
+    public String getShowTitle() {
+        return showTitle;
+    }
+
+    public void setShowTitle(String showTitle) {
+        this.showTitle = showTitle;
+    }
+
+    public String getProjectionDate() {
+        return projectionDate;
+    }
+
+    public void setProjectionDate(String projectionDate) {
+        this.projectionDate = projectionDate;
+    }
 
     public RegisteredUser getBuyer() {
         return buyer;

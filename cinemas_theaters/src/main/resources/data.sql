@@ -19,11 +19,11 @@ insert into `show`(title, genre, duration, price, average_rating, number_of_rate
 
 
 #projections
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(10, 350,"08/05/2018 20:00", 5, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(11, 450,"09/05/2018 20:00", 5, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(12, 400,"10/05/2018 20:00", 6, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(13, 250,"08/05/2018 20:00", 7, 231);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id) values(14, 350,"08/05/2018 20:00", 5, 231);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(10, 350,"08/05/2018 20:00", 5, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(11, 450,"09/05/2018 20:00", 5, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(12, 400,"10/05/2018 20:00", 6, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(13, 250,"08/05/2018 20:00", 7, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(14, 350,"08/05/2018 20:00", 5, 231,true);
 
 #halls
 insert into hall (hall_id, name, theatre_theatre_id) values (5, 1, 132);

@@ -17,6 +17,7 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.List;
 
 @RestController
 @RequestMapping(value = "/ticket")
@@ -55,7 +56,14 @@ public class TicketController {
             String username = this.jwtService.getUser(userToken).getUsername();
             RegisteredUser user = this.registeredUserService.findByUsername(username);
 
-            p.setReservedSeats(ticketReservationDTO.getSeatIds());
+            List<String> ids = p.getReservedSeats();
+
+            for(String seatID: ticketReservationDTO.getSeatIds()){
+
+                ids.add(seatID);
+            }
+
+            p.setReservedSeats(ids);
 
             this.projectionService.add(p);
 

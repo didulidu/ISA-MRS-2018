@@ -77,7 +77,7 @@ function formSeats(projection){
     var seats = projection.hall.seats;
     //var sc = $('#seat-map').seatCharts;
 
-
+    unavailable_seats = projection.reservedSeats;
 
     seats_array = []
     max_chairs = getMaxChairs(seats);

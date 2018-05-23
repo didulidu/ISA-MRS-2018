@@ -1,9 +1,11 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
 import ch.qos.logback.core.CoreConstants;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.FriendshipStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.FriendshipRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.UserRepository;
@@ -17,8 +19,12 @@ import org.springframework.transaction.annotation.Transactional;
 import java.sql.ResultSet;
 import java.sql.ResultSetMetaData;
 import java.sql.SQLException;
+import java.text.ParseException;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.concurrent.TimeUnit;
 
 @Service
 public class RegisteredUserServiceImpl implements RegisteredUserService {
@@ -126,5 +132,64 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     public List<UserFriendsDTO> getFriends(Long userId) {
 
         return this.friendshipRepository.getFriends(userId);
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public List<RegisteredUserSearchDTO> findUsers(String username, String parameter){
+        return this.registeredUserRepository.findUsers(username, parameter);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public List<Ticket> getAllPersonalReservation(RegisteredUser user)
+    {
+        List<Ticket> reservations = new ArrayList<>();
+        Date now = new Date();
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy");
+
+        try {
+            Date dateNow = sdf.parse(sdf.format(now));
+            long timeNowMinutes = TimeUnit.MILLISECONDS.toMinutes(now.getTime());
+
+            for (Ticket ticket : user.getTickets()) {
+                Date dateReservation = sdf.parse(ticket.getProjectionDate());
+                /*long timeStartReservationMinutes = TimeUnit.MILLISECONDS.toMinutes(reservation.getStartTime().getTime());
+                long durationReservationMin = (long)(ticket.getDuration() * 60);
+                long timeEndReservationMinutes = timeStartReservationMinutes + durationReservationMin;*/
+
+                if(dateReservation.compareTo(dateNow)>0)
+                    // datum rezervacije jos nije dosao
+                    reservations.add(ticket);
+                else if(dateReservation.compareTo(dateNow)<0) {
+                    /*
+                    if(!reservation.getBillCreated()) {
+                        // ako nismo oznacili rezervaciju kao zavrsenu, sada to radimo
+                        reservation.setBillCreated(true);
+                        this.reservationRepository.save(reservation);
+                    }*/
+                    continue;
+                }
+                else
+                {
+                   /*
+                    if(timeNowMinutes - timeEndReservationMinutes >= 0) {
+
+                        if(!reservation.getBillCreated())
+                        {
+                            reservation.setBillCreated(true);
+                            this.reservationRepository.save(reservation);
+                        }
+                        continue;
+                    }
+                    else
+                        // vreme rezervacije jos nije proslo*/
+                        reservations.add(ticket);
+                }
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return reservations;
     }
 }
