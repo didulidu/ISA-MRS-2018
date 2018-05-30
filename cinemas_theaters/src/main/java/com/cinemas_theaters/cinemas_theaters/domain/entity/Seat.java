@@ -28,7 +28,6 @@ public class Seat  implements Serializable {
     private Hall hall;
 
     @OneToOne(fetch = FetchType.LAZY)
-    @JsonBackReference
     @JsonIgnore
     private Ticket ticket;
 

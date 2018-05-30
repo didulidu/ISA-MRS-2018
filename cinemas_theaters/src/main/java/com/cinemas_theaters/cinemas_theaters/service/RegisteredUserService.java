@@ -3,6 +3,7 @@ package com.cinemas_theaters.cinemas_theaters.service;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
 
 import java.util.List;
@@ -24,5 +25,8 @@ public interface RegisteredUserService {
 
     List<RegisteredUserSearchDTO> findUsers(String username, String parameter);
 
-    List<Ticket> getAllPersonalReservation(RegisteredUser user);
+    List<Reservation> getAllReservations(RegisteredUser user);
+
+
+   void removeReservation(Reservation reservation);
 }

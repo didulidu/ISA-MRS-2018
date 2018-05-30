@@ -54,6 +54,10 @@ public class Theatre implements Serializable {
     @JsonIgnoreProperties("theatre")
     private List<Hall> halls;
 
+    @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("theatre")
+    private List<Ticket> tickets;
+
 
     @Column(nullable = false)
     @Enumerated(EnumType.STRING)

@@ -25,7 +25,7 @@ public class Projection  implements Serializable {
     //@JoinColumn(name = "show_id")
     //@NotNull
     @ManyToOne
-    //@JsonIgnore
+    @JsonIgnore
     private Show show;
 
     @ElementCollection(targetClass=String.class)

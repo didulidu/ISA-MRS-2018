@@ -11,11 +11,9 @@ public interface TicketService {
 
     List<Ticket> findAll();
 
-    List<Ticket> findAllTicketsForAUser(Long user_id);
 
     Optional findById(Long id);
 
-    Ticket findByTitle(String showTitle);
 
     Ticket getById(Long id);
 }

@@ -20,6 +20,8 @@ public interface TheatreRepository extends JpaRepository<Theatre, Long> {
 
     Theatre findByName(String name);
 
+    Theatre getById(Long id);
+
     Optional findById(Long id);
 
 }

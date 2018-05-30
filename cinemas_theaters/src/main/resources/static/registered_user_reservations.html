@@ -7,7 +7,6 @@
     <!--library-->
     <script type="text/javascript" src="lib/jQuery/jquery.min.js"></script>
     <script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
-    <script type="text/javascript" src="lib/bootstrap/bootstrap.min.js"></script>
     <script type="text/javascript" src="lib/websocket/sockjs.min.js"></script>
     <script type="text/javascript" src="lib/websocket/stomp.min.js"></script>
     <!--custom-->
@@ -16,11 +15,8 @@
     <script type="text/javascript" src="js/registered_user_reservations.js"></script>
 
     <!--CSS-->
-    <link rel="stylesheet" href="css/bootstrap/bootstrap.min.css"/>
-    <link rel="stylesheet" href="css/bootstrap/bootstrap-theme.min.css"/>
     <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
     <!--custom-->
-    <link rel="stylesheet" href="css/style.css"/>
 
     <title>Reservations</title>
 </head>
@@ -30,12 +26,15 @@
 
 <div class="regUser-view-reservations">
     <div class="container">
-        <table class="table table-hover table-condensed" id="reservation-list-tickets">
+        <table class="table table-hover table-condensed" id="reservation-list-tickets" border="1px">
             <thead>
             <th class="col-md-1"> Cinema/Theatre </th>
             <th class="col-md-2"> Show </th>
+            <th class="col-md-1"> Number of tickets </th>
             <th class="col-md-1"> Date </th>
-            <th class="col-md-1"> Vreme </th>
+            <th class="col-md-1"> Time </th>
+            <th class="col-md-1"> </th>
+
             </thead>
             <tbody></tbody>
         </table>

@@ -25,18 +25,8 @@ public class TicketServiceImpl implements TicketService {
     }
 
     @Override
-    public List<Ticket> findAllTicketsForAUser(Long user_id) {
-        return this.ticketRepository.findAllTicketsForAUser(user_id);
-    }
-
-    @Override
     public Optional findById(Long id) {
         return this.ticketRepository.findById(id);
-    }
-
-    @Override
-    public Ticket findByTitle(String showTitle) {
-        return this.ticketRepository.findByShowTitle(showTitle);
     }
 
     @Override

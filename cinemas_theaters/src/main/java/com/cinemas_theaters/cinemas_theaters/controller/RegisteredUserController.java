@@ -1,9 +1,11 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
-import ch.qos.logback.core.net.SyslogOutputStream;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.JwtUser;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
+import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
+import com.cinemas_theaters.cinemas_theaters.repository.TheatreRepository;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
@@ -37,6 +39,9 @@ public class RegisteredUserController {
 
     @Autowired
     private SimpMessagingTemplate template;
+
+    @Autowired
+    private ReservationRepository reservationRepository;
 
     @RequestMapping(
             value = "/registration",
@@ -266,21 +271,62 @@ public class RegisteredUserController {
     }
 
     @RequestMapping(
-            value = "/getAllPersonalReservation",
+            value = "/getAllRegisteredUserReservations",
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity<RegisteredUserReservationsDTO> getAllPersonalReservation(@RequestHeader("Authorization") String userToken){
+    public ResponseEntity<RegisteredUserReservationsDTO> getAllRegisteredUserReservations(@RequestHeader("Authorization") String userToken){
         JwtUser user = this.jwtService.getUser(userToken);
         RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization", this.jwtService.getToken(user));
 
         if(currentUser != null){
-            List<Ticket> reservations = this.registeredUserService.getAllPersonalReservation(currentUser);
+            List<Reservation> reservations = this.registeredUserService.getAllReservations(currentUser);
             return new ResponseEntity<RegisteredUserReservationsDTO>(new RegisteredUserReservationsDTO(reservations), headers, HttpStatus.OK);
         }
         return new ResponseEntity<RegisteredUserReservationsDTO>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/removeReservation",
+            method = RequestMethod.DELETE,
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity removeReservation(@RequestHeader("Authorization") String userToken, @RequestBody String reservationId) {
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if (currentUser != null) {
+            //Reservation reservation = this.registeredUserService.reservationExist(currentUser, Long.parseLong(reservationId));
+            Reservation reservation = reservationRepository.getById(Long.parseLong(reservationId));
+
+            if(reservation != null){
+                // otkazivanje rezervacije je moguce samo 30min pre njenog pocetka
+                //boolean success = this.registeredUserService.checkReservationExpire(reservation);
+                boolean success = true;
+
+                if(success) {
+                    /*for (Invite invited : reservation.getInvites()) {
+                        try {
+                            this.emailService.sendNotification(currentUser, invited.getInvited(), reservation, reservation.getReservationTables().get(0).getRestaurant());
+                        }catch( Exception e ){
+                            System.out.println("Greska u slanju e-maila!");
+                        }
+                    }*/
+                    this.registeredUserService.removeReservation(reservation);
+                    return new ResponseEntity(headers, HttpStatus.OK);
+                }
+                else
+                    // preostalo je manje ili tacno 30min do pocetka rezervacije
+                    return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+            }
+            else
+                // rezervacija ne postoji, ili je u pitanju id rezervacije koju je kreirao neko od prijatelja
+                return new ResponseEntity(headers, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
     }
 
     private RegisteredUserDTO convertRegisteredUserToDTO(RegisteredUser user){

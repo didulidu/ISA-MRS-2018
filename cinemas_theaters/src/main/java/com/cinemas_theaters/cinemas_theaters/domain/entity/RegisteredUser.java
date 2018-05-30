@@ -7,6 +7,7 @@ import com.cinemas_theaters.cinemas_theaters.serializer.CustomFriendshipSerializ
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
 
@@ -45,9 +46,9 @@ public class RegisteredUser extends User implements Serializable {
     @JsonSerialize(using = CustomFriendshipSerializer.class)
     private Map<RegisteredUser, Friendship> friendships;
 
-    @OneToMany(fetch = FetchType.LAZY)
-    //@JsonBackReference(value = "buyer")
-    private List<Ticket> tickets;
+    @OneToMany(mappedBy = "buyer")
+    @JsonIgnore
+    private  List<Reservation> reservations;
 
 
     //@OneToMany(mappedBy = "invited", fetch = FetchType.LAZY)
@@ -71,6 +72,16 @@ public class RegisteredUser extends User implements Serializable {
         this.friendships = new HashMap<>();
         //this.invites = new ArrayList<>();
         //this.personalReservations = new ArrayList<>();
+    }
+
+    public RegisteredUser(@Email String email, @NotNull String avatarUrl, @NotNull boolean registrationConfirmed, @NotNull String address, @NotNull String telephoneNumber, Map<RegisteredUser, Friendship> friendships, List<Ticket> tickets, List<Reservation> reservations) {
+        this.email = email;
+        this.avatarUrl = avatarUrl;
+        this.registrationConfirmed = registrationConfirmed;
+        this.address = address;
+        this.telephoneNumber = telephoneNumber;
+        this.friendships = friendships;
+        this.reservations = reservations;
     }
 
     public String getAvatarUrl() {
@@ -113,19 +124,23 @@ public class RegisteredUser extends User implements Serializable {
         this.telephoneNumber = telephoneNumber;
     }
 
-    public List<Ticket> getTickets() {
-        return tickets;
-    }
-
-    public void setTickets(List<Ticket> tickets) {
-        this.tickets = tickets;
-    }
-
     public boolean getRegistrationConfirmed() {
         return registrationConfirmed;
     }
 
     public void setRegistrationConfirmed(boolean registrationConfirmed) {
         this.registrationConfirmed = registrationConfirmed;
+    }
+
+    public boolean isRegistrationConfirmed() {
+        return registrationConfirmed;
+    }
+
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
+
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
     }
 }
