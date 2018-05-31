@@ -1,14 +1,12 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.JwtUser;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
-import com.cinemas_theaters.cinemas_theaters.repository.TheatreRepository;
+import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
+import com.cinemas_theaters.cinemas_theaters.service.ProjectionService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -25,7 +23,9 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
+import java.util.ListIterator;
 
 @RestController
 @RequestMapping(value = "/registeredUser")
@@ -42,6 +42,12 @@ public class RegisteredUserController {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private TicketRepository ticketRepository;
+
+    @Autowired
+    private ProjectionService projectionService;
 
     @RequestMapping(
             value = "/registration",
@@ -315,6 +321,24 @@ public class RegisteredUserController {
                             System.out.println("Greska u slanju e-maila!");
                         }
                     }*/
+
+                    Projection p = this.projectionService.getById(reservation.getProjection().getId());
+
+
+                    for (Ticket t: reservation.getTickets())
+                    {
+                        ListIterator<String> it = p.getReservedSeats().listIterator();
+
+                        while(it.hasNext()){
+                            if (t.getSeat().getId().equals(Long.parseLong(it.next()))){
+                                it.remove();
+                            }
+                        }
+
+                        this.ticketRepository.delete(t);
+                    }
+
+                    this.projectionService.save(p);
                     this.registeredUserService.removeReservation(reservation);
                     return new ResponseEntity(headers, HttpStatus.OK);
                 }

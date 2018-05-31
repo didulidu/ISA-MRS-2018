@@ -31,6 +31,7 @@ public class Ticket  implements Serializable {
     private Theatre theatre;
 
     @ManyToOne
+    @JsonIgnore
     private Reservation reservation;
 
     public Ticket(){}
@@ -109,5 +110,13 @@ public class Ticket  implements Serializable {
 
     public void setTheatre(Theatre theatre) {
         this.theatre = theatre;
+    }
+
+    public Reservation getReservation() {
+        return reservation;
+    }
+
+    public void setReservation(Reservation reservation) {
+        this.reservation = reservation;
     }
 }

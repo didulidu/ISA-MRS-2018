@@ -8,9 +8,9 @@ import java.util.Optional;
 
 public interface ProjectionService {
 
-    void add(Projection show);
+    void save(Projection show);
 
-    Projection save(Projection projection);
+    Projection saveAndFlush(Projection projection);
 
     List<Projection> getAllProjections(Long show_id);
 

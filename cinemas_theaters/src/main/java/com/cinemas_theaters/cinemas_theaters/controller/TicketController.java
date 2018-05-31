@@ -1,6 +1,5 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
-import ch.qos.logback.core.CoreConstants;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TicketReservationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
@@ -70,7 +69,7 @@ public class TicketController {
 
             p.setReservedSeats(ids);
 
-            this.projectionService.add(p);
+
 
             ArrayList<Ticket> tickets = new ArrayList<>();
 
@@ -93,8 +92,12 @@ public class TicketController {
             }
 
             r.setTickets(tickets);
+            r.setProjection(p);
+
+            p.getReservations().add(r);
 
             this.reservationRepository.save(r);
+            this.projectionService.save(p);
 
             return new ResponseEntity<TicketReservationDTO>(ticketReservationDTO, HttpStatus.CREATED);
             }

@@ -38,7 +38,7 @@ public class ShowController {
     public ResponseEntity<?> getRepertoire(@PathVariable("id") String id){
         //JwtUser user = this.jwtService.getUser(userToken);
         //HttpHeaders headers = new HttpHeaders();
-        //headers.add("Authorization", this.jwtService.getToken(user));
+        //headers.save("Authorization", this.jwtService.getToken(user));
 
         HttpHeaders headers = new HttpHeaders();
         System.out.println(Long.parseLong(id));
@@ -60,7 +60,7 @@ public class ShowController {
     public ResponseEntity<?> getProjections(@PathVariable("id") String id){
         //JwtUser user = this.jwtService.getUser(userToken);
         //HttpHeaders headers = new HttpHeaders();
-        //headers.add("Authorization", this.jwtService.getToken(user));
+        //headers.save("Authorization", this.jwtService.getToken(user));
 
         HttpHeaders headers = new HttpHeaders();
 

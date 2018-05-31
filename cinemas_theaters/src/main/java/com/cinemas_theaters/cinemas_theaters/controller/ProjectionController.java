@@ -14,7 +14,6 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
-import java.text.SimpleDateFormat;
 import java.time.LocalDateTime;
 import java.time.format.DateTimeFormatter;
 import java.util.*;
@@ -46,7 +45,7 @@ public class ProjectionController {
 //    public ResponseEntity<?> getProjections(@PathVariable("id") String id){
 //        //JwtUser user = this.jwtService.getUser(userToken);
 //        //HttpHeaders headers = new HttpHeaders();
-//        //headers.add("Authorization", this.jwtService.getToken(user));
+//        //headers.save("Authorization", this.jwtService.getToken(user));
 //
 //        HttpHeaders headers = new HttpHeaders();
 //
@@ -56,7 +55,7 @@ public class ProjectionController {
 //        //s.getId()
 //        for (Projection p: projections){
 //            System.out.println(p.getHall());
-//            projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall()));
+//            projectionDisplayDTOS.save(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getHall()));
 //        }
 //
 //        return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, headers, HttpStatus.OK);
@@ -70,7 +69,7 @@ public class ProjectionController {
     public ResponseEntity<?> getProjection(@PathVariable("id") String id){
         //JwtUser user = this.jwtService.getUser(userToken);
         //HttpHeaders headers = new HttpHeaders();
-        //headers.add("Authorization", this.jwtService.getToken(user));
+        //headers.save("Authorization", this.jwtService.getToken(user));
 
         HttpHeaders headers = new HttpHeaders();
 
@@ -100,7 +99,7 @@ public class ProjectionController {
     }
 
     @PostMapping(
-            value = "/add",
+            value = "/save",
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
@@ -127,7 +126,7 @@ public class ProjectionController {
         }
         if (ok) {
             Projection nova = new Projection(projDTO.getDate(), film, sala, projDTO.getPrice());
-            this.projectionService.add(nova);
+            this.projectionService.save(nova);
             projekcijeSale.add(nova);
             ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
             for (Projection p: projectionService.getAllProjections(film.getId())){
@@ -175,7 +174,7 @@ public class ProjectionController {
                 choosen.setDate(projDTO.getDate());
                 choosen.setHall(sala);
                 choosen.setPrice(projDTO.getPrice());
-                this.projectionService.save(choosen);
+                this.projectionService.saveAndFlush(choosen);
                 ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
                 for (Projection p : projectionService.getAllProjections(film.getId())) {
                     if (p.getExist())
@@ -201,7 +200,7 @@ public class ProjectionController {
         Projection chosen = projectionService.getById(id);
         if(chosen.getReservedSeats().isEmpty()) {
             chosen.setExist(false);
-            projectionService.save(chosen);
+            projectionService.saveAndFlush(chosen);
             ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
             for (Projection p : projectionService.getAllProjections(map.get("showId"))) {
                 if (p.getExist())

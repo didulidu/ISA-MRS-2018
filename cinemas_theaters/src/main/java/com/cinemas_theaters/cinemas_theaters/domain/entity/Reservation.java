@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -32,6 +33,9 @@ public class Reservation   implements Serializable {
     @OneToMany(fetch = FetchType.LAZY)
     private List<Ticket> tickets;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    private Projection projection;
+
     public Reservation() {
     }
 
@@ -56,6 +60,23 @@ public class Reservation   implements Serializable {
         this.projectionDate = projectionDate;
         this.buyer = buyer;
         this.tickets = tickets;
+    }
+
+    public Reservation(Long id, String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection) {
+        this.id = id;
+        this.showTitle = showTitle;
+        this.projectionDate = projectionDate;
+        this.buyer = buyer;
+        this.tickets = tickets;
+        this.projection = projection;
+    }
+
+    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection) {
+        this.showTitle = showTitle;
+        this.projectionDate = projectionDate;
+        this.buyer = buyer;
+        this.tickets = tickets;
+        this.projection = projection;
     }
 
     public Long getId() {
@@ -96,5 +117,13 @@ public class Reservation   implements Serializable {
 
     public void setBuyer(RegisteredUser buyer) {
         this.buyer = buyer;
+    }
+
+    public Projection getProjection() {
+        return projection;
+    }
+
+    public void setProjection(Projection projection) {
+        this.projection = projection;
     }
 }

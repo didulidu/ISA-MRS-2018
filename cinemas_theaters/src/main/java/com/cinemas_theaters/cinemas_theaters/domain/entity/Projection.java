@@ -44,6 +44,10 @@ public class Projection  implements Serializable {
     @Column(nullable = false)
     private Boolean exist;
 
+    @OneToMany(fetch = FetchType.LAZY)
+    @JsonIgnore
+    private List<Reservation> reservations;
+
 
     public Projection(){reservedSeats = new ArrayList<>();
     }
@@ -55,10 +59,30 @@ public class Projection  implements Serializable {
         this.show = show;
         this.hall = hall;
         this.price = price;
-        reservedSeats = new ArrayList<>();
+        this.reservedSeats = new ArrayList<>();
         this.exist = true;
     }
 
+    public Projection(@NotNull String date, Show show, List<String> reservedSeats, Hall hall, @NotNull Integer price, Boolean exist, List<Reservation> reservations) {
+        this.date = date;
+        this.show = show;
+        this.reservedSeats = reservedSeats;
+        this.hall = hall;
+        this.price = price;
+        this.exist = exist;
+        this.reservations = reservations;
+    }
+
+    public Projection(Long id, @NotNull String date, Show show, List<String> reservedSeats, Hall hall, @NotNull Integer price, Boolean exist, List<Reservation> reservations) {
+        this.id = id;
+        this.date = date;
+        this.show = show;
+        this.reservedSeats = reservedSeats;
+        this.hall = hall;
+        this.price = price;
+        this.exist = exist;
+        this.reservations = reservations;
+    }
 
     public Long getId() {
         return id;
@@ -116,6 +140,12 @@ public class Projection  implements Serializable {
         this.exist = exist;
     }
 
+    public List<Reservation> getReservations() {
+        return reservations;
+    }
 
+    public void setReservations(List<Reservation> reservations) {
+        this.reservations = reservations;
+    }
 }
 

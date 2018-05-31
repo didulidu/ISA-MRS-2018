@@ -164,14 +164,14 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
 
                 if(dateReservation.compareTo(dateNow)>0)
                     // datum rezervacije jos nije dosao
-                    //reservations.add(ticket);
+                    //reservations.save(ticket);
                     continue;
                 else if(dateReservation.compareTo(dateNow)<0) {
                     /*
                     if(!reservation.getBillCreated()) {
                         // ako nismo oznacili rezervaciju kao zavrsenu, sada to radimo
                         reservation.setBillCreated(true);
-                        this.reservationRepository.save(reservation);
+                        this.reservationRepository.saveAndFlush(reservation);
                     }*/
                     continue;
                 }
@@ -183,7 +183,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
                         if(!reservation.getBillCreated())
                         {
                             reservation.setBillCreated(true);
-                            this.reservationRepository.save(reservation);
+                            this.reservationRepository.saveAndFlush(reservation);
                         }
                         continue;
                     }

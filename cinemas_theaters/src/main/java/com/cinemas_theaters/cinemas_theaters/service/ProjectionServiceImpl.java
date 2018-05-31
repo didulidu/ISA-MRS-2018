@@ -16,12 +16,12 @@ public class ProjectionServiceImpl implements ProjectionService {
 
 
     @Override
-    public void add(Projection show) {
+    public void save(Projection show) {
         this.projectionRepository.save(show);
     }
 
     @Override
-    public Projection save(Projection projection) {
+    public Projection saveAndFlush(Projection projection) {
         return projectionRepository.saveAndFlush(projection);
     }
 

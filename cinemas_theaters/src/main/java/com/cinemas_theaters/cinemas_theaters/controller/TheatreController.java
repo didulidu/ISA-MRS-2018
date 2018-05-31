@@ -41,7 +41,7 @@ public class TheatreController {
     public ResponseEntity<?> getAllTheatres(){
         //JwtUser user = this.jwtService.getUser(userToken);
         //HttpHeaders headers = new HttpHeaders();
-        //headers.add("Authorization", this.jwtService.getToken(user));
+        //headers.save("Authorization", this.jwtService.getToken(user));
         HttpHeaders headers = new HttpHeaders();
         List<Theatre> theatres = this.theatreService.getAllTheatres();
         List<TheatreDTO> theatreDTOS = new ArrayList<>();
