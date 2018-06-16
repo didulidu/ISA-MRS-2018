@@ -15,6 +15,8 @@ public class RegisteredUserDTO {
     private String lastname;
     private String username;
     private String email;
+    private String address;
+    private String telephoneNumber;
     private UserType type;
     @JsonSerialize(using = CustomFriendshipSerializer.class)
     private Map<RegisteredUser, Friendship> friendships;
@@ -23,12 +25,23 @@ public class RegisteredUserDTO {
         this.friendships = new HashMap<>();
     }
 
-    public RegisteredUserDTO(String name, String lastname, String username, String email, HashMap<RegisteredUser, Friendship> friendships) {
+    /*public RegisteredUserDTO(String name, String lastname, String username, String email, HashMap<RegisteredUser, Friendship> friendships) {
         this.name = name;
         this.lastname = lastname;
         this.username = username;
         this.email = email;
         this.type = UserType.RegisteredUser;
+        this.friendships = friendships;
+    }*/
+
+    public RegisteredUserDTO(String name, String lastname, String username, String email, String address, String telephoneNumber, UserType type, Map<RegisteredUser, Friendship> friendships) {
+        this.name = name;
+        this.lastname = lastname;
+        this.username = username;
+        this.email = email;
+        this.address = address;
+        this.telephoneNumber = telephoneNumber;
+        this.type = type;
         this.friendships = friendships;
     }
 
@@ -78,5 +91,21 @@ public class RegisteredUserDTO {
 
     public void setFriendships(Map<RegisteredUser, Friendship> friendships) {
         this.friendships = friendships;
+    }
+
+    public String getAddress() {
+        return address;
+    }
+
+    public void setAddress(String address) {
+        this.address = address;
+    }
+
+    public String getTelephoneNumber() {
+        return telephoneNumber;
+    }
+
+    public void setTelephoneNumber(String telephoneNumber) {
+        this.telephoneNumber = telephoneNumber;
     }
 }

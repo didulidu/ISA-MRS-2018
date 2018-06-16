@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
 import ch.qos.logback.core.CoreConstants;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.RegUserProfileUpdateDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
@@ -202,5 +203,32 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Transactional(readOnly = false)
     public void removeReservation(Reservation reservation){
         this.reservationRepository.delete(reservation);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public boolean updateRegisteredUserProfile(RegisteredUser user, RegUserProfileUpdateDTO updatedInfo)
+    {
+
+        user.setTelephoneNumber(updatedInfo.getUpdatedTelephoneNumber());
+        user.setAddress(updatedInfo.getUpdatedAddress());
+        user.setName(updatedInfo.getUpdatedName());
+        user.setLastname(updatedInfo.getUpdatedLastname());
+        user.setEmail(updatedInfo.getUpdatedEmail());
+
+        if (!updatedInfo.getPasswordChanged()) {
+            user.setPassword(user.getPassword());
+            this.registeredUserRepository.save(user);
+            return true;
+
+        }
+        else if(updatedInfo.getOldPassword().equals(user.getPassword()) && updatedInfo.getUpdatedPassword1().equals(updatedInfo.getUpdatedPassword2()))
+        {
+            user.setPassword(updatedInfo.getUpdatedPassword1());
+            this.registeredUserRepository.save(user);
+            return true;
+        }
+        else
+            return false;
     }
 }

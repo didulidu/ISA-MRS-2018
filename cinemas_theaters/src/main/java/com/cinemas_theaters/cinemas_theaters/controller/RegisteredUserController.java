@@ -295,6 +295,24 @@ public class RegisteredUserController {
     }
 
     @RequestMapping(
+            value = "/updateDataAndPassword",
+            method = RequestMethod.PUT,
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<RegisteredUserDTO> updateData(@RequestHeader("Authorization") String userToken, @RequestBody RegUserProfileUpdateDTO dataDTO){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null) {
+            this.registeredUserService.updateRegisteredUserProfile(currentUser, dataDTO);
+            return new ResponseEntity<RegisteredUserDTO>(convertRegisteredUserToDTO(currentUser), headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<RegisteredUserDTO>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
             value = "/removeReservation",
             method = RequestMethod.DELETE,
             consumes = MediaType.TEXT_PLAIN_VALUE)

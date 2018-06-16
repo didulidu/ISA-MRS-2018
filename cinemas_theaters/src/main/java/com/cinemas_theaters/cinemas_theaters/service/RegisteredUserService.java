@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
+import com.cinemas_theaters.cinemas_theaters.domain.dto.RegUserProfileUpdateDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
@@ -27,6 +28,7 @@ public interface RegisteredUserService {
 
     List<Reservation> getAllReservations(RegisteredUser user);
 
+    void removeReservation(Reservation reservation);
 
-   void removeReservation(Reservation reservation);
+    boolean updateRegisteredUserProfile(RegisteredUser user, RegUserProfileUpdateDTO updatedInfo);
 }

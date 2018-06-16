@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+    <!--JavaScript-->
+    <!--library-->
+    <script type="text/javascript" src="lib/jQuery/jquery.min.js"></script>
+    <script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
+    <script type="text/javascript" src="lib/webSocket/sockjs.min.js"></script>
+    <script type="text/javascript" src="lib/webSocket/stomp.min.js"></script>
+    <!--custom-->
+    <script type="text/javascript" src="js/misc.js"></script>
+    <script type="text/javascript" src="js/home.js"></script>
+    <script type="text/javascript" src="js/registeredUserProfile.js"></script>
+
+
+    <!--CSS-->
+    <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
+    <!--custom-->
+    <link rel="stylesheet" href="css/style.css"/>
+
+    <title>Registered user profile</title>
+</head>
+
+<body>
+<script type="text/javascript">
+            $.get("/navbars/navigationBar.html", function(data){
+                $("#header").replaceWith(data);
+            });
+        </script>
+<div class="header" id="header"></div>
+
+</div>
+<div class="container profile-container" style="text-align: center;">
+    <hr>
+    <form class="form" id="profile-data">
+
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label for="profile-user-username"><h4> Username </h4></label>
+                <input type="text" class="form-control" id="profile-user-username" readonly title="Username can't be modified!">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label for="profile-user-name"><h4>Name </h4></label>
+                <input type="text" class="form-control" id="profile-user-name" placeholder="Name">
+            </div>
+        </div>
+
+        <div class="form-group">
+
+            <div class="col-xs-6">
+                <label for="profile-user-lastname"><h4> Surname</h4></label>
+                <input type="text" class="form-control" id="profile-user-lastname" placeholder="Surname">
+            </div>
+        </div>
+
+
+        <div class="form-group" id="div-profile-email">
+
+            <div class="col-xs-6">
+                <label for="profile-user-email"><h4> Email </h4></label>
+                <input type="email" class="form-control" name="email" id="profile-user-email" placeholder="Email...">
+            </div>
+        </div>
+
+        <div class="form-group" id="div-profile-address">
+
+            <div class="col-xs-6">
+                <label for="profile-user-email"><h4> Address </h4></label>
+                <input type="email" class="form-control" name="email" id="profile-user-address" placeholder="Address...">
+            </div>
+        </div>
+
+        <div class="form-group" id="div-profile-telephone">
+
+            <div class="col-xs-6">
+                <label for="profile-user-email"><h4> Telephone number </h4></label>
+                <input type="email" class="form-control" name="email" id="profile-user-telephone" placeholder="Telephone number...">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label for="profile-user-password"><h4> Current password</h4></label>
+                <input type="password" class="form-control" id="profile-user-password" placeholder="Current Password...">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label for="profile-user-new-password"><h4> New password </h4></label>
+                <input type="password" class="form-control" id="profile-user-new-password" placeholder="New password...">
+            </div>
+        </div>
+
+
+
+        <div class="form-group">
+            <div class="col-xs-6">
+                <label for="profile-user-new-password-2"><h4> Repeated password</h4></label>
+                <input type="password" class="form-control" id="profile-user-new-password-2" placeholder="Repeated password...">
+            </div>
+        </div>
+
+        <div class="form-group">
+            <div class="col-xs-12" style="text-align: center">
+                <br>
+                <button class="btn btn-success" id="profile-change-save"><i class="glyphicon glyphicon-ok-sign"></i> Save </button>
+                <button class="btn btn-primary" id="profile-change-reset"><i class="glyphicon glyphicon-repeat"></i> Reset </button>
+            </div>
+        </div>
+    </form>
+</div>
+</body>
+</html>

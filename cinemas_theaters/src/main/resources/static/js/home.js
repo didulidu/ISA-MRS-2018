@@ -23,7 +23,12 @@ $(document).on('click', '#friends-button', function(e){
 
 $(document).on('click', '#reservations-button', function(e){
    e.preventDefault();
-   window.location.replace("registered_user_reservations.html")
+   window.location.replace("registeredUserReservations.html")
+});
+
+$(document).on('click', '#user-profile-button', function(e){
+   e.preventDefault();
+   window.location.replace("registeredUserProfile.html")
 });
 
 $(document).ready(function(){
@@ -124,13 +129,16 @@ function getRegisteredUserData(){
                 if(currentUser.type == "RegisteredUser") {
                     openConnectionFriends(currentUser);
 
+                    if(document.URL.indexOf("registeredUserFriends.html") != -1)
+                        displayRegisteredUsersFriends(currentUser);
+                    else if (document.URL.indexOf("registeredUserProfile.html") != -1)
+                        showPersonalData(currentUser);
+
                     //if(document.URL.indexOf("index.html") != -1)
                         //setCurrentUsername(currentUser);
 
-                    //else if (document.URL.indexOf("profile.html") != -1)
-                        //showPersonalData(currentUser);
-                    if(document.URL.indexOf("registeredUserFriends.html") != -1)
-                        displayRegisteredUsersFriends(currentUser);
+
+
                 }
             }
     });
