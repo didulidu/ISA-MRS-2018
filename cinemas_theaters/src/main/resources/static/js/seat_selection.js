@@ -1,17 +1,38 @@
 var projection = {}
 var seatIds = []
 var unavailable_seats = [];
+var currentUser = ""
+var invitedFriends = []
 
 $(document).ready(function(){    if(index != -1){
     var index = document.URL.indexOf("?id=");
 
         id = document.URL.substring(index+4);
-//        id = 10;
+        getCurrentUserData();
         fetchProjectionData(id);
+
     }
 });
 
-
+function getCurrentUserData(){
+    $.ajax({
+            url: "/user/getCurrentUser",
+            type: "GET",
+            dataType: "json",
+            beforeSend: function(request){
+                request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+            },
+            success: function(data, textStatus, response){
+                currentUser = data;
+                localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
+                localStorage.setItem("currentUserRole", currentUser.type);
+                showUsers(currentUser.friendships);
+            },
+            error: function (request, status, error) {
+                    alert(request.responseText);
+                }
+    });
+}
 
 function fetchProjectionData(id){
 
@@ -123,11 +144,9 @@ $(document).on("click", "#book-ticket-btn", function(){
           "showTitle": projection.showTitle,
           "projectionDate": projection.date,
           "projectionId": projection.id + "",
-          //"issueDate": projection.date
+          "invitedFriends": invitedFriends,
           "seatIds": seatIds
       };
-
-
 
       ticket = JSON.stringify(ticket);
 
@@ -263,3 +282,144 @@ function displaySeats(projection){
 					return total;
 				}
     }
+
+function searchFriends(parameter){
+    $.ajax({
+        url: "/registeredUser/searchUsers/" + parameter,
+        type: "GET",
+        dataType: "json",
+        beforeSend: function(request){
+            request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+        },
+        success: function(data, textStatus, response){
+            var foundUsers = data.users;
+            currentUser = data.currentUser;
+            localStorage.setItem("currentUserToken", response.getResponseHeader("Authorization"));
+            if(foundUsers.length == 0)
+                getToastr("No users matching your query: " + parameter, "", 2);
+            else
+                showUsers(foundUsers);
+        },
+        error: function(response){
+            if(response.status == 401)
+                getToastr("Not authorized for this activity!", "Error", 3);
+            else
+                getToastr("Error when searching for a user! \nStatus: " + response.status, "", 3);
+        }
+    });
+}
+
+function showFriends(){
+    var friendshipList = (currentUser.friendships == null) ? [] : (currentUser.friendships instanceof Array ? currentUser.friendships : [currentUser.friendships]);
+    var friendTable = $("#friends-invitation-modal");
+    friendTable.find("tbody").empty();
+
+    $.each(friendshipList, function(index, friend){
+        var tableBody = friendTable.find("tbody");
+        if(friend.status == "Accepted") {
+            var trFriend = "<tr id='" + friend.username + "'>" +
+                "<td>" + friend.firstname + "</td>" +
+                "<td>" + friend.lastname + "</td>" +
+                "<td>" + friend.username + "</td>" +
+                "<td>" +
+                    "<form class='form-group form-delete-friend'>" +
+                        "<input type='hidden' value='" + friend.username + "'>" +
+                        "<button class='btn btn-danger btn-delete-friend' id='delete-friend-button'>" +
+                        "<span class='glyphicon glyphicon-remove'></span> Remove </button>" +
+                    "</form>" +
+                "</td>" +
+            "</tr>";
+            tableBody.append(trFriend);
+        }
+        else if(friend.status == "Pending"){
+            var trWaiting = "<tr id='" + friend.username + "'>" +
+                    "<td>" + friend.firstname + "</td>" +
+                    "<td>" + friend.lastname + "</td>" +
+                    "<td>" + friend.username + "</td>" +
+                    "<td> Waiting for a response </td>" +
+                "</tr>";
+            tableBody.append(trWaiting);
+        }
+        else {
+            var trFriendRequest = "<tr id='" + friend.username + "'>" +
+                    "<td>" + friend.firstname + "</td>" +
+                    "<td>" + friend.lastname + "</td>" +
+                    "<td>" + friend.username + "</td>" +
+                    "<td>" +
+                        "<form class='form-inline form-accept-request'>" +
+                            "<div class='form-group' style='margin-right: 2%;'>" +
+                                "<input type='hidden' value='" + friend.username + "'>" +
+                                "<button class='btn btn-warning btn-accept-friend-request' id='accept-request-button'>" +
+                                    "<span class='glyphicon glyphicon-check'></span> Invite </button>" +
+                            "</div>" +
+                        "</form>" +
+                    "</td>" +
+                "</tr>";
+            requestTable.find("tbody").append(trFriendRequest);
+        }
+    });
+}
+
+function showUsers(users){
+    var userList = (users == null) ? [] : (users instanceof Array ? users : [users]);
+    $.each(userList, function(index, user){
+
+        var trUser = "<tr id='" + user.username + "'>" +
+                "<td>" + user.name + "</td>" +
+                "<td>" + user.lastname + "</td>" +
+                "<td>" + user.username + "</td>" +
+                "<td>";
+                trUser += "<form class='form-group form-add-friend'>" +
+                    "<input type='hidden' value='" + user.username + "'>" +
+                    "<button id='invite-friend-button'>" +
+                    " Invite </button>" +
+                "</form>";
+
+                trUser += "</td>" +
+            "</tr>";
+        $("#friends-invitation-modal").find("tbody").append(trUser);
+    });
+}
+
+$(document).on('click', '#invite-friend-button',function(e){
+
+    var parentForm = $(this).parent();
+    var username = parentForm.find("input[type=hidden]").val();
+    var lastname = parentForm.parents("tr").find("#friend-name").text();
+    var name = parentForm.parents("tr").find("#friend-lastname").text();
+
+    invitedFriends.push(username);
+
+    $(this).remove();
+    parentForm.append(
+        "<button id = 'reject-friend-invitation'>" +
+            "<span class='glyphicon glyphicon-minus'></span> Reject " +
+        "</button>"
+    );
+});
+
+$(document).on('click', '#reject-friend-invitation', function(e) {
+    e.preventDefault();
+
+    var parentForm = $(this).parent();
+    $(this).remove();
+    parentForm.append(
+        "<button id = 'invite-friend-button'>" +
+        "<span class='glyphicon glyphicon-plus'></span> Invite " +
+        "</button>"
+    );
+    var username = parentForm.find('input[type=hidden]').val();
+    var index = invitedFriends.indexOf(username);
+
+    invitedFriends.splice(index, 1);
+});
+
+$(document).on('click', '#search-friends-invitation-button', function(e){
+    e.preventDefault();
+    var form = $(this).parent("form");
+    var parameter = $("#search-friends-invitation-form :text").val();
+    $("#friends-invitation-modal").find("tbody").empty();
+    if(parameter.trim() != "") {
+        searchFriends(parameter);
+    }
+});

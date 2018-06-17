@@ -221,7 +221,7 @@ function showFriends(){
         var tableBody = friendTable.find("tbody");
         if(friend.status == "Accepted") {
             var trFriend = "<tr id='" + friend.username + "'>" +
-                "<td>" + friend.firstname + "</td>" +
+                "<td>" + friend.name + "</td>" +
                 "<td>" + friend.lastname + "</td>" +
                 "<td>" + friend.username + "</td>" +
                 "<td>" +
@@ -282,7 +282,7 @@ function showUsers(users){
         });
 
         var trUser = "<tr id='" + user.username + "'>" +
-                "<td>" + user.firstname + "</td>" +
+                "<td>" + user.name + "</td>" +
                 "<td>" + user.lastname + "</td>" +
                 "<td>" + user.username + "</td>" +
                 "<td>";

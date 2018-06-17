@@ -1,19 +1,19 @@
 package com.cinemas_theaters.cinemas_theaters.domain.dto;
 
-import com.cinemas_theaters.cinemas_theaters.domain.enums.FriendshipStatus;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 
 public class FriendDTO {
 
     String username;
-    String firstname;
+    String name;
     String lastname;
-    FriendshipStatus status;
+    InvitationStatus status;
 
     public FriendDTO() { }
 
-    public FriendDTO(String username, String firstname, String lastname, FriendshipStatus status) {
+    public FriendDTO(String username, String name, String lastname, InvitationStatus status) {
         this.username = username;
-        this.firstname = firstname;
+        this.name = name;
         this.lastname = lastname;
         this.status = status;
     }
@@ -26,12 +26,12 @@ public class FriendDTO {
         this.username = username;
     }
 
-    public String getFirstname() {
-        return firstname;
+    public String getName() {
+        return name;
     }
 
-    public void setFirstname(String firstname) {
-        this.firstname = firstname;
+    public void setName(String name) {
+        this.name = name;
     }
 
     public String getLastname() {
@@ -42,11 +42,11 @@ public class FriendDTO {
         this.lastname = lastname;
     }
 
-    public FriendshipStatus getStatus() {
+    public InvitationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(FriendshipStatus status) {
+    public void setStatus(InvitationStatus status) {
         this.status = status;
     }
 }

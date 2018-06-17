@@ -2,6 +2,7 @@ package com.cinemas_theaters.cinemas_theaters.controller;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TicketReservationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TheatreRepository;
 import com.cinemas_theaters.cinemas_theaters.service.*;
@@ -61,42 +62,40 @@ public class TicketController {
             RegisteredUser user = this.registeredUserService.findByUsername(username);
 
             List<String> ids = p.getReservedSeats();
-
             for(String seatID: ticketReservationDTO.getSeatIds()){
 
                 ids.add(seatID);
             }
-
             p.setReservedSeats(ids);
 
+            ArrayList<RegisteredUser> invitedFriends = this.registeredUserService.approveInvitations(ticketReservationDTO.getInvitedFriends(), user);
 
+            Reservation reservation = new Reservation(ticketReservationDTO.getShowTitle(), ticketReservationDTO.getProjectionDate(), user);
+            List<Invitation> invitations = this.registeredUserService.sendInvitations(invitedFriends, user, reservation);
+
+            reservation.setInvitations(invitations);
+
+            this.reservationRepository.save(reservation);
 
             ArrayList<Ticket> tickets = new ArrayList<>();
-
-            Reservation r = new Reservation(ticketReservationDTO.getShowTitle(), ticketReservationDTO.getProjectionDate(), user);
-
-            this.reservationRepository.save(r);
-
-            System.out.println("%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^%^ " + r.getId());
-
             for (String s: ticketReservationDTO.getSeatIds()){
                 Seat seat = this.seatService.getById(Long.parseLong(s));
 
                 //Ticket ticket = new Ticket(ticketReservationDTO.getShowTitle(), ticketReservationDTO.getProjectionDate(), user, seat, p);
 
-                Ticket ticket = new Ticket(seat, p, theatreRepository.getById(132L), r);
+                Ticket ticket = new Ticket(seat, p, theatreRepository.getById(132L), reservation);
 
                 tickets.add(ticket);
 
                 this.ticketService.add(ticket);
             }
 
-            r.setTickets(tickets);
-            r.setProjection(p);
+            reservation.setTickets(tickets);
+            reservation.setProjection(p);
 
-            p.getReservations().add(r);
+            p.getReservations().add(reservation);
 
-            this.reservationRepository.save(r);
+            this.reservationRepository.save(reservation);
             this.projectionService.save(p);
 
             return new ResponseEntity<TicketReservationDTO>(ticketReservationDTO, HttpStatus.CREATED);

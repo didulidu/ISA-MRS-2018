@@ -12,16 +12,17 @@ public class TicketReservationDTO {
 
     private String projectionId;
 
-    //private String issueDate;
+    private ArrayList<String> invitedFriends;
 
     private ArrayList<String> seatIds;
 
     public TicketReservationDTO(){}
 
-    public TicketReservationDTO(String showTitle, String projectionDate, String projectionId, ArrayList<String> seatIds){
+    public TicketReservationDTO(String showTitle, String projectionDate, String projectionId, ArrayList<String> invitedFriends, ArrayList<String> seatIds){
         this.showTitle = showTitle;
         this.projectionDate = projectionDate;
         this.projectionId = projectionId;
+        this.invitedFriends = invitedFriends;
         this.seatIds = seatIds;
     }
 
@@ -47,6 +48,14 @@ public class TicketReservationDTO {
 
     public void setProjectionId(String projectionId) {
         this.projectionId = projectionId;
+    }
+
+    public ArrayList<String> getInvitedFriends() {
+        return invitedFriends;
+    }
+
+    public void setInvitedFriends(ArrayList<String> invitedFriends) {
+        this.invitedFriends = invitedFriends;
     }
 
     public ArrayList<String> getSeatIds() {

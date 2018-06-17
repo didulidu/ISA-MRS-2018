@@ -1,14 +1,13 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
-import ch.qos.logback.core.CoreConstants;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegUserProfileUpdateDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Invitation;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
-import com.cinemas_theaters.cinemas_theaters.domain.enums.FriendshipStatus;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.*;
 
 
@@ -16,9 +15,6 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
-import java.sql.ResultSet;
-import java.sql.ResultSetMetaData;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -40,6 +36,9 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
 
     @Autowired
     private ReservationRepository reservationRepository;
+
+    @Autowired
+    private InvitationRepository invitationRepository;
 
     @Override
     @Transactional(readOnly = false)
@@ -63,7 +62,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
         if(user.getFriendships().containsKey(friend))
             return false;
         else {
-            Friendship user_friend_friendsip = new Friendship(user, friend, FriendshipStatus.Pending);
+            Friendship user_friend_friendsip = new Friendship(user, friend, InvitationStatus.Pending);
             Friendship friend_user_friendsip = new Friendship(friend, user, null);
             user.getFriendships().put(friend, user_friend_friendsip);
             friend.getFriendships().put(user, friend_user_friendsip);
@@ -81,8 +80,8 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
         if(!user.getFriendships().containsKey(friend) || user.getFriendships().get(friend).getStatus() != null) {
             return false;
         }
-        user.getFriendships().get(friend).setStatus(FriendshipStatus.Accepted);
-        friend.getFriendships().get(user).setStatus(FriendshipStatus.Accepted);
+        user.getFriendships().get(friend).setStatus(InvitationStatus.Accepted);
+        friend.getFriendships().get(user).setStatus(InvitationStatus.Accepted);
 
         this.registeredUserRepository.save(user);
         this.registeredUserRepository.save(friend);
@@ -230,5 +229,93 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
         }
         else
             return false;
+    }
+
+    @Override
+    public boolean hasReservationExpired(Reservation reservation){
+        SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+        Date now = new Date();
+        String nowDateString = sdf.format(now);
+        String reservationDateString = reservation.getProjectionDate();
+        Date reservationDate = null;
+        Date nowDate = null;
+        Date thirtyMinutesBeforeReservation = null;
+        try {
+            nowDate = sdf.parse(nowDateString);
+            reservationDate = sdf.parse(reservationDateString);
+            thirtyMinutesBeforeReservation = new Date(reservationDate.getTime() - TimeUnit.MINUTES.toMillis(30));
+
+            if(reservationDate.before(nowDate))
+                return false;
+            //pola sata pre projekcije
+            else if (nowDate.after(thirtyMinutesBeforeReservation) && nowDate.before(reservationDate)){
+                return false;
+            } else{
+                return true;
+            }
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+        return true;
+    }
+
+    @Override
+    public ArrayList<RegisteredUser> approveInvitations (List<String> invitedUsers, RegisteredUser inviter){
+        ArrayList<RegisteredUser> invitedFriends = new ArrayList<>();
+        for (String user: invitedUsers){
+            RegisteredUser friend = this.registeredUserRepository.findByUsername(user);
+
+            //TODO: provera
+            invitedFriends.add(friend);
+        }
+        return invitedFriends;
+    }
+
+    @Override
+    public ArrayList<Invitation> sendInvitations(List<RegisteredUser> invitedFriends, RegisteredUser sender, Reservation reservation) {
+        ArrayList<Invitation> invitations = new ArrayList<>();
+        for (RegisteredUser invitedFriend : invitedFriends) {
+            Invitation invitation = new Invitation(InvitationStatus.Pending,invitedFriend, sender, reservation);
+            invitations.add(invitation);
+            invitedFriend.getInvitations().add(invitation);
+        }
+        return invitations;
+    }
+
+    @Override
+    public Invitation checkInvitation(RegisteredUser user, Long invitationId, InvitationStatus status){
+        Invitation invite = null;
+        for (Invitation inv : user.getInvitations()) {
+            if(inv.getId().equals(invitationId) && inv.getStatus().equals(status)){
+                invite = inv;
+                break;
+            }
+        }
+
+        return invite;
+    }
+
+    @Override
+    public List<Invitation> findRegisteredUserInvitations(Long id){
+        return this.invitationRepository.findByInvitedUserId(id);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void acceptInvitation(RegisteredUser user, Invitation invite){
+        invite.setStatus(InvitationStatus.Accepted);
+        this.registeredUserRepository.save(user);
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void rejectInvitation(RegisteredUser user, Invitation invite){
+        this.invitationRepository.deleteByReservationIdAndInvitationId(user.getId(), invite.getReservation().getId());
+    }
+
+    @Override
+    @Transactional(readOnly = false)
+    public void cancelInvitation(RegisteredUser user, Invitation invite){
+        this.invitationRepository.deleteByReservationIdAndInvitationId(user.getId(), invite.getReservation().getId());
     }
 }

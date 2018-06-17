@@ -12,7 +12,7 @@ function getPersonalReservation(){
         },
         error: function(response){
             if(response.status == 401)
-                getToastr("Not authorized for this activity", "Greška", 3);
+                getToastr("Not authorized for this activity", "Error", 3);
             else
                 getToastr("An error occured while fetchng reservations! \nStatus: " + response.status, "", 3);
         }

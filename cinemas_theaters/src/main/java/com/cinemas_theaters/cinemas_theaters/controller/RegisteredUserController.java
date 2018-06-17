@@ -2,6 +2,7 @@ package com.cinemas_theaters.cinemas_theaters.controller;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
@@ -21,7 +22,9 @@ import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
+import javax.persistence.criteria.CriteriaBuilder;
 import javax.validation.Valid;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
@@ -186,7 +189,6 @@ public class RegisteredUserController {
         return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
     }
 
-
     @RequestMapping(
             value = "/deleteFriend",
             method = RequestMethod.PUT,
@@ -295,6 +297,33 @@ public class RegisteredUserController {
     }
 
     @RequestMapping(
+            value = "/getAllRegisteredUserInvitations",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<List<RegisteredUserInvitationDTO>> getAllRegisteredUserInvitations(@RequestHeader("Authorization") String userToken){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            List<Invitation> invitations = this.registeredUserService.findRegisteredUserInvitations(currentUser.getId());
+
+            List<RegisteredUserInvitationDTO> registeredUserInvitationDTOS = new ArrayList<>();
+
+            for(Invitation invitation: invitations){
+                RegisteredUserInvitationDTO registeredUserInvitationDTO = new RegisteredUserInvitationDTO(invitation.getId(), invitation.getReservation().getId(), invitation.getInvitationSender().getUsername(), invitation.getInvitationSender().getName(), invitation.getInvitationSender().getLastname()
+                ,invitation.getReservation().getProjection().getShow().getTheatre().getName(), invitation.getReservation().getShowTitle(),invitation.getReservation().getProjectionDate(), invitation.getStatus());
+                registeredUserInvitationDTOS.add(registeredUserInvitationDTO);
+            }
+
+            return new ResponseEntity<List<RegisteredUserInvitationDTO>>(registeredUserInvitationDTOS, headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<List<RegisteredUserInvitationDTO>>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
             value = "/updateDataAndPassword",
             method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -332,7 +361,7 @@ public class RegisteredUserController {
                 boolean success = true;
 
                 if(success) {
-                    /*for (Invite invited : reservation.getInvites()) {
+                    /*for (Invitation invited : reservation.getInvites()) {
                         try {
                             this.emailService.sendNotification(currentUser, invited.getInvited(), reservation, reservation.getReservationTables().get(0).getRestaurant());
                         }catch( Exception e ){
@@ -367,6 +396,99 @@ public class RegisteredUserController {
             else
                 // rezervacija ne postoji, ili je u pitanju id rezervacije koju je kreirao neko od prijatelja
                 return new ResponseEntity(headers, HttpStatus.FORBIDDEN);
+        }
+        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/acceptInvitation",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<ReservationInvitationDTO> acceptInvite(@RequestHeader("Authorization") String userToken, @RequestBody String idInvite){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            Invitation invitation = this.registeredUserService.checkInvitation(currentUser, Long.parseLong(idInvite), InvitationStatus.Pending);
+            if(invitation != null) {
+                boolean success = this.registeredUserService.hasReservationExpired(invitation.getReservation());
+
+                if(success) {
+                    this.registeredUserService.acceptInvitation(currentUser, invitation);
+
+                    Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
+                    SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                    String date = sdfDate.format(invitation.getReservation().getProjectionDate());
+                    ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
+                            currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
+
+                    return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
+                }
+                else
+                    // do pocetka rezervacije je preostalo 30min ili manje
+                    return new ResponseEntity(headers, HttpStatus.NOT_ACCEPTABLE);
+            }
+            else
+                // poziv za rucak ne postoji ili je vec prihvacen ranije
+                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/rejectInvitation",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity ignoreInvite(@RequestHeader("Authorization") String userToken, @RequestBody String idInvite){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            Invitation invitation = this.registeredUserService.checkInvitation(currentUser, Long.parseLong(idInvite), InvitationStatus.Pending);
+            if(invitation != null) {
+                this.registeredUserService.rejectInvitation(currentUser, invitation);
+
+                Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
+                SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                String date = sdfDate.format(invitation.getReservation().getProjectionDate());
+                ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
+                        currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
+                return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/cancelInvitation",
+            method = RequestMethod.DELETE,
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity removeInvite(@RequestHeader("Authorization") String userToken, @RequestBody String idInvite){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            Invitation invitation = this.registeredUserService.checkInvitation(currentUser, Long.parseLong(idInvite), InvitationStatus.Accepted);
+            if(invitation != null) {
+                this.registeredUserService.cancelInvitation(currentUser, invitation);
+
+                Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
+                SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
+                String date = sdfDate.format(invitation.getReservation().getProjectionDate());
+                ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
+                        currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
+                return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
     }

@@ -176,7 +176,7 @@ span.seatCharts-legendDescription {
 	line-height: 30px;
 	}
 .checkout-button {
-    display: block;
+    display: inline-block;
     margin: 16px 0 22px;
     border:none;
     font-size: 16px;
