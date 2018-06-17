@@ -21,7 +21,12 @@ $("#add-show").on('click', function(){
 
 
 $(document).ready(function(){
-        var id = localStorage.getItem("theater");
+    var id = localStorage.getItem("theater");
+    if(localStorage.getItem("currentUser") !=undefined){
+        if(JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
+            $("#nav-tab").append("<button type='button' class='btn btn-warning' id='settings-btn'data-toggle=\"modal\" data-target=\"#settingsModal\"><i class=\"fab fa-whmcs\"></i> Settings</button>")
+        }
+    }
        // localStorage.setItem("theater", undefined);
         getProfileData(id, forward_profile);
         $('#nav-tab a').on('click', function (e) {
@@ -31,6 +36,19 @@ $(document).ready(function(){
             $(this).tab('show')
         })
 });
+
+// // OVO MENJAJ
+// $(document).on('click', '#settings-btn',function(e){
+//     e.preventDefault();
+//     if(localStorage.getItem("currentUser")!=undefined)
+//         if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "TheaterAndCinemaAdmin")
+//             window.location.replace("cinema_admin_profile.html");
+//         else
+//             window.location.replace("index.html");
+//     else
+//         window.location.replace("index.html");
+//     return false;
+// });
 
 
 $(document).on('click', '#home-btn',function(e){

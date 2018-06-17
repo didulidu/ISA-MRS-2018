@@ -107,6 +107,7 @@ public class ProjectionController {
         String username = this.jwtService.getUser(userToken).getUsername();
         TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
         if(!user.getType().equals(UserType.TheaterAndCinemaAdmin)){
+            System.out.println("Ne odgovara tip korisnika *****************88");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         Show film = showService.getById(projDTO.getShowId());
@@ -124,6 +125,7 @@ public class ProjectionController {
                 if(p.getExist()) ok = false;
             }
         }
+        System.out.println("Stigo dovdeee ****************************");
         if (ok) {
             Projection nova = new Projection(projDTO.getDate(), film, sala, projDTO.getPrice());
             this.projectionService.save(nova);
@@ -136,6 +138,7 @@ public class ProjectionController {
             return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);
         }
         else
+            System.out.println("Datum ne valja");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
     }
 

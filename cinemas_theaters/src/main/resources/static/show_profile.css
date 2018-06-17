@@ -2,7 +2,7 @@ table {
     font-family: arial, sans-serif;
     border-collapse: collapse;
     width: 80%;
-    border-radius:15;
+    /*border-radius:15;*/
 }
 
 td, th {
@@ -12,21 +12,21 @@ td, th {
 }
 
 tr:nth-child(even) {
-    background-color: lightblue;
+    background-color: #e3e3e3;
 }
 
 tr:nth-child(odd) {
-    background-color: lightgreen;
+    background-color: darkgrey;
 }
 
 
-table tr:last-child td:first-child {
+/*table tr:last-child td:first-child {
     border-bottom-left-radius: 30px;
 }
 
 table tr:first-child td:first-child {
     border-bottom-right-radius: 30px;
-}
+}*/
 
 h1 h2{
 	color:white;
