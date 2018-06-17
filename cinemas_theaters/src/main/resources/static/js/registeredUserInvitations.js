@@ -147,7 +147,7 @@ function removeInvitation(inviteId, tr){
 
 function rejectInvitation(idInvite, tr){
     $.ajax({
-        url: 'registeredUser/ignoreInvitation',
+        url: 'registeredUser/rejectInvitation',
         type: 'PUT',
         contentType: 'text/plain',
         data: idInvite,

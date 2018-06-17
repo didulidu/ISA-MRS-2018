@@ -21,6 +21,6 @@ public interface InvitationRepository extends JpaRepository<Invitation, Long> {
     void deleteById(@Param("id") Long id);
 
     @Modifying
-    @Query("DELETE FROM Invitation inv WHERE reservation_id = :id AND invited_user_id = :invited_user_id")
+    @Query("DELETE FROM Invitation inv WHERE reservation_reservation_id = :id AND invited_user_id = :invited_user_id")
     void deleteByReservationIdAndInvitationId(@Param("invited_user_id") Long invited_id, @Param("id") Long id);
 }

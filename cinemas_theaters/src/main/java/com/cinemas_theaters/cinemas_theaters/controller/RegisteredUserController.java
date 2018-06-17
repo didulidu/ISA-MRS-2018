@@ -420,7 +420,7 @@ public class RegisteredUserController {
 
                     Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
                     SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                    String date = sdfDate.format(invitation.getReservation().getProjectionDate());
+                    String date = invitation.getReservation().getProjectionDate();
                     ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
                             currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
 
@@ -454,7 +454,7 @@ public class RegisteredUserController {
 
                 Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
                 SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                String date = sdfDate.format(invitation.getReservation().getProjectionDate());
+                String date = invitation.getReservation().getProjectionDate();
                 ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
                         currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
                 return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
@@ -482,7 +482,7 @@ public class RegisteredUserController {
 
                 Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
                 SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
-                String date = sdfDate.format(invitation.getReservation().getProjectionDate());
+                String date = invitation.getReservation().getProjectionDate();
                 ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
                         currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
                 return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
