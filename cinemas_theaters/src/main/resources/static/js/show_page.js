@@ -147,7 +147,12 @@ $(document).on('click', '#edit-projection',function(e) {
           forward_projections(data);
       },
       error: function(response){
-      getToastr('you can\'t edit this projection, someone has ticket for it!','Prick!',  3);
+        if(response.status == 401){
+          getToastr('you can\'t edit this projection, it\'s not yours!','Prick!',  3);
+        }
+        if(response.status == 409){
+          getToastr('you can\'t edit this projection, someone has ticket for it!','Prick!',  3);
+        }
       }
   });
 });

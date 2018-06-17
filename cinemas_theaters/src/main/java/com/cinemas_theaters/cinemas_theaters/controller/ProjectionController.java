@@ -155,7 +155,13 @@ public class ProjectionController {
         }
         Show film = showService.getById(projDTO.getShowId());
         Hall sala = hallService.findById(projDTO.getHallId());
+
+
         Projection choosen = projectionService.getById(id);
+        if(!choosen.getShow().getTheatre().getTheaterAdminUser().getId().equals(user.getId())){
+            System.out.println("NE GLEDAJ U TUDJ TANJIR");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
         if (!choosen.getReservedSeats().isEmpty()) {
             System.out.println("Postoji rezervacija");
             return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
