@@ -7,7 +7,9 @@ public class ShowRepertoireDTO {
     private String title;
     private String genre;
     private Integer duration;
-
+    private String actors;
+    private String directors;
+    private String description;
 
     public ShowRepertoireDTO() {}
 
@@ -19,6 +21,50 @@ public class ShowRepertoireDTO {
         this.duration = duration;
     }
 
+    public ShowRepertoireDTO(Long id, String title, String genre, Integer duration, String posterURL, String actors, String directors, String description) {
+        this.id = id;
+        this.posterURL = posterURL;
+        this.title = title;
+        this.genre = genre;
+        this.duration = duration;
+        this.actors = actors;
+        this.directors = directors;
+        this.description = description;
+    }
+
+    public ShowRepertoireDTO(String title, String genre, Integer duration, String posterURL, String actors, String directors, String description) {
+        this.posterURL = posterURL;
+        this.title = title;
+        this.genre = genre;
+        this.duration = duration;
+        this.actors = actors;
+        this.directors = directors;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public String getActors() {
+        return actors;
+    }
+
+    public void setActors(String actors) {
+        this.actors = actors;
+    }
+
+    public String getDirectors() {
+        return directors;
+    }
+
+    public void setDirectors(String directors) {
+        this.directors = directors;
+    }
 
     public Long getId() {
         return id;

@@ -56,6 +56,10 @@ public class TheatreController {
         return new ResponseEntity<List<TheatreDTO>>(theatreDTOS, headers, HttpStatus.OK);
     }
 
+
+
+
+
     @PostMapping(
             value = "/getTheatersByAdmin",
             produces = MediaType.APPLICATION_JSON_VALUE

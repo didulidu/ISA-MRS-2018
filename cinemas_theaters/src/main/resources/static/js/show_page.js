@@ -148,10 +148,10 @@ $(document).on('click', '#edit-projection',function(e) {
       },
       error: function(response){
         if(response.status == 401){
-          getToastr('you can\'t edit this projection, it\'s not yours!','Prick!',  3);
+          getToastr('you can\'t edit this projection, it\'s not yours!','Oh no!',  3);
         }
         if(response.status == 409){
-          getToastr('you can\'t edit this projection, someone has ticket for it!','Prick!',  3);
+          getToastr('you can\'t edit this projection, someone has ticket for it!','Oh no!',  3);
         }
       }
   });
@@ -181,7 +181,6 @@ function deleteProjection(id){
 var chosenId = undefined;
 function editProjectionWrapper(id) {
   chosenId =id;
-  alert("a sad" +chosenId);
 }
 
 

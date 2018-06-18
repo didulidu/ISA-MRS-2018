@@ -13,9 +13,9 @@ insert into theatre(name, description, address, city, type, theatre_id, avatar_u
 insert into theatre(name, description, address, city, type, theatre_id, avatar_url, rate, owner_id) values ("Amfiteatar", "Ovo je fensi teatar", "Tamo neka druga", "Novi Sad", "Theatre", 134, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fwww.mojnovisad.com%2Ffiles%2Fevent%2F0%2F4%2F9%2F22049%2F22049-arena-cineplex1.jpg&f=1",3.5,665);
 
 #movies, plays
-insert into `show`(title, genre, duration, price, average_rating, number_of_rates, show_id, theatre_theatre_id, posterurl) values ("Deadpool", "Comedy/Action", "110", 350, 4.1, 0, 231, 132, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.traileraddict.com%2Fcontent%2F20th-century-fox%2Fdeadpool-poster-9.jpg&f=1");
-insert into `show`(title, genre, duration, price, average_rating, number_of_rates, show_id, theatre_theatre_id, posterurl) values ("Blade Runner 2049", "SciFi/Drama", "130", 350, 4.5, 10, 232, 132, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fs3.birthmoviesdeath.com%2Fimages%2Fmade%2FBR2049_Key_Art_(US)_-_8.24_1200_1851_81_s.jpg&f=1");
-insert into `show`(title, genre, duration, price, average_rating, number_of_rates, show_id, theatre_theatre_id, posterurl) values ("Good Will Hunting", "Drama", "120", 250, 4.9, 2343, 233, 132, "https://images.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.QrpVypYWF-FUw7f0hqdrrQHaK9%26pid%3D15.1&f=1");
+insert into `show`(title, genre, duration, average_rating, number_of_rates, show_id, theatre_theatre_id, posterurl, exist) values ("Deadpool", "Comedy/Action", "110", 4.1, 0, 231, 132, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fcdn.traileraddict.com%2Fcontent%2F20th-century-fox%2Fdeadpool-poster-9.jpg&f=1", true);
+insert into `show`(title, genre, duration, average_rating, number_of_rates, show_id, theatre_theatre_id, posterurl, exist) values ("Blade Runner 2049", "SciFi/Drama", "130",  4.5, 10, 232, 132, "https://images.duckduckgo.com/iu/?u=http%3A%2F%2Fs3.birthmoviesdeath.com%2Fimages%2Fmade%2FBR2049_Key_Art_(US)_-_8.24_1200_1851_81_s.jpg&f=1", true);
+insert into `show`(title, genre, duration, average_rating, number_of_rates, show_id, theatre_theatre_id, posterurl, exist) values ("Good Will Hunting", "Drama", "120", 4.9, 2343, 233, 132, "https://images.duckduckgo.com/iu/?u=https%3A%2F%2Ftse4.mm.bing.net%2Fth%3Fid%3DOIP.QrpVypYWF-FUw7f0hqdrrQHaK9%26pid%3D15.1&f=1", true);
 
 
 #projections

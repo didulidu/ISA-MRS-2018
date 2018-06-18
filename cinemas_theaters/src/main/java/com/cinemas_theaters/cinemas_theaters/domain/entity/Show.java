@@ -28,13 +28,14 @@ public class Show  implements Serializable {
     @Size(min = 2)
     private String title;
 
+    @Column(nullable = true)
+    private String description;
+
+
     @Column(nullable = false)
     @NotNull
     private Integer duration;
 
-    @Column(nullable = false)
-    @NotNull
-    private Integer price;
 
     @Column(nullable = false)
     @NotNull
@@ -53,6 +54,10 @@ public class Show  implements Serializable {
     @CollectionTable(name = "directors" )
     @Column(name = "director")
     private List<String> directors;
+
+    @Column(nullable = false)
+    private Boolean exist;
+
 
     //@ManyToMany(mappedBy = "repertoire", fetch = FetchType.LAZY)
     /*@ManyToMany(cascade = {
@@ -87,15 +92,15 @@ public class Show  implements Serializable {
         this.projections = new ArrayList<>();
         this.actors = new ArrayList<>();
         this.directors = new ArrayList<>();
+        this.exist = true;
     }
 
-    public Show(Long id, @NotNull @Size(min = 2) String title, @NotNull Integer duration, @NotNull Integer price, @NotNull Double averageRating,
+    public Show(Long id, @NotNull @Size(min = 2) String title, @NotNull Integer duration,  @NotNull Double averageRating,
                 @NotNull Integer numberOfRates, @NotNull List<String> actors, @NotNull List<String> directors, Theatre theatre, List<Projection> projections,
-                Hall hall, @NotNull @Size(min = 2) String genre, @NotNull String posterURL) {
+                 @NotNull @Size(min = 2) String genre, @NotNull String posterURL, String description) {
         this.id = id;
         this.title = title;
         this.duration = duration;
-        this.price = price;
         this.averageRating = averageRating;
         this.numberOfRates = numberOfRates;
         this.actors = actors;
@@ -105,6 +110,43 @@ public class Show  implements Serializable {
         //this.hall = hall;
         this.genre = genre;
         this.posterURL = posterURL;
+        this.exist = true;
+        this.description = description;
+    }
+
+    public Show(@NotNull @Size(min = 2) String title, @NotNull Integer duration, @NotNull Double averageRating,
+                @NotNull Integer numberOfRates, @NotNull List<String> actors, @NotNull List<String> directors, Theatre theatre, List<Projection> projections,
+                @NotNull @Size(min = 2) String genre, @NotNull String posterURL, @NotNull boolean exist, String description) {
+
+        this.title = title;
+        this.duration = duration;
+        this.averageRating = averageRating;
+        this.numberOfRates = numberOfRates;
+        this.actors = actors;
+        this.directors = directors;
+        this.theatre = theatre;
+        this.projections = projections;
+        //this.hall = hall;
+        this.genre = genre;
+        this.posterURL = posterURL;
+        this.exist = exist;
+        this.description = description;
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public Boolean getExist() {
+        return exist;
+    }
+
+    public void setExist(Boolean exist) {
+        this.exist = exist;
     }
 
     public Long getId() {
@@ -137,14 +179,6 @@ public class Show  implements Serializable {
 
     public void setDuration(Integer duration) {
         this.duration = duration;
-    }
-
-    public Integer getPrice() {
-        return price;
-    }
-
-    public void setPrice(Integer price) {
-        this.price = price;
     }
 
     public Double getAverageRating() {

@@ -21,6 +21,8 @@ function getAdminTheaters(){
             });        
 }
 
+
+
 function forward_admins_theaters(theaters){
 	$card = $(".theater-card").first();
     $(".cards").empty();

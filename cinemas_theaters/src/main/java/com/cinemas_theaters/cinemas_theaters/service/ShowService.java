@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
+import com.cinemas_theaters.cinemas_theaters.domain.dto.ShowRepertoireDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Show;
 
 import java.util.List;
@@ -15,4 +16,9 @@ public interface ShowService {
     Show findByTitle(String name);
 
     Show getById(Long id);
+
+    void save(Show show);
+
+    Show saveAndFlush(Show show);
+
 }

@@ -41,4 +41,16 @@ public class ShowServiceImpl implements ShowService {
     public Show findByTitle(String name) {
         return showRepository.findByTitle(name);
     }
+
+    @Override
+    public void save(Show show) {
+        this.showRepository.save(show);
+    }
+
+
+    @Override
+    public Show saveAndFlush(Show show) {
+        return showRepository.saveAndFlush(show);
+    }
+
 }
