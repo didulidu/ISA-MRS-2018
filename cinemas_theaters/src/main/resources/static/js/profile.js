@@ -6,6 +6,7 @@ function addTheaterAdminWidgets(){
     if(localStorage.getItem("currentUser") !=undefined){
         if(JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
             $("#nav-repertoire").append("<button id=\"add-show\" type='button' data-toggle=\"modal\" data-target=\"#exampleModal\" class='btn btn-success add-new-projection' >New</button>")
+            $("#nav-tab").append("<a class=\"nav-item nav-link\" id=\"nav-profile-tab\" data-toggle=\"tab\" href=\"#nav-profile\" role=\"tab\" aria-controls=\"nav-profile\" aria-selected=\"false\">Hall configuration</a>");
         }
     }
 }
@@ -146,8 +147,12 @@ function addCards(showsList){
             +"</div>"
             +"<div id=\"rateYo\"></div>"
             +"</div>";
+            if(localStorage.getItem("currentUser") !=undefined){
+             if(JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
+
             Kartica+="<div><button type='button' class='btn btn-danger' onclick='deleteShow("+show["id"]+")' id=\"delete-show\">Remove</button></div>"
             Kartica+="<div><button type='button' id = \"edit-show\" onclick='editShowWrapper("+show["id"]+")' data-toggle=\"modal\" data-target=\"#editShowModal\" class='btn btn-warning edit-show' >Edit</button></div>"
+            }}
             Kartice+=Kartica;
         });
         Kartice+="</div>";

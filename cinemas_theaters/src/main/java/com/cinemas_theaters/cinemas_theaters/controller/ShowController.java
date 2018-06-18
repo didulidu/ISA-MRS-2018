@@ -153,7 +153,15 @@ public class ShowController {
         if(!user.getType().equals(UserType.TheaterAndCinemaAdmin)){
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+
+
         Show chosen = showService.getById(Long.parseLong(id));
+
+        if(!chosen.getTheatre().getTheaterAdminUser().getId().equals(user.getId())){
+            System.out.println("NE GLEDAJ U TUDJ TANJIR");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+
         System.out.println("**************************" + chosen.getTitle()+"***"+map.get("theatreId"));
         if(chosen.getProjections().isEmpty()) {
             chosen.setExist(false);
@@ -177,7 +185,7 @@ public class ShowController {
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public ResponseEntity editProjection(@RequestHeader("Authorization") String userToken, @RequestBody @Valid ShowRepertoireDTO showDTO,@PathVariable("id") Long id, BindingResult result ) {
+    public ResponseEntity editShow(@RequestHeader("Authorization") String userToken, @RequestBody @Valid ShowRepertoireDTO showDTO,@PathVariable("id") Long id, BindingResult result ) {
         String username = this.jwtService.getUser(userToken).getUsername();
         TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
         if (!user.getType().equals(UserType.TheaterAndCinemaAdmin)) {
