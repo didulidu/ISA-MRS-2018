@@ -1,13 +1,10 @@
 function activateUser(token)
 {
-    var tokenJson = {
-        jwtToken:token
-    };
     $.ajax({
-        url: "/registeredUser/activation",
+        url: "/registeredUser/activateUser",
         type: "PUT",
         contentType: "application/json",
-        data: JSON.stringify(tokenJson),
+        data: token,
         error: function (response) {
             if(response.status == 400)
                 getToastr("Account already activated!", "", 2);

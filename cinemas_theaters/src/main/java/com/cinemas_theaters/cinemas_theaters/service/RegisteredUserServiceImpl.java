@@ -51,6 +51,18 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     }
 
     @Override
+    @Transactional(readOnly = false)
+    public boolean activateUser(RegisteredUser user)
+    {
+        if(!user.getRegistrationConfirmed()) {
+            user.setRegistrationConfirmed(true);
+            this.registeredUserRepository.save(user);
+            return true;
+        }
+        return false;
+    }
+
+    @Override
     public RegisteredUser findByUsername(String username){
         return this.registeredUserRepository.findByUsername(username);
     }

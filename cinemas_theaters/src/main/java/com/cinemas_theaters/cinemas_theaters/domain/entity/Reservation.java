@@ -28,6 +28,7 @@ public class Reservation   implements Serializable {
 
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     private RegisteredUser buyer;
 
     @OneToMany(fetch = FetchType.LAZY)

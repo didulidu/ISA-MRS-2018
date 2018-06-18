@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
+import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.User;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.repository.UserRepository;
@@ -25,9 +26,9 @@ public class UserServiceImpl implements  UserService {
         User user = findByUsername(username);
         if(user != null){
             if(user.getType().equals(UserType.RegisteredUser)){
-                //if(((RegisteredUser) user).getRegistrationConfirmed())
+                if(((RegisteredUser) user).getRegistrationConfirmed())
                     return user.getPassword().equals(password);
-                    //return false;
+                return false;
             }
             return user.getPassword().equals(password);
         }

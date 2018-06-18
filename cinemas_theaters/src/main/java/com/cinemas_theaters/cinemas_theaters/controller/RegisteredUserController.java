@@ -5,6 +5,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
+import com.cinemas_theaters.cinemas_theaters.service.EmailService;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
 import com.cinemas_theaters.cinemas_theaters.service.ProjectionService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
@@ -52,6 +53,30 @@ public class RegisteredUserController {
     @Autowired
     private ProjectionService projectionService;
 
+    @Autowired
+    private EmailService emailService;
+
+    @RequestMapping(
+            value = "/activateUser",
+            method = RequestMethod.PUT,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity activateUser(@RequestBody String token)
+    {
+        JwtUser user = this.jwtService.getUser(token);
+        RegisteredUser registeredUser = this.registeredUserService.findByUsername(user.getUsername());
+
+        if(registeredUser != null) {
+            boolean activationCompleted = this.registeredUserService.activateUser(registeredUser);
+
+            if (activationCompleted)
+                return new ResponseEntity(HttpStatus.OK);
+            else
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        else
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
     @RequestMapping(
             value = "/registration",
             method = RequestMethod.POST,
@@ -59,34 +84,30 @@ public class RegisteredUserController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity guestRegistration(@RequestBody @Valid UserRegistrationDTO newUser, BindingResult result) {
         if(result.hasErrors()){
-            // sistemske validacije podataka nisu zadovoljene
             System.out.println(result.getAllErrors());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         else {
             if(!newUser.getPassword().equals(newUser.getRepeatedPassword()))
-                // unosi za lozinku se ne poklapaju
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
             RegisteredUser newRegisteredUser = convertDTOToRegisteredUser(newUser);
 
             newRegisteredUser.setType(UserType.RegisteredUser);
-
             newRegisteredUser.setTelephoneNumber("");
             newRegisteredUser.setAddress("");
 
-
             boolean userCreated = this.registeredUserService.createNewUser(newRegisteredUser);
             if(!userCreated)
-                // vec postoji korisnik sa istim korisnickim imenom
                 return new ResponseEntity(HttpStatus.FORBIDDEN);
             else {
-                /**try {
-                    emailService.sendEmailNotification(newRegisteredUser);
+                String token = jwtService.getToken(new JwtUser(newUser.getUsername()));
+                try {
+                    emailService.sendUserActivation(newRegisteredUser, token);
                 }catch( Exception e ){
-                    System.out.println("Error while when sending an email!");
+                    e.printStackTrace();
                     return new ResponseEntity(HttpStatus.CONFLICT);
-                }**/
+                }
                 return new ResponseEntity(HttpStatus.CREATED);
             }
         }
@@ -352,15 +373,14 @@ public class RegisteredUserController {
         headers.add("Authorization", this.jwtService.getToken(user));
 
         if (currentUser != null) {
-            //Reservation reservation = this.registeredUserService.reservationExist(currentUser, Long.parseLong(reservationId));
             Reservation reservation = reservationRepository.getById(Long.parseLong(reservationId));
 
             if(reservation != null){
                 // otkazivanje rezervacije je moguce samo 30min pre njenog pocetka
                 //boolean success = this.registeredUserService.checkReservationExpire(reservation);
-                boolean success = true;
+                boolean notTooLate = registeredUserService.hasReservationExpired(reservation);
 
-                if(success) {
+                if(notTooLate) {
                     /*for (Invitation invited : reservation.getInvites()) {
                         try {
                             this.emailService.sendNotification(currentUser, invited.getInvited(), reservation, reservation.getReservationTables().get(0).getRestaurant());
@@ -390,11 +410,9 @@ public class RegisteredUserController {
                     return new ResponseEntity(headers, HttpStatus.OK);
                 }
                 else
-                    // preostalo je manje ili tacno 30min do pocetka rezervacije
                     return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
             }
             else
-                // rezervacija ne postoji, ili je u pitanju id rezervacije koju je kreirao neko od prijatelja
                 return new ResponseEntity(headers, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
@@ -419,7 +437,6 @@ public class RegisteredUserController {
                     this.registeredUserService.acceptInvitation(currentUser, invitation);
 
                     Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
-                    SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                     String date = invitation.getReservation().getProjectionDate();
                     ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
                             currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
@@ -427,11 +444,9 @@ public class RegisteredUserController {
                     return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
                 }
                 else
-                    // do pocetka rezervacije je preostalo 30min ili manje
                     return new ResponseEntity(headers, HttpStatus.NOT_ACCEPTABLE);
             }
             else
-                // poziv za rucak ne postoji ili je vec prihvacen ranije
                 return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
         }
         return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
@@ -453,7 +468,6 @@ public class RegisteredUserController {
                 this.registeredUserService.rejectInvitation(currentUser, invitation);
 
                 Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
-                SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String date = invitation.getReservation().getProjectionDate();
                 ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
                         currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
@@ -481,7 +495,6 @@ public class RegisteredUserController {
                 this.registeredUserService.cancelInvitation(currentUser, invitation);
 
                 Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
-                SimpleDateFormat sdfDate = new SimpleDateFormat("dd/MM/yyyy HH:mm");
                 String date = invitation.getReservation().getProjectionDate();
                 ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
                         currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);

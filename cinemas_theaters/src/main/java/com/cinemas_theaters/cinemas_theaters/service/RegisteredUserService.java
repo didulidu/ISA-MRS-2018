@@ -15,6 +15,9 @@ import java.util.List;
 public interface RegisteredUserService {
     boolean createNewUser(RegisteredUser user);
 
+
+    boolean activateUser(RegisteredUser user);
+
     RegisteredUser findByUsername(String username);
 
     boolean addFriend(RegisteredUser user, RegisteredUser friend);
