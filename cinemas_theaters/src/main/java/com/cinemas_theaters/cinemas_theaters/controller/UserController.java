@@ -3,6 +3,7 @@ package com.cinemas_theaters.cinemas_theaters.controller;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.JwtUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.TheaterAdminUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.User;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
@@ -16,7 +17,10 @@ import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
+
+import javax.validation.Valid;
 
 @RestController
 @RequestMapping(value = "/user")
@@ -36,8 +40,10 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity login(@RequestBody UserLoginDTO userLoginDTO){
         User user = this.userService.findByUsername(userLoginDTO.getUsername());
-        UserLoginDTO userDTO = new UserLoginDTO(user.getUsername(),user.getPassword(),user.getType(), user.getId());
+        System.out.println("             ----->>>>>>>>"+user.getPassword()+ " " + user.getUsername());
+        UserLoginDTO userDTO = new UserLoginDTO(user.getUsername(),user.getPassword(),user.getType(), user.getId(), user.getName(), user.getLastname(), user.getEmail());
         Boolean userExist = this.userService.authenticate(userLoginDTO.getUsername(), userLoginDTO.getPassword());
+
         if(userExist){
             HttpHeaders headers = new HttpHeaders();
             JwtUser jwtUser = new JwtUser(userLoginDTO.getUsername());
@@ -87,4 +93,8 @@ public class UserController {
         ModelMapper mapper = new ModelMapper();
         return mapper.map(user, RegisteredUserDTO.class);
     }
+
+
+
+
 }

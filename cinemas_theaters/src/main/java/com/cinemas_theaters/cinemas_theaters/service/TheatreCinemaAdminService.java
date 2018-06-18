@@ -6,4 +6,6 @@ import org.springframework.stereotype.Service;
 @Service("TCAService")
 public interface TheatreCinemaAdminService {
     TheaterAdminUser findByUsername(String username);
+    TheaterAdminUser saveAndFlush(TheaterAdminUser user);
+
 }

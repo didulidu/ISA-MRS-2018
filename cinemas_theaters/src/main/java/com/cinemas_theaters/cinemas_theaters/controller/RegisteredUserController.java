@@ -5,10 +5,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
-import com.cinemas_theaters.cinemas_theaters.service.EmailService;
-import com.cinemas_theaters.cinemas_theaters.service.JwtService;
-import com.cinemas_theaters.cinemas_theaters.service.ProjectionService;
-import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
+import com.cinemas_theaters.cinemas_theaters.service.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -55,6 +52,11 @@ public class RegisteredUserController {
 
     @Autowired
     private EmailService emailService;
+
+    @Autowired
+    private TheatreCinemaAdminService theatreCinemaAdminService;
+
+
 
     @RequestMapping(
             value = "/activateUser",
@@ -505,6 +507,43 @@ public class RegisteredUserController {
         }
         return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
     }
+
+
+    @PostMapping(
+            value = "/admin-edit/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity editAdminInfo(@RequestHeader("Authorization") String userToken, @RequestBody @Valid UserLoginDTO userDTO, @PathVariable("id") String id, BindingResult result ) {
+        String username = this.jwtService.getUser(userToken).getUsername();
+        TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
+        if (!user.getType().equals(UserType.TheaterAndCinemaAdmin)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        System.out.println("EMAIL ------->>"+user.getEmail());
+
+
+        if(!id.equals(user.getId().toString())){
+            System.out.println("NE GLEDAJ U TUDJ TANJIR");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } else {
+
+            user.setName(userDTO.getName());
+            user.setLastname(userDTO.getLastname());
+            user.setPassword(userDTO.getPassword());
+
+            theatreCinemaAdminService.saveAndFlush(user);
+            return new ResponseEntity<UserLoginDTO>(userDTO, HttpStatus.CREATED);
+        }
+    }
+
+
+
+
+
+
+
 
     private RegisteredUserDTO convertRegisteredUserToDTO(RegisteredUser user){
         ModelMapper mapper = new ModelMapper();

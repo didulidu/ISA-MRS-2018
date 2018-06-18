@@ -6,4 +6,5 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface TheatreCinemaAdminRepository extends JpaRepository<TheaterAdminUser,Long> {
     TheaterAdminUser findByUsername(String username);
+    TheaterAdminUser saveAndFlush(TheaterAdminUser user);
 }

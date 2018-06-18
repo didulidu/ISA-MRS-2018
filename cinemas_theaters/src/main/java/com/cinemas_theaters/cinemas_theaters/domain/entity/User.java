@@ -39,6 +39,13 @@ public abstract class User implements Serializable {
     @Enumerated(EnumType.STRING)
     private UserType type;
 
+    @Column(nullable = true, unique = true)
+    @NotNull
+    @Size(min = 5, max = 30)
+    private String email;
+
+
+
     public User() { }
 
     public User(String name, String lastname, String username, String password, UserType type) {
@@ -49,15 +56,35 @@ public abstract class User implements Serializable {
         this.type = type;
     }
 
-    public User(String username, UserType type){
+    public User(String name, String lastname, String username, String password, UserType type, String email) {
+        this.name = name;
+        this.lastname = lastname;
         this.username = username;
+        this.password = password;
         this.type = type;
+        this.email = email;
     }
 
-    public User(String username, String name, UserType type){
+
+    public User(String username, UserType type, String email){
+        this.username = username;
+        this.type = type;
+        this.email = email;
+    }
+
+    public User(String username, String name, UserType type, String email){
         this.name = name;
         this.username = username;
         this.type = type;
+        this.email = email;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Long getId() {

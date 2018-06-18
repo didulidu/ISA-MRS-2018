@@ -16,10 +16,6 @@ import java.util.Map;
 
 @Entity
 public class TheaterAdminUser extends User implements Serializable {
-    @Column(nullable = false)
-    @Email
-    private String email;
-
 
     @Column(nullable = false)
     @NotNull
@@ -36,39 +32,28 @@ public class TheaterAdminUser extends User implements Serializable {
 
 
     public TheaterAdminUser(@Email String email, @NotNull boolean registrationConfirmed,  List<Theatre> theatres) {
-        this.email = email;
         this.registrationConfirmed = registrationConfirmed;
         this.theatres = theatres;
     }
 
     public TheaterAdminUser(String name, String lastname, String username, String password, UserType type, @Email String email, @NotNull boolean registrationConfirmed, List<Theatre> theatres) {
-        super(name, lastname, username, password, type);
-        this.email = email;
+        super(name, lastname, username, password, type, email);
         this.registrationConfirmed = registrationConfirmed;
         this.theatres = theatres;
     }
 
     public TheaterAdminUser(String username, UserType type, @Email String email, @NotNull boolean registrationConfirmed, List<Theatre> theatres) {
-        super(username, type);
-        this.email = email;
+        super(username, type, email);
         this.registrationConfirmed = registrationConfirmed;
         this.theatres = theatres;
     }
 
     public TheaterAdminUser(String username, String name, UserType type, @Email String email,@NotNull boolean registrationConfirmed,  List<Theatre> theatres) {
-        super(username, name, type);
-        this.email = email;
+        super(username, name, type, email);
         this.registrationConfirmed = registrationConfirmed;
         this.theatres = theatres;
     }
 
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
-    }
 
     public boolean isRegistrationConfirmed() {
         return registrationConfirmed;
