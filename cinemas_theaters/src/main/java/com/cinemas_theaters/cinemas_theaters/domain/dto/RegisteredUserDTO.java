@@ -1,14 +1,9 @@
 package com.cinemas_theaters.cinemas_theaters.domain.dto;
 
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import com.cinemas_theaters.cinemas_theaters.serializer.CustomFriendshipSerializer;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
-import java.util.HashMap;
-import java.util.Map;
+import java.util.ArrayList;
+import java.util.List;
 
 public class RegisteredUserDTO {
     private String name;
@@ -18,11 +13,10 @@ public class RegisteredUserDTO {
     private String address;
     private String telephoneNumber;
     private UserType type;
-    @JsonSerialize(using = CustomFriendshipSerializer.class)
-    private Map<RegisteredUser, Friendship> friendships;
+    private List<FriendDTO> friendships;
 
     public RegisteredUserDTO() {
-        this.friendships = new HashMap<>();
+        this.friendships = new ArrayList<>();
     }
 
     /*public RegisteredUserDTO(String name, String lastname, String username, String email, HashMap<RegisteredUser, Friendship> friendships) {
@@ -34,7 +28,7 @@ public class RegisteredUserDTO {
         this.friendships = friendships;
     }*/
 
-    public RegisteredUserDTO(String name, String lastname, String username, String email, String address, String telephoneNumber, UserType type, Map<RegisteredUser, Friendship> friendships) {
+    public RegisteredUserDTO(String name, String lastname, String username, String email, String address, String telephoneNumber, UserType type, List<FriendDTO> friendships) {
         this.name = name;
         this.lastname = lastname;
         this.username = username;
@@ -85,11 +79,11 @@ public class RegisteredUserDTO {
         this.type = type;
     }
 
-    public Map<RegisteredUser, Friendship> getFriendships() {
+    public List<FriendDTO> getFriendships() {
         return friendships;
     }
 
-    public void setFriendships(Map<RegisteredUser, Friendship> friendships) {
+    public void setFriendships(List<FriendDTO> friendships) {
         this.friendships = friendships;
     }
 

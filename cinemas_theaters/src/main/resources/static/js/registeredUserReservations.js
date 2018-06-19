@@ -49,13 +49,6 @@ function renderPersonalReservation(data){
     });
 }
 
-/*
-
-    NAPRAVI DA SE NAKON OTKAZIVANJA REZERVACIJE OBRISU I KARTE U BAZI!
-    !!!!!!!!!!!!!!!!!!!!!!!!
-    !!!!!!!!!!!!!!!!!!!!!!!!
-*/
-
 function removeReservation(reservationId, tr){
     $.ajax({
         url: '/registeredUser/removeReservation',

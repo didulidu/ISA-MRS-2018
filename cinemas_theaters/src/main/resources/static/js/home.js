@@ -133,8 +133,10 @@ function getRegisteredUserData(){
 
                     if(document.URL.indexOf("registeredUserFriends.html") != -1)
                         displayRegisteredUsersFriends(currentUser);
-                    else if (document.URL.indexOf("registeredUserProfile.html") != -1)
-                        showPersonalData(currentUser);
+                    else if (document.URL.indexOf("registeredUserProfile.html") != -1){
+                        displayCurrentUserProfile(currentUser);
+                        displayVisitations();
+                    }
 
                     //if(document.URL.indexOf("index.html") != -1)
                         //setCurrentUsername(currentUser);

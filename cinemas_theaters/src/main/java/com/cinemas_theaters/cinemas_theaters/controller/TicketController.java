@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TicketReservationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
@@ -38,6 +39,9 @@ public class TicketController {
     private JwtService jwtService;
 
     @Autowired
+    private EmailService emailService;
+
+    @Autowired
     private TheatreRepository theatreRepository;
 
     @Autowired
@@ -53,6 +57,8 @@ public class TicketController {
             // sistemske validacije podataka nisu zadovoljene
             System.out.println(result.getAllErrors());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }else if(ticketReservationDTO.getInvitedFriends().size()>ticketReservationDTO.getSeatIds().size()){
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
         else {
             System.out.println(ticketReservationDTO.getShowTitle());
@@ -97,6 +103,8 @@ public class TicketController {
 
             this.reservationRepository.save(reservation);
             this.projectionService.save(p);
+
+            this.emailService.sendReservedTicketInfo(user, reservation);
 
             return new ResponseEntity<TicketReservationDTO>(ticketReservationDTO, HttpStatus.CREATED);
             }

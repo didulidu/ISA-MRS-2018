@@ -57,17 +57,17 @@ function renderPersonalInvitations(data){
                                  "<td>" +
                                      "<form>" +
                                          "<input type='hidden' value='" + invitation.id + "'>" +
-                                         "<button id = 'reject-invitation-button'>" +
+                                         "<button id = 'cancel-invitation-button'>" +
                                              "Cancel" +
                                          "</button>" +
                                      "</form>" +
                                  "</td>" +
                              "</tr>";
         }else{
-            trReservation += "<td id='" + invitation.reservationId + "'>" +
+                trReservation += "<td id='" + invitation.reservationId + "'>" +
                                 "<form>" +
                                     "<input type='hidden' value='" + invitation.id + "'>" +
-                                    "<button id = 'remove-invitation-button' class='btn btn-danger reservation-remove-button'>" +
+                                    "<button id = 'remove-invitation-button'>" +
                                         "<span class='glyphicon glyphicon-remove'></span> Remove" +
                                     "</button>" +
                                 "</form>" +
@@ -90,18 +90,11 @@ function acceptInvitation(idReservation, idInvite, td, tdIgnore){
             localStorage.setItem('currentUserToken', response.getResponseHeader('Authorization'));
             tdIgnore.remove();
             td.empty();
-            td.append("<form>" +
-                    "<input type='hidden' value='" + idReservation + "'>" +
-                    "<button class='btn btn-primary invite-details-button'>" +
-                        "<span class='glyphicon glyphicon-info-sign'></span> Detaljnije" +
-                    "</button>" +
-                "</form>");
-            var tr = td.parents("tr");
-            tr.append("<td>" +
+            td.append("<td>" +
                     "<form>" +
                         "<input type='hidden' value='" + idInvite + "'>" +
-                        "<button class='btn btn-danger invite-remove-button'>" +
-                            "<span class='glyphicon glyphicon-remove'></span> Otkaži" +
+                        "<button id='remove-invitation-button'>" +
+                            "Remove" +
                         "</button>" +
                     "</form>" +
                 "</td>");
@@ -119,9 +112,9 @@ function acceptInvitation(idReservation, idInvite, td, tdIgnore){
     });
 }
 
-function removeInvitation(inviteId, tr){
+function cancelInvitation(inviteId, tr){
     $.ajax({
-        url: 'registeredUser/removeInvitation',
+        url: 'registeredUser/cancelInvitation',
         type: 'DELETE',
         contentType: 'text/plain',
         data: inviteId,
@@ -145,9 +138,9 @@ function removeInvitation(inviteId, tr){
     })
 }
 
-function rejectInvitation(idInvite, tr){
+function removeInvitation(idInvite, tr){
     $.ajax({
-        url: 'registeredUser/rejectInvitation',
+        url: 'registeredUser/removeInvitation',
         type: 'PUT',
         contentType: 'text/plain',
         data: idInvite,
@@ -170,14 +163,14 @@ function rejectInvitation(idInvite, tr){
 }
 
 
-$(document).on('click', '#remove-invitation-button', function(e){
+$(document).on('click', '#cancel-invitation-button', function(e){
     e.preventDefault();
     var form = $(this).parents("form");
     var inviteId = form.find("input[type=hidden]").val();
 
     var td = form.parent();
     var tr = td.parent();
-    removeInvitation(inviteId, tr);
+    cancelInvitation(inviteId, tr);
 });
 
 $(document).on('click', '#accept-invitation-button', function(e){
@@ -191,11 +184,11 @@ $(document).on('click', '#accept-invitation-button', function(e){
     acceptInvitation(reservationId, idInvite, td, tdIgnore);
 });
 
-$(document).on('click', '#reject-invitation-button', function(e){
+$(document).on('click', '#remove-invitation-button', function(e){
     e.preventDefault();
     var form = $(this).parents("form");
     var tr = form.parents("tr");
 
     var idInvite = form.find("input[type=hidden]").val();
-    rejectInvitation(idInvite, tr);
+    removeInvitation(idInvite, tr);
 });

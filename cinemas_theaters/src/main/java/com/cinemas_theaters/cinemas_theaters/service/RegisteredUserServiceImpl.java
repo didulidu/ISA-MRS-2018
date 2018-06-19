@@ -2,6 +2,7 @@ package com.cinemas_theaters.cinemas_theaters.service;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegUserProfileUpdateDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserVisitationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Invitation;
@@ -71,13 +72,13 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Transactional(readOnly = false)
     public boolean addFriend(RegisteredUser user, RegisteredUser friend)
     {
-        if(user.getFriendships().containsKey(friend))
+        if(alreadyFriends(user, friend))
             return false;
         else {
             Friendship user_friend_friendsip = new Friendship(user, friend, InvitationStatus.Pending);
-            Friendship friend_user_friendsip = new Friendship(friend, user, null);
-            user.getFriendships().put(friend, user_friend_friendsip);
-            friend.getFriendships().put(user, friend_user_friendsip);
+            Friendship friend_user_friendsip = new Friendship(friend, user, InvitationStatus.Undefined);
+            user.getFriendships().add(user_friend_friendsip);
+            friend.getFriendships().add(friend_user_friendsip);
 
             this.registeredUserRepository.save(user);
             this.registeredUserRepository.save(friend);
@@ -89,11 +90,11 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Override
     @Transactional(readOnly = false)
     public boolean acceptFriendRequest(RegisteredUser user, RegisteredUser friend){
-        if(!user.getFriendships().containsKey(friend) || user.getFriendships().get(friend).getStatus() != null) {
+        if(alreadyFriends(user, friend) || getRegisteredUserFriendship(user, friend).getStatus() != InvitationStatus.Undefined) {
             return false;
         }
-        user.getFriendships().get(friend).setStatus(InvitationStatus.Accepted);
-        friend.getFriendships().get(user).setStatus(InvitationStatus.Accepted);
+        getRegisteredUserFriendship(user, friend).setStatus(InvitationStatus.Accepted);
+        getRegisteredUserFriendship(friend, user).setStatus(InvitationStatus.Accepted);
 
         this.registeredUserRepository.save(user);
         this.registeredUserRepository.save(friend);
@@ -103,13 +104,14 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Override
     @Transactional(readOnly = false)
     public boolean deleteFriendRequest(RegisteredUser user, RegisteredUser friend){
-        if(!user.getFriendships().containsKey(friend) || user.getFriendships().get(friend).getStatus() != null)
+        if(alreadyFriends(user, friend) || getRegisteredUserFriendship(user, friend).getStatus() != InvitationStatus.Undefined) {
             return false;
-        Friendship user_friend_friendsip = user.getFriendships().get(friend);
-        Friendship friend_user_friendsip = friend.getFriendships().get(user);
+        }
+        Friendship user_friend_friendsip = getRegisteredUserFriendship(user, friend);
+        Friendship friend_user_friendsip = getRegisteredUserFriendship(friend, user);
 
-        user.getFriendships().remove(friend);
-        friend.getFriendships().remove(user);
+        removeRegisteredUserFriend(user, user_friend_friendsip.getId());
+        removeRegisteredUserFriend(friend, friend_user_friendsip.getId());
 
         this.friendshipRepository.delete(user_friend_friendsip);
         this.friendshipRepository.delete(friend_user_friendsip);
@@ -121,13 +123,17 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Override
     @Transactional(readOnly = false)
     public boolean removeFriend(RegisteredUser user, RegisteredUser friend){
-        if(user.getFriendships().containsKey(friend) && friend.getFriendships().containsKey(user)) {
-            Friendship user_friend_friendsip = user.getFriendships().get(friend);
-            Friendship friend_user_friendsip = friend.getFriendships().get(user);
+        //if(!alreadyFriends(user, friend) || !alreadyFriends(friend, user))
+        //    return false;
+        //else
+        {
+            Friendship user_friend_friendsip = getRegisteredUserFriendship(user, friend);
+            Friendship friend_user_friendsip = getRegisteredUserFriendship(friend, user);
 
-            user.getFriendships().remove(friend);
+            removeRegisteredUserFriend(user, user_friend_friendsip.getId());
+            removeRegisteredUserFriend(friend, friend_user_friendsip.getId());
 
-            friend.getFriendships().remove(user);
+            //TODO: Obrisi sve pozivnice od strane obrisanog prijatelja
 
             this.friendshipRepository.delete(user_friend_friendsip);
             this.friendshipRepository.delete(friend_user_friendsip);
@@ -136,10 +142,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
 
             return true;
         }
-        return false;
     }
-
-
 
     @Override
     @Transactional(readOnly = true)
@@ -152,6 +155,26 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Transactional(readOnly = true)
     public List<RegisteredUserSearchDTO> findUsers(String username, String parameter){
         return this.registeredUserRepository.findUsers(username, parameter);
+    }
+
+    @Override
+    public List<Reservation> getAllVisitations(RegisteredUser currentUser) {
+
+        List<Reservation> ret = new ArrayList<>();
+
+        for (Reservation reservation: currentUser.getReservations()){
+            if (!isReservationOngoing(reservation)){
+                ret.add(reservation);
+            }
+        }
+
+        for(Invitation invitation: currentUser.getInvitations()){
+            if (invitation.getStatus() == InvitationStatus.Accepted && !isReservationOngoing(invitation.getReservation())){
+                ret.add(invitation.getReservation());
+            }
+        }
+
+        return ret;
     }
 
     @Override
@@ -244,7 +267,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     }
 
     @Override
-    public boolean hasReservationExpired(Reservation reservation){
+    public boolean isReservationOngoing(Reservation reservation){
         SimpleDateFormat sdf = new SimpleDateFormat("dd/MM/yyyy HH:mm");
         Date now = new Date();
         String nowDateString = sdf.format(now);
@@ -321,7 +344,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
 
     @Override
     @Transactional(readOnly = false)
-    public void rejectInvitation(RegisteredUser user, Invitation invite){
+    public void removeInvitation(RegisteredUser user, Invitation invite){
         this.invitationRepository.deleteByReservationIdAndInvitationId(user.getId(), invite.getReservation().getId());
     }
 
@@ -329,5 +352,34 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Transactional(readOnly = false)
     public void cancelInvitation(RegisteredUser user, Invitation invite){
         this.invitationRepository.deleteByReservationIdAndInvitationId(user.getId(), invite.getReservation().getId());
+    }
+
+
+    private boolean alreadyFriends(RegisteredUser user, RegisteredUser friends){
+        for(Friendship f: user.getFriendships()){
+            if (f.getSecondUser().getId().equals(user.getId())){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private Friendship getRegisteredUserFriendship(RegisteredUser user, RegisteredUser friend){
+        for(Friendship f: user.getFriendships()){
+            if (f.getSecondUser().getId().equals(friend.getId())){
+                return f;
+            }
+        }
+        return null;
+    }
+
+    private boolean removeRegisteredUserFriend(RegisteredUser user, Long id){
+        for(Friendship f: user.getFriendships()){
+            if (f.getId().equals(id)){
+                user.getFriendships().remove(f);
+                return true;
+            }
+        }
+        return false;
     }
 }

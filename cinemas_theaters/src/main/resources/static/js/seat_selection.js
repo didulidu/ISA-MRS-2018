@@ -167,6 +167,8 @@ $(document).on("click", "#book-ticket-btn", function(){
         error: function(response){
             if(response.status == 401)
                 getToastr("Not authorized for the selected activity!", "Error", 3);
+            else if (response.status == 403)
+                getToastr("Number of invited friends exceeds the number of reserved tickets!", "Error", 3);
             else
                 getToastr("Seats couldn't be fetched! \nStatus: " + response.status, "", 3);
         }
@@ -305,57 +307,6 @@ function searchFriends(parameter){
                 getToastr("Not authorized for this activity!", "Error", 3);
             else
                 getToastr("Error when searching for a user! \nStatus: " + response.status, "", 3);
-        }
-    });
-}
-
-function showFriends(){
-    var friendshipList = (currentUser.friendships == null) ? [] : (currentUser.friendships instanceof Array ? currentUser.friendships : [currentUser.friendships]);
-    var friendTable = $("#friends-invitation-modal");
-    friendTable.find("tbody").empty();
-
-    $.each(friendshipList, function(index, friend){
-        var tableBody = friendTable.find("tbody");
-        if(friend.status == "Accepted") {
-            var trFriend = "<tr id='" + friend.username + "'>" +
-                "<td>" + friend.firstname + "</td>" +
-                "<td>" + friend.lastname + "</td>" +
-                "<td>" + friend.username + "</td>" +
-                "<td>" +
-                    "<form class='form-group form-delete-friend'>" +
-                        "<input type='hidden' value='" + friend.username + "'>" +
-                        "<button class='btn btn-danger btn-delete-friend' id='delete-friend-button'>" +
-                        "<span class='glyphicon glyphicon-remove'></span> Remove </button>" +
-                    "</form>" +
-                "</td>" +
-            "</tr>";
-            tableBody.append(trFriend);
-        }
-        else if(friend.status == "Pending"){
-            var trWaiting = "<tr id='" + friend.username + "'>" +
-                    "<td>" + friend.firstname + "</td>" +
-                    "<td>" + friend.lastname + "</td>" +
-                    "<td>" + friend.username + "</td>" +
-                    "<td> Waiting for a response </td>" +
-                "</tr>";
-            tableBody.append(trWaiting);
-        }
-        else {
-            var trFriendRequest = "<tr id='" + friend.username + "'>" +
-                    "<td>" + friend.firstname + "</td>" +
-                    "<td>" + friend.lastname + "</td>" +
-                    "<td>" + friend.username + "</td>" +
-                    "<td>" +
-                        "<form class='form-inline form-accept-request'>" +
-                            "<div class='form-group' style='margin-right: 2%;'>" +
-                                "<input type='hidden' value='" + friend.username + "'>" +
-                                "<button class='btn btn-warning btn-accept-friend-request' id='accept-request-button'>" +
-                                    "<span class='glyphicon glyphicon-check'></span> Invite </button>" +
-                            "</div>" +
-                        "</form>" +
-                    "</td>" +
-                "</tr>";
-            requestTable.find("tbody").append(trFriendRequest);
         }
     });
 }

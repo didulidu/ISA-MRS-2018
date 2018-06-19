@@ -1,13 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.domain.dto;
 
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
-import com.cinemas_theaters.cinemas_theaters.serializer.CustomFriendshipSerializer;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
-
-import java.util.HashMap;
-import java.util.Map;
 
 public class TheaterAdminUserDTO {
     private String name;
