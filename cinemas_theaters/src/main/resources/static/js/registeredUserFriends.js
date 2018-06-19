@@ -5,60 +5,6 @@ function displayRegisteredUsersFriends(user){
     showFriends();
 }
 
-function sortFriendByName(direction){
-    currentUser.friendships.sort(function(f1,f2) {
-        if(direction == "asc") {
-            if (f1.firstname.toLowerCase() < f2.firstname.toLowerCase())
-                return -1;
-            if (f1.firstname.toLowerCase() > f2.firstname.toLowerCase())
-                return 1;
-        }
-        else if(direction == "desc"){
-            if (f1.firstname.toLowerCase() > f2.firstname.toLowerCase())
-                return -1;
-            if (f1.firstname.toLowerCase() < f2.firstname.toLowerCase())
-                return 1;
-        }
-    });
-    showFriends();
-}
-
-function sortByLastname(direction){
-    currentUser.friendships.sort(function(f1,f2) {
-        if(direction == "asc") {
-            if (f1.lastname.toLowerCase() < f2.lastname.toLowerCase())
-                return -1;
-            if (f1.lastname.toLowerCase() > f2.lastname.toLowerCase())
-                return 1;
-        }
-        else if(direction == "desc"){
-            if (f1.lastname.toLowerCase() > f2.lastname.toLowerCase())
-                return -1;
-            if (f1.lastname.toLowerCase() < f2.lastname.toLowerCase())
-                return 1;
-        }
-    });
-    showFriends();
-}
-
-function sortByUsername(direction){
-    currentUser.friendships.sort(function(f1,f2) {
-        if(direction == "asc") {
-            if (f1.username.toLowerCase() < f2.username.toLowerCase())
-                return -1;
-            if (f1.username.toLowerCase() > f2.username.toLowerCase())
-                return 1;
-        }
-        else if(direction == "desc"){
-            if (f1.username.toLowerCase() > f2.username.toLowerCase())
-                return -1;
-            if (f1.username.toLowerCase() < f2.username.toLowerCase())
-                return 1;
-        }
-    });
-    showFriends();
-}
-
 function addFriend(friendUsername,td){
     $.ajax({
         url: "/registeredUser/addFriend",
@@ -355,28 +301,4 @@ $(document).on('click', '#delete-request-button', function(e){
     var form = $(this).parents("form");
     var friendUsername = form.find("input[type=hidden]").val();
     deleteRequest(friendUsername);
-});
-
-$(document).on('click', '#sort-friend-name-asc', function(){
-    sortFriendByName("asc");
-});
-
-$(document).on('click', '#sort-friend-name-desc', function(){
-    sortFriendByName("desc");
-});
-
-$(document).on('click', '#sort-friend-lastname-asc', function(){
-    sortByLastname("asc");
-});
-
-$(document).on('click', '#sort-friend-lastname-desc', function(){
-    sortByLastname("desc");
-});
-
-$(document).on('click', '#sort-friend-username-asc', function(){
-    sortByUsername("asc");
-});
-
-$(document).on('click', '#sort-friend-username-desc', function(){
-    sortByUsername("desc");
 });

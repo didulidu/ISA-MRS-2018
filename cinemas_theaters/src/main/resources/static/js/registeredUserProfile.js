@@ -203,14 +203,13 @@ function renderVisitations(data){
     });
 }
 
-$(document).on('click', '#profile-change-reset', function(e){
-    e.preventDefault();
-    $('#profile-user-name').val("");
-    $('#profile-user-lastname').val("");
-    $('#profile-user-email').val("");
-    $('#profile-user-username').val(currentUser.username);
-    $('#profile-user-password').val("");
-    $('#profile-user-new-password').val("");
-    $('#profile-user-new-password-2').val("");
+$(document).on('click', "#profile-link", function(){
+    $("#current-user-visitation-container").hide();
+    $("#current-user-profile-container").show();
+});
+
+$(document).on('click', "#visitations-link", function(){
+    $("#current-user-profile-container").hide();
+    $("#current-user-visitation-container").show();
 });
 

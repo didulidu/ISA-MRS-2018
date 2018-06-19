@@ -63,23 +63,27 @@ public class UserController {
             method = RequestMethod.GET,
             produces = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<?> getCurrentUser(@RequestHeader("Authorization") String userToken) {
-        JwtUser user = this.jwtService.getUser(userToken);
-        User currentUser = this.userService.findByUsername(user.getUsername());
-        HttpHeaders headers = new HttpHeaders();
-        headers.add("Authorization", this.jwtService.getToken(user));
+        try {
+            JwtUser user = this.jwtService.getUser(userToken);
+            User currentUser = this.userService.findByUsername(user.getUsername());
+            HttpHeaders headers = new HttpHeaders();
+            headers.add("Authorization", this.jwtService.getToken(user));
 
-        if(currentUser != null) {
-            switch (currentUser.getType()){
-                case RegisteredUser:
-                    RegisteredUser currUser = (RegisteredUser) currentUser;
-                    RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(currUser.getName(),currUser.getLastname(), currUser.getUsername(), currUser.getEmail(),
-                    currUser.getAddress(), currUser.getTelephoneNumber(), currUser.getType(), getRegisteredUserFriends(currUser.getFriendships()));
-                    return new ResponseEntity<RegisteredUserDTO>(registeredUserDTO, headers, HttpStatus.OK);
-                //case SystemAdmin:
-                //case TheaterAndCinemaAdmin:
+            if (currentUser != null) {
+                switch (currentUser.getType()) {
+                    case RegisteredUser:
+                        RegisteredUser currUser = (RegisteredUser) currentUser;
+                        RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(currUser.getName(), currUser.getLastname(), currUser.getUsername(), currUser.getEmail(),
+                                currUser.getAddress(), currUser.getTelephoneNumber(), currUser.getType(), getRegisteredUserFriends(currUser.getFriendships()));
+                        return new ResponseEntity<RegisteredUserDTO>(registeredUserDTO, headers, HttpStatus.OK);
+                    //case SystemAdmin:
+                    //case TheaterAndCinemaAdmin:
+                }
             }
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }catch(Exception e){
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<>(HttpStatus.NOT_FOUND);
     }
 
     @RequestMapping(

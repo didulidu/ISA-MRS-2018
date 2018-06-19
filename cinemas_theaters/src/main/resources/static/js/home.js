@@ -33,6 +33,11 @@ $(document).on('click', '#user-profile-button', function(e){
    window.location.replace("registeredUserProfile.html")
 });
 
+$(document).on('click', '#home-button', function(e){
+   e.preventDefault();
+   window.location.replace("index.html")
+});
+
 $(document).ready(function(){
         if(document.URL.indexOf("friends.html") == -1)
             getTheaters();
@@ -123,6 +128,13 @@ function getRegisteredUserData(){
             },
             success: function(data, textStatus, response){
                 var currentUser = data;
+
+                if (response.status == 404){
+                    formUnregisteredUserMenu();
+                    return;
+                }
+
+
                 localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
                 localStorage.setItem("currentUserRole", currentUser.type);
 
@@ -130,6 +142,7 @@ function getRegisteredUserData(){
 
                 if(currentUser.type == "RegisteredUser") {
                     openConnectionFriends(currentUser);
+                    formRegisteredUserMenu();
 
                     if(document.URL.indexOf("registeredUserFriends.html") != -1)
                         displayRegisteredUsersFriends(currentUser);
@@ -137,15 +150,37 @@ function getRegisteredUserData(){
                         displayCurrentUserProfile(currentUser);
                         displayVisitations();
                     }
-
-                    //if(document.URL.indexOf("index.html") != -1)
-                        //setCurrentUsername(currentUser);
-
-
-
+                }
+            },
+            error: function(response){
+                if (response.status == 404){
+                    formUnregisteredUserMenu();
+                    return;
                 }
             }
     });
+}
+
+function formUnregisteredUserMenu(){
+    $("#shop-button").hide();
+    $("#login-button").show();
+    $("#sign-up-button").show();
+    $("#friends-button").hide();
+    $("#reservations-button").hide();
+    $("#invitations-button").hide();
+    $("#user-profile-button").hide();
+    $("#home-button").show();
+}
+
+function formRegisteredUserMenu(){
+    $("#shop-button").show();
+    $("#login-button").hide();
+    $("#sign-up-button").hide();
+    $("#friends-button").show();
+    $("#reservations-button").show();
+    $("#invitations-button").show();
+    $("#user-profile-button").show();
+    $("#home-button").show();
 }
 
 function openConnectionFriends(currentUser){
