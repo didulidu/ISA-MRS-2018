@@ -76,19 +76,22 @@ public class TicketController {
             // sistemske validacije podataka nisu zadovoljene
             System.out.println(result.getAllErrors());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }else if(ticketReservationDTO.getInvitedFriends().size()>ticketReservationDTO.getSeatIds().size()){
+        }else if(ticketReservationDTO.getInvitedFriends().size()>ticketReservationDTO.getSeatIds().size()) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
         else {
             System.out.println(ticketReservationDTO.getShowTitle());
             Projection p = this.projectionService.getById(Long.parseLong(ticketReservationDTO.getProjectionId()));
 
+            if(this.projectionService.alreadyReserved(p, ticketReservationDTO.getSeatIds())){
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
+
             String username = this.jwtService.getUser(userToken).getUsername();
             RegisteredUser user = this.registeredUserService.findByUsername(username);
 
             List<String> ids = p.getReservedSeats();
             for(String seatID: ticketReservationDTO.getSeatIds()){
-
                 ids.add(seatID);
             }
             p.setReservedSeats(ids);
@@ -152,9 +155,9 @@ public class TicketController {
         List<QuickTicketDTO> sve_brze_karte = new ArrayList<QuickTicketDTO>();
         for(Ticket t : sve_karte){
             LocalDateTime datum_projekcije = ShowController.str2Date(t.getProjection().getDate());
-            if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
-                sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(), Long.parseLong(id)));
-            }
+            //if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
+            //    sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(), Long.parseLong(id)));
+            //}
         }
         return new ResponseEntity<List<QuickTicketDTO>>(sve_brze_karte, headers, HttpStatus.OK);
     }
@@ -186,16 +189,16 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        Ticket newTicket = new QuickTicket(sediste,projekcija,pozoriste,null,quickTicketDTO.getDiscount());
+        //Ticket newTicket = new QuickTicket(sediste,projekcija,pozoriste,null,quickTicketDTO.getDiscount());
 
-        this.ticketService.save(newTicket);
+        //this.ticketService.save(newTicket);
 
         List<QuickTicketDTO> sve_brze_karte = new ArrayList<QuickTicketDTO>();
         for(Ticket t : this.ticketService.findAll()){
             LocalDateTime datum_projekcije = ShowController.str2Date(t.getProjection().getDate());
-            if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
-                sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(),t.getTheatre().getId()));
-            }
+            //if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
+            //    sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(),t.getTheatre().getId()));
+            //}
         }
         return new ResponseEntity<List<QuickTicketDTO>>(sve_brze_karte, headers, HttpStatus.OK);
     }

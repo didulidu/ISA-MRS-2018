@@ -22,8 +22,14 @@ public class UserServiceImpl implements  UserService {
     }
 
     @Override
-    public Boolean authenticate(String username, String password){
-        User user = findByUsername(username);
+    @Transactional(readOnly = true)
+    public User findByEmail(String email){
+        return this.userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Boolean validateUserCredentials(String email, String password){
+        User user = findByEmail(email);
         if(user != null){
             if(user.getType().equals(UserType.RegisteredUser)){
                 if(((RegisteredUser) user).getRegistrationConfirmed())

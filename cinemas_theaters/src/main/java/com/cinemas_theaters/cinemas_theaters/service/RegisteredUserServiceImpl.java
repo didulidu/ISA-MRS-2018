@@ -69,6 +69,11 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     }
 
     @Override
+    public RegisteredUser findByEmail(String email) {
+        return this.registeredUserRepository.findByEmail(email);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public boolean addFriend(RegisteredUser user, RegisteredUser friend)
     {

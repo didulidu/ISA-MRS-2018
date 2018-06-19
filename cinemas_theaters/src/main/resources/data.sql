@@ -62,13 +62,6 @@ insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1024, 1
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1025, 2, 4, 6);
 
 
-#friendships
-insert into friendship(id, first_user_id, second_user_id, friendships_key, status) values (20, 151, 152, 152, 1);
-insert into friendship(id, first_user_id, second_user_id, friendships_key, status) values (21, 152, 151, 151, 1);
-insert into friendship(id, first_user_id, second_user_id, friendships_key, status) values (22, 151, 153, 153, 1);
-insert into friendship(id, first_user_id, second_user_id, friendships_key, status) values (23, 153, 151, 151, 1);
-insert into friendship(id, first_user_id, second_user_id, friendships_key, status) values (24, 152, 153, 153, 1);
-insert into friendship(id, first_user_id, second_user_id, friendships_key, status) values (25, 153, 152, 152, 1);
 
 
 

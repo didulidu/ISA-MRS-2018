@@ -48,6 +48,10 @@ public abstract class User implements Serializable {
 
     public User() { }
 
+    public User(@NotNull @Size(min = 5, max = 30) String email) {
+        this.email = email;
+    }
+
     public User(String name, String lastname, String username, String password, UserType type) {
         this.name = name;
         this.lastname = lastname;

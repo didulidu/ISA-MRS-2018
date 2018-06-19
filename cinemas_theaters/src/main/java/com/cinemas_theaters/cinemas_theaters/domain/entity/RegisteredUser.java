@@ -15,10 +15,6 @@ import java.util.List;
 public class RegisteredUser extends User implements Serializable {
 
     @Column(nullable = false)
-    @Email
-    private String email;
-
-    @Column(nullable = false)
     @NotNull
     private String avatarUrl;
 
@@ -52,15 +48,14 @@ public class RegisteredUser extends User implements Serializable {
     }
 
     public RegisteredUser(String username, String password, UserType type, String name, String lastname, String email) {
-        super(name, lastname, username, password, type);
+        super(name, lastname, username, password, type, email);
         this.avatarUrl = "";
-        this.email = email;
         this.registrationConfirmed = false;
         this.friendships = new ArrayList<>();
     }
 
     public RegisteredUser(@Email String email, @NotNull String avatarUrl, @NotNull boolean registrationConfirmed, @NotNull String address, @NotNull String telephoneNumber, List<Friendship> friendships, List<Ticket> tickets, List<Reservation> reservations) {
-        this.email = email;
+        super(email);
         this.avatarUrl = avatarUrl;
         this.registrationConfirmed = registrationConfirmed;
         this.address = address;
@@ -75,14 +70,6 @@ public class RegisteredUser extends User implements Serializable {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public List<Friendship> getFriendships() {

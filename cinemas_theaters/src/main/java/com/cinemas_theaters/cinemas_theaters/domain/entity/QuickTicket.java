@@ -4,9 +4,9 @@ package com.cinemas_theaters.cinemas_theaters.domain.entity;
 import javax.persistence.Column;
 import javax.persistence.Entity;
 
-@Entity
-public class QuickTicket extends Ticket {
-    @Column
+//@Entity
+public class QuickTicket {
+    //@Column
     private Integer discount;
 
     public QuickTicket(Integer discount) {
@@ -14,37 +14,37 @@ public class QuickTicket extends Ticket {
     }
 
     public QuickTicket(Long id, Seat seat, Projection projection, Integer discount) {
-        super(id, seat, projection);
+        //super(id, seat, projection);
         this.discount = discount;
     }
 
     public QuickTicket(Long id, Seat seat, Projection projection, Theatre theatre, Reservation reservation, Integer discount) {
-        super(id, seat, projection, theatre, reservation);
+        //super(id, seat, projection, theatre, reservation);
         this.discount = discount;
     }
 
     public QuickTicket(Seat seat, Projection projection, Theatre theatre, Reservation reservation, Integer discount) {
-        super(seat, projection, theatre, reservation);
+        //super(seat, projection, theatre, reservation);
         this.discount = discount;
     }
 
     public QuickTicket(Seat seat, Projection projection, Theatre theatre, Integer discount) {
-        super(seat, projection, theatre);
+        //super(seat, projection, theatre);
         this.discount = discount;
     }
 
     public QuickTicket(Long id, Seat seat, Projection projection, Theatre theatre, Integer discount) {
-        super(id, seat, projection, theatre);
+        //super(id, seat, projection, theatre);
         this.discount = discount;
     }
 
     public QuickTicket(Seat seat, Projection projection, Integer discount) {
-        super(seat, projection);
+        //super(seat, projection);
         this.discount = discount;
     }
 
     public QuickTicket(Long id, Seat seat, Integer discount) {
-        super(id, seat);
+        //super(id, seat);
         this.discount = discount;
     }
 

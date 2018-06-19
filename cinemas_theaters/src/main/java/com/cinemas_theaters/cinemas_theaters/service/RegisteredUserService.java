@@ -20,6 +20,8 @@ public interface RegisteredUserService {
 
     RegisteredUser findByUsername(String username);
 
+    RegisteredUser findByEmail(String email);
+
     boolean addFriend(RegisteredUser user, RegisteredUser friend);
 
     boolean acceptFriendRequest(RegisteredUser user, RegisteredUser friend);
