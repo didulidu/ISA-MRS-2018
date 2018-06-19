@@ -3,6 +3,12 @@ $(document).on('click', '#login-button', function(e){
     window.location.replace("login.html")
 });
 
+$(document).on('click', '#logout-button', function(e){
+    e.preventDefault();
+    logout();
+});
+
+
 $(document).on('click', '#sign-up-button', function(e){
     e.preventDefault();
     window.location.replace("registration.html")
@@ -163,6 +169,7 @@ function getRegisteredUserData(){
 
 function formUnregisteredUserMenu(){
     $("#shop-button").hide();
+    $("#logout-button").hide();
     $("#login-button").show();
     $("#sign-up-button").show();
     $("#friends-button").hide();
@@ -174,6 +181,7 @@ function formUnregisteredUserMenu(){
 
 function formRegisteredUserMenu(){
     $("#shop-button").show();
+    $("#logout-button").show();
     $("#login-button").hide();
     $("#sign-up-button").hide();
     $("#friends-button").show();
