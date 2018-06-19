@@ -56,8 +56,6 @@ public class TicketController {
     @Autowired
     private HallService hallService;
 
-    @Autowired
-    private EmailService emailService;
 
     @Autowired
     private TheatreRepository theatreRepository;
