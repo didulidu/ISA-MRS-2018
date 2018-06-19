@@ -17,7 +17,7 @@ public class TheatreItem extends Item {
 
     public TheatreItem(){}
 
-    public TheatreItem(String name, String description, Double price, Long quantity, Theatre theatre, Set categories) {
+    public TheatreItem(String name, String description, Theatre theatre, Set categories, Double price, Long quantity) {
 
         super(name, description, categories);
         this.price = price;

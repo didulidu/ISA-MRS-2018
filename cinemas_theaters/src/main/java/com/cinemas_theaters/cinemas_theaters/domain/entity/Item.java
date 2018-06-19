@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
 import com.cinemas_theaters.cinemas_theaters.domain.enums.Category;
+import org.springframework.stereotype.Component;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
@@ -22,6 +23,8 @@ public class Item  implements Serializable {
 
     private String description;
 
+    private String imagePath;
+
     private Set categories = new LinkedHashSet();
 
     public Item(){}
@@ -36,6 +39,20 @@ public class Item  implements Serializable {
         this.name = name;
         this.description = description;
         this.categories = categories;
+    }
+
+    public Item(String name, String description, Set categories, String imagePath) {
+        this.name = name;
+        this.description = description;
+        this.categories = categories;
+        this.imagePath = imagePath;
+    }
+
+    public Item(String name, String description, String imagePath) {
+
+        this.name = name;
+        this.description = description;
+        this.imagePath = imagePath;
     }
 
 
@@ -78,4 +95,9 @@ public class Item  implements Serializable {
     public Set getCategories(){   return categories;  }
 
     public void setCategories(Set categories){    this.categories = categories;   }
+
+    @Column(name="imagePath")
+    public String getImagePath(){return this.imagePath;}
+
+    public void setImagePath(String imagePath){this.imagePath = imagePath;}
 }

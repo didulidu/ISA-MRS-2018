@@ -1,26 +1,36 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.cinemas_theaters.cinemas_theaters.domain.enums.UserItemStatus;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import org.hibernate.annotations.ColumnDefault;
 
 import javax.persistence.*;
-import javax.validation.Constraint;
 import java.time.Duration;
+import java.util.Date;
 
 @Entity
 @Table(name = "USER_ITEM")
 public class UserItem extends Item {
 
-    private RegisteredUser user;
+    private User user;
     private Duration duration;
+    private UserItemStatus status;
+    private Date dataTime;
 
     public UserItem(){}
 
-    public UserItem(String name, String description, RegisteredUser user, Duration duration) {
+    public UserItem(String name, String description, User user, Duration duration) {
 
         super(name, description);
         this.user = user;
         this.duration = duration;
+    }
+
+    public UserItem(String name, String description, User user, Duration duration, String imagePath) {
+
+        super(name, description, imagePath);
+        this.user = user;
+        this.duration = duration;
+        this.status = UserItemStatus.PENDING;
     }
 
     public UserItem(String name, String description, Duration duration){
@@ -28,13 +38,21 @@ public class UserItem extends Item {
         this.duration = duration;
     }
 
+    public UserItem(String name, String description, Duration duration, Date dateTime, User user, String imagePath){
+        super(name, description, imagePath);
+        this.duration = duration;
+        this.dataTime = dateTime;
+        this.user = user;
+    }
+
+
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
     @JsonIgnore
     public User getUser() {
         return user;
     }
 
-    public void setUser(RegisteredUser user) {
+    public void setUser(User user) {
         this.user = user;
     }
 
@@ -46,4 +64,14 @@ public class UserItem extends Item {
     public void setDuration(Duration duration) {
         this.duration = duration;
     }
+
+    @Column(name="STATUS")
+    public UserItemStatus getStatus(){return this.status;}
+
+    public void setStatus(UserItemStatus status){this.status = status;}
+
+    @Column(name="DATE")
+    public Date getDataTime(){return this.dataTime;}
+
+    public void setDataTime(Date dateTime){this.dataTime = dateTime;}
 }

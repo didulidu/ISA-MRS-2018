@@ -8,6 +8,7 @@ public class ItemDTO {
     private String type;
     private String duration;
     private Long quantity;
+    private String imagePath;
 
     public ItemDTO(){}
 
@@ -18,13 +19,15 @@ public class ItemDTO {
         this.type = type;
     }
 
-    public ItemDTO(String name, String description, Double price, String type, String duration, Long quantity) {
+    public ItemDTO(String name, String description, Double price, String type,
+                   String duration, Long quantity, String imagePath) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.type = type;
         this.duration = duration;
         this.quantity = quantity;
+        this.imagePath = imagePath;
     }
 
     public String getName() {
@@ -74,4 +77,9 @@ public class ItemDTO {
     public void setQuantity(Long quantity) {
         this.quantity = quantity;
     }
+
+    public String getImagePath(){return this.imagePath;}
+
+    public void setImagePath(String imagePath){this.imagePath = imagePath;}
+
 }

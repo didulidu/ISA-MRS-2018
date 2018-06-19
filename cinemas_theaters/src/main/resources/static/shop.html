@@ -4,19 +4,551 @@
     <meta charset="UTF-8">
     <title>Title</title>
 
+
+    <link rel="stylesheet" href="shop.css" />
     <script src="lib/jQuery/jquery.min.js"></script>
 
     <script type="text/javascript" src="js/shop.js"></script>
-    <link rel="stylesheet" href="shop.css" />
 </head>
 <body>
-    <h1>SHOP</h1>
-    <input type="text" name="search-field" id="search-field">
-    <button id="search-btn" onclick="searchItems()">SEARCH</button>
 
-    <script>
-        function searchItems() {
-            $.ajax({
+    <div id=random></div>
+    <div id="nav-bar">
+        <ul>
+            <li><a class="active">Shop</a></li>
+            <li><a>New Item</a></li>
+            <li><a>My Offers</a></li>
+            <li><a>My Bids</a></li>
+        </ul>
+    </div>
+
+    <div id="content-container">
+
+        <div id="shop">
+
+
+            <div id="search-container">
+                <input type="text" name="search-name">
+                <button id="search-btn">SEARCH</button>
+
+                <div id="advanced-search">
+                    <div id="wrapper">
+
+                        <div id="chosen-categories"> <span id="chosen-categories-lbl">Selected categories</span></div>
+
+                        <input type="text" id="filter-label" placeholder="Filter categories...">
+                    </div>
+                    <div id="ac-div"></div>
+                </div>
+
+                <div id="advanced-search-btn">
+                    <a id="advanced-search-btn-btn">Advanced Search</a>
+                </div>
+            </div>
+
+            <div class="items-label"><div class="items-label-line"><hr /></div> Official Items</div>
+            <div id="official-items-container">
+                <div class="item">
+                    <div class="item-img">
+                        <img src="slika.png">
+                    </div>
+
+                    <div class="item-content-wrapper">
+                        <div class="item-content-opacity"></div>
+                        <div class="item-content">
+                            <div class="item-content-btn hidden"> > </div>
+                            <div class="item-content-container">
+                                <p class="item-content-name">
+                                    Yoda action figure
+                                </p>
+                                <p class="item-content-description">
+                                    <i>Description:</i>
+                                    <span>
+                                        Yoda action figure for children.
+                                        Green and small, your child will love it.
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="purchase">
+                        <div class="purchase-price">
+                            <span class="integer">299</span>,<span class="decimals">99</span>
+                        </div>
+                        <button class="purchase-btn">BUY</button>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="item-img">
+                        <img src="slika.png">
+                    </div>
+
+                    <div class="item-content-wrapper">
+                        <div class="item-content-opacity"></div>
+                        <div class="item-content">
+                            <div class="item-content-btn hidden"> > </div>
+                            <div class="item-content-container">
+                                <p class="item-content-name">
+                                    Yoda action figure
+                                </p>
+                                <p class="item-content-description">
+                                    <i>Description:</i>
+                                    <span>
+                                        Yoda action figure for children.
+                                        Green and small, your child will love it.
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="purchase">
+                        <div class="purchase-price">
+                            <span class="integer">299</span>,<span class="decimals">99</span>
+                        </div>
+                        <button class="purchase-btn">BUY</button>
+                    </div>
+                </div>
+            </div>
+
+            <div class="items-label"><div class="items-label-line"><hr /></div> User Items</div>
+            <div id="user-items-container">
+                <div class="item">
+                    <div class="item-img">
+                        <img src="slika.png">
+                    </div>
+
+                    <div class="item-content-wrapper">
+                        <div class="item-content-opacity"></div>
+                        <div class="item-content">
+                            <div class="item-content-btn hidden"> > </div>
+                            <div class="item-content-container">
+                                <p class="item-content-name">
+                                    Yoda action figure
+                                </p>
+                                <p class="item-content-description">
+                                    <i>Description:</i>
+                                    <span>
+                                        Yoda action figure for children.
+                                        Green and small, your child will love it.
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="purchase">
+                        <div class="purchase-price purchase-price-bid">
+                            <input type="number" name="item-bid">
+                        </div>
+                        <button class="purchase-btn">BID</button>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="item-img">
+                        <img src="slika.png">
+                    </div>
+
+                    <div class="item-content-wrapper">
+                        <div class="item-content-opacity"></div>
+                        <div class="item-content">
+                            <div class="item-content-btn hidden"> > </div>
+                            <div class="item-content-container">
+                                <p class="item-content-name">
+                                    Yoda action figure
+                                </p>
+                                <p class="item-content-description">
+                                    <i>Description:</i>
+                                    <span>
+                                        Yoda action figure for children.
+                                        Green and small, your child will love it.
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="purchase">
+                        <div class="purchase-price">
+                            <span class="integer">299</span>,<span class="decimals">99</span>
+                        </div>
+                        <button class="purchase-btn">BUY</button>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="item-img">
+                        <img src="slika.png">
+                    </div>
+
+                    <div class="item-content-wrapper">
+                        <div class="item-content-opacity"></div>
+                        <div class="item-content">
+                            <div class="item-content-btn hidden"> > </div>
+                            <div class="item-content-container">
+                                <p class="item-content-name">
+                                    Yoda action figure
+                                </p>
+                                <p class="item-content-description">
+                                    <i>Description:</i>
+                                    <span>
+                                        Yoda action figure for children.
+                                        Green and small, your child will love it.
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+
+                    </div>
+
+                    <div class="purchase">
+                        <div class="purchase-price">
+                            <span class="integer">299</span>,<span class="decimals">99</span>
+                        </div>
+                        <button class="purchase-btn">BUY</button>
+                    </div>
+                </div>
+
+                <div class="item">
+                    <div class="item-img">
+                        <img src="slika.png">
+                    </div>
+
+                    <div class="item-content-wrapper">
+                        <div class="item-content-opacity"></div>
+                        <div class="item-content">
+                            <div class="item-content-btn hidden"> > </div>
+                            <div class="item-content-container">
+                                <p class="item-content-name">
+                                    Yoda action figure
+                                </p>
+                                <p class="item-content-description">
+                                    <i>Description:</i>
+                                    <span>
+                                        Yoda action figure for children.
+                                        Green and small, your child will love it.
+                                    </span>
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+
+                    <div class="purchase">
+                        <div class="purchase-price">
+                            <span class="integer">299</span>,<span class="decimals">99</span>
+                        </div>
+                        <button class="purchase-btn">BUY</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="new-item">
+            <div id="new-item-wrapper">
+                <div class="new-item-row">
+                    <label>Name:</label>
+                    <input type="text" name="new-item-name" class="new-item-field">
+                    <label>Description:</label>
+                    ​<textarea id="txtArea" rows="10" cols="60" name="new-item-description" class="new-item-field"></textarea>
+                    <label>Expiration date:</label>
+                    <div class="new-item-field">
+                        <input type="date" name="new-item-date">
+                        <input type="time" name="new-item-time">
+                    </div>
+                    <label>Image (Optional):</label>
+                    <input type="file" name="new-item-image" class="new-item-field">
+
+                    <button id="new-item-btn">POST</button>
+                </div>
+            </div>
+        </div>
+
+        <div id="my-offers">
+            <div id="my-offers-wrapper">
+                <div class="my-offers-item-wrapper">
+                    <div class="my-offers-item">
+                        <span class="my-offers-item-content">Item1</span>
+                        <div class="my-offers-btns">
+                            <button class="my-offers-btn">E</button>
+                            <button class="my-offers-btn">D</button>
+                        </div>
+                    </div>
+                    <div class="my-offers-offers">
+                        <div class="my-offers-offers-item">
+                            <span class="my-offers-offers-content">200</span>
+                            <div class="my-offers-offers-btns">
+                                <button class="my-offers-offers-btn">A</button>
+                                <button class="my-offers-offers-btn">R</button>
+                            </div>
+                        </div>
+
+                        <div class="my-offers-offers-item">
+                            <span class="my-offers-offers-content">200</span>
+                            <div class="my-offers-offers-btns">
+                                <button class="my-offers-offers-btn">A</button>
+                                <button class="my-offers-offers-btn">R</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="my-offers-item">
+                    <span class="my-offers-item-content">Item2</span>
+                    <div class="my-offers-btns">
+                        <button class="my-offers-btn">E</button>
+                        <button class="my-offers-btn">D</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div id="my-bids">
+            <p>Ovo su moji bidovi</p>
+        </div>
+    </div>
+
+
+<script type="text/javascript">
+
+    $("#advanced-search").hide();
+
+    $("#advanced-search-btn-btn").click(function(){
+
+        $("#advanced-search").toggle();
+    });
+
+    var categories = ["Action", "Adventure", "Comedy", "Crime", "Drama", "Fantasy", "Historical",
+        "Horror",
+        "Romance", "Science fiction","Thriller", "Western"];
+
+    var chosen_categories = [];
+
+    $(document).ready(function(){
+
+        $(document).on('click', '.close-chosen-category', function(){
+            $(this).parent().remove();
+
+        });
+
+
+        $("#filter-label").on('input', function(){
+            displayCategories($("#filter-label").val());
+            focusCategory();
+        });
+
+        $("#filter-label").focusout(function(){
+
+            $("#ac-div").empty();
+            $(this).val("");
+        });
+
+        $("#filter-label").keydown(function(e){
+            //console.log(e.keyCode);
+            if (e.keyCode == 38){
+                e.preventDefault();
+
+                var currentFocus = $("#ac-div > .focus");
+                $(currentFocus).toggleClass("focus");
+                var nextFocus = $(currentFocus).prev();
+                if ($(nextFocus).length == 0){
+                    nextFocus = $("#ac-div").children()[$("#ac-div").children().length - 1];
+                }
+                $(nextFocus).toggleClass("focus");
+            }
+
+            if (e.keyCode == 40){
+                e.preventDefault();
+                var currentFocus = $("#ac-div > .focus");
+                $(currentFocus).toggleClass("focus");
+                var nextFocus = $(currentFocus).next();
+
+                if ($(nextFocus).length == 0){
+                    nextFocus = $("#ac-div").children()[0];
+                }
+                $(nextFocus).toggleClass("focus");
+            }
+
+            if (e.keyCode == 13){
+                e.preventDefault();
+
+                if($("#ac-div > .focus")[0]){
+                    addCategory($("#ac-div > .focus")[0].textContent);
+                }
+
+                $("#ac-div").empty();
+                $(this).val("");
+            }
+        });
+    });
+
+    var addCategory = function(category){
+        if ($.inArray(category, chosen_categories) == -1){
+            $("#chosen-categories").append($("<div class='chosen'>" + category + "<span class='close-chosen-category'> &times </span> </div>"));
+            chosen_categories.push(category);
+        }
+
+    };
+
+    var focusCategory = function(){
+        var child = $("#ac-div").children()[0];
+        $(child).toggleClass("focus");
+    };
+
+    var displayCategories = function(text){
+        $("#ac-div").empty();
+
+        if (text == ""){
+            return;
+        }
+
+        $.each(categories, function(index, value){
+            if (value.substr(0, text.length).toUpperCase() == text.toUpperCase()){
+                $("#ac-div").append($("<div class='item-search'> <strong>" + value.substr(0, text.length) + "</strong>" + value.substr(text.length) + " </div>"));
+            }
+        });
+
+        //$("#ac-div > .item").removeClass("focus");
+    };
+
+
+</script>
+
+
+
+<script type="text/javascript">
+
+
+    $("#content-container").children().hide();
+    $("#shop").show();
+
+    $("li").click(function(){
+        changeSection(this);
+    });
+
+
+    var changeSection = function(elem){
+        $("li .active").removeClass("active");
+        $(elem).children().addClass("active");
+
+        var a = $(elem).children()[0];
+
+        changeContent($(a).text());
+    }
+
+    var changeContent = function(text){
+
+        if(text == "Shop"){
+            open($("#shop"));
+        }
+        else if(text == "New Item"){
+            open($("#new-item"));
+        }
+        else if(text == "My Offers"){
+            open($("#my-offers"));
+        }
+        else if(text == "My Bids"){
+            open($("#my-bids"));
+        }
+    }
+
+    var open = function(elem){
+
+        $("#content-container").children().hide();
+        $(elem).show();
+    }
+
+    $(document).ready(function(){
+
+        $(".item-content-btn").click(function(){
+
+            var parent = $(this).parent();
+            var div = $(parent).parent();
+            var opacity = $(parent).prev();
+            var purchaseParent = $(parent).parent();
+            var purchase = $(purchaseParent).next();
+
+            if( $(this).hasClass("hidden") ){
+
+                opacity.css("display", "none");
+                $(purchase).css("z-index", -1);
+
+                div.animate({height: '215'}, 500, function(){
+                    var div = $(this).children()[1];
+                    var show = $(div).children()[0];
+                    $({deg: 90}).animate({deg: 270}, {
+                        duration: 500,
+                        step: function(now){
+                            $(show).css({
+                                transform: "rotate(" + now + "deg)"
+                            });
+                        }
+                    });
+
+                    var content = $(div).children()[1];
+                    $(content).css("overflow", "auto");
+                });
+
+                $(this).removeClass("hidden");
+
+            }else{
+                opacity.css("display", "inline-block");
+
+                var content = $(this).next();
+                $(content).css("overflow", "hidden");
+
+                div.animate({height: '115'}, 500, function(){
+
+
+                    $(purchase).css("z-index", 1);
+
+                    var div = $(this).children()[1];
+                    var show = $(div).children()[0];
+                    $({deg: 270}).animate({deg: 90}, {
+                        duration: 500,
+                        step: function(now){
+                            $(show).css({
+                                transform: "rotate(" + now + "deg)"
+                            });
+                        }
+                    });
+                });
+
+
+                $(this).addClass("hidden");
+
+            }
+
+        });
+
+
+    });
+
+
+    $(document).on('click', '.my-offers-item-content', function(){
+        var parent = $(this).parent();
+        var offers = $(parent).next();
+
+        if($(offers).css('display') === 'none'){
+            $(offers).slideDown();
+        }
+        else{
+            $(offers).slideUp();
+        }
+    });
+
+</script>
+
+
+
+</body>
+</html>
+
+<!--
                 url: "/items/search?search=name:" + $("#search-field").val(),
                 type: "GET",
                 contentType: "application/json",
@@ -27,12 +559,4 @@
                 error: function (response) {
                     console.log(response.status);
                 }
-            })
-        }
-        
-    </script>
-
-
-    <div id="items-container"></div>
-</body>
-</html>
+                -->
