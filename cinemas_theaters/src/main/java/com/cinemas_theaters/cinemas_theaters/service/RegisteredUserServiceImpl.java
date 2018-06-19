@@ -52,6 +52,11 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     }
 
     @Override
+    public void save(RegisteredUser registeredUser) {
+        this.registeredUserRepository.save(registeredUser);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public boolean activateUser(RegisteredUser user)
     {

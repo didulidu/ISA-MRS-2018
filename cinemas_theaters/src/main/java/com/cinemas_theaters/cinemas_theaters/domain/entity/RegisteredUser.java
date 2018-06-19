@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.cinemas_theaters.cinemas_theaters.domain.enums.MembershipStatus;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -39,6 +40,12 @@ public class RegisteredUser extends User implements Serializable {
 
     @OneToMany(mappedBy = "invitedUser", fetch = FetchType.LAZY)
     private List<Invitation> invitations;
+
+    @Column
+    private Integer points = 0;
+
+    @Column
+    private MembershipStatus membershipStatus;
 
     public RegisteredUser() {
         super();
@@ -123,4 +130,22 @@ public class RegisteredUser extends User implements Serializable {
     public void setInvitations(List<Invitation> invitations) {
         this.invitations = invitations;
     }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    public MembershipStatus getMembershipStatus() {
+        return membershipStatus;
+    }
+
+    public void setMembershipStatus(MembershipStatus membershipStatus) {
+        this.membershipStatus = membershipStatus;
+    }
+
+
 }

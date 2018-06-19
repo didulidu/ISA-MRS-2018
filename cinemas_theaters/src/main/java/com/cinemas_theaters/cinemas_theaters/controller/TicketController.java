@@ -7,6 +7,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TicketReservationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.MembershipStatus;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TheatreRepository;
@@ -126,11 +127,29 @@ public class TicketController {
             this.reservationRepository.save(reservation);
             this.projectionService.save(p);
 
-            this.emailService.sendReservedTicketInfo(user, reservation);
+            //this.emailService.sendReservedTicketInfo(user, reservation);
 
-            this.emailService.sendReservedTicketInfo(user, reservation);
+            user.setPoints(user.getPoints()+1);
+            user.setMembershipStatus(updateUserMembership(user));
+
+            this.registeredUserService.save(user);
 
             return new ResponseEntity<TicketReservationDTO>(ticketReservationDTO, HttpStatus.CREATED);
+            }
+        }
+
+        private MembershipStatus updateUserMembership(RegisteredUser currentUser){
+            if (currentUser.getPoints() < 0){
+                currentUser.setPoints(0);
+                return MembershipStatus.Bronze;
+            }
+
+            if(currentUser.getPoints()>=20){
+                return MembershipStatus.Gold;
+            } else if(currentUser.getPoints()>=10){
+                return MembershipStatus.Silver;
+            } else{
+                return MembershipStatus.Bronze;
             }
         }
 

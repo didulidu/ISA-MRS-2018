@@ -1,7 +1,7 @@
 #registered users
-insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url) values ('Petar', 'Peric', 'pera', '123', 'pera@gmail.com', 'RegisteredUser', "Kikinda, Random ulica 2", "12312312", true, 151, 'url');
-insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url) values ('Vladimir', 'Antonic', 'vlada1', '321', 'vlada@gmail.com', 'RegisteredUser', "Adice, Random ulica 3", "12312312", true, 152, 'url');
-insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url) values ('Marko', 'Balenovic', 'balenko', '111', 'balenko@gmail.com', 'RegisteredUser', "Novi Sad, Random ulica 4", "12312312", true, 153, 'url');
+insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Petar', 'Peric', 'pera', '123', 'pera@gmail.com', 'RegisteredUser', "Kikinda, Random ulica 2", "12312312", true, 151, 'url', 0, "Bronze");
+insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Vladimir', 'Antonic', 'vlada1', '321', 'vlada@gmail.com', 'RegisteredUser', "Adice, Random ulica 3", "12312312", true, 152, 'url', 0, "Bronze");
+insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Marko', 'Balenovic', 'balenko', '111', 'balenko@gmail.com', 'RegisteredUser', "Novi Sad, Random ulica 4", "12312312", true, 153, 'url', 0, "Bronze");
 
 #theatre admins
 insert into theater_admin_user(name, lastname, username, password, email, type, registration_confirmed, id) values ('Vladimir', 'Antonic', 'vlada', '1234', 'vlada@gmail.com', 'TheaterAndCinemaAdmin', true, 666);
