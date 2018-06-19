@@ -76,8 +76,6 @@ public class TicketController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity ticketReservation(@RequestHeader("Authorization") String userToken, @RequestBody @Valid TicketReservationDTO ticketReservationDTO, BindingResult result) {
         if(result.hasErrors()){
-            // sistemske validacije podataka nisu zadovoljene
-            System.out.println(result.getAllErrors());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }else if(ticketReservationDTO.getInvitedFriends().size()>ticketReservationDTO.getSeatIds().size()) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
