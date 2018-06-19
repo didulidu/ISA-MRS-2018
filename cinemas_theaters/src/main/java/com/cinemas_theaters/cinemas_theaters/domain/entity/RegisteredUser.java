@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
+import com.cinemas_theaters.cinemas_theaters.domain.enums.MembershipStatus;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -13,10 +14,6 @@ import java.util.List;
 
 @Entity
 public class RegisteredUser extends User implements Serializable {
-
-    @Column(nullable = false)
-    @Email
-    private String email;
 
     @Column(nullable = false)
     @NotNull
@@ -44,6 +41,12 @@ public class RegisteredUser extends User implements Serializable {
     @OneToMany(mappedBy = "invitedUser", fetch = FetchType.LAZY)
     private List<Invitation> invitations;
 
+    @Column
+    private Integer points = 0;
+
+    @Column
+    private MembershipStatus membershipStatus;
+
     public RegisteredUser() {
         super();
         this.avatarUrl = "";
@@ -52,15 +55,14 @@ public class RegisteredUser extends User implements Serializable {
     }
 
     public RegisteredUser(String username, String password, UserType type, String name, String lastname, String email) {
-        super(name, lastname, username, password, type);
+        super(name, lastname, username, password, type, email);
         this.avatarUrl = "";
-        this.email = email;
         this.registrationConfirmed = false;
         this.friendships = new ArrayList<>();
     }
 
     public RegisteredUser(@Email String email, @NotNull String avatarUrl, @NotNull boolean registrationConfirmed, @NotNull String address, @NotNull String telephoneNumber, List<Friendship> friendships, List<Ticket> tickets, List<Reservation> reservations) {
-        this.email = email;
+        super(email);
         this.avatarUrl = avatarUrl;
         this.registrationConfirmed = registrationConfirmed;
         this.address = address;
@@ -75,14 +77,6 @@ public class RegisteredUser extends User implements Serializable {
 
     public void setAvatarUrl(String avatarUrl) {
         this.avatarUrl = avatarUrl;
-    }
-
-    public String getEmail() {
-        return email;
-    }
-
-    public void setEmail(String email) {
-        this.email = email;
     }
 
     public List<Friendship> getFriendships() {
@@ -136,4 +130,22 @@ public class RegisteredUser extends User implements Serializable {
     public void setInvitations(List<Invitation> invitations) {
         this.invitations = invitations;
     }
+
+    public Integer getPoints() {
+        return points;
+    }
+
+    public void setPoints(Integer points) {
+        this.points = points;
+    }
+
+    public MembershipStatus getMembershipStatus() {
+        return membershipStatus;
+    }
+
+    public void setMembershipStatus(MembershipStatus membershipStatus) {
+        this.membershipStatus = membershipStatus;
+    }
+
+
 }

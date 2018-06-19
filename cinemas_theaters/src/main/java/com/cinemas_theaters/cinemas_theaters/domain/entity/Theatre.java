@@ -56,6 +56,7 @@ public class Theatre implements Serializable {
 
     @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("theatre")
+    @JsonIgnore
     private List<Ticket> tickets;
 
     @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)

@@ -15,10 +15,13 @@ import java.util.List;
 public interface RegisteredUserService {
     boolean createNewUser(RegisteredUser user);
 
+    void save(RegisteredUser registeredUser);
 
     boolean activateUser(RegisteredUser user);
 
     RegisteredUser findByUsername(String username);
+
+    RegisteredUser findByEmail(String email);
 
     boolean addFriend(RegisteredUser user, RegisteredUser friend);
 

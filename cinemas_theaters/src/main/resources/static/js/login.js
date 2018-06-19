@@ -1,13 +1,10 @@
 function activateUser(token)
 {
-    var tokenJson = {
-        jwtToken:token
-    };
     $.ajax({
-        url: "/registeredUser/activation",
+        url: "/registeredUser/activateUser",
         type: "PUT",
         contentType: "application/json",
-        data: JSON.stringify(tokenJson),
+        data: token,
         error: function (response) {
             if(response.status == 400)
                 getToastr("Account already activated!", "", 2);
@@ -20,10 +17,10 @@ function activateUser(token)
 }
 
 function validateLoginData(formData){
-    var username = formData["username"];
+    var email = formData["email"];
     var password = formData["password"];
 
-    if(username.trim() == "") {
+    if(email.trim() == "") {
         getToastr("Username can't be empty!", "Username is a required field", 2);
         return false;
     }

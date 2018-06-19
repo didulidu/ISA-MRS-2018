@@ -3,6 +3,7 @@ package com.cinemas_theaters.cinemas_theaters.controller;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.MembershipStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
 import com.cinemas_theaters.cinemas_theaters.service.*;
@@ -455,6 +456,12 @@ public class RegisteredUserController {
 
                     this.projectionService.save(p);
                     this.registeredUserService.removeReservation(reservation);
+
+                    currentUser.setPoints(currentUser.getPoints()-1);
+                    currentUser.setMembershipStatus(updateUserMembership(currentUser));
+
+                    this.registeredUserService.save(currentUser);
+
                     return new ResponseEntity(headers, HttpStatus.OK);
                 }
                 else
@@ -464,6 +471,21 @@ public class RegisteredUserController {
                 return new ResponseEntity(headers, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    private MembershipStatus updateUserMembership(RegisteredUser currentUser){
+        if (currentUser.getPoints() < 0){
+            currentUser.setPoints(0);
+            return MembershipStatus.Bronze;
+        }
+
+        if(currentUser.getPoints()>=20){
+            return MembershipStatus.Gold;
+        } else if(currentUser.getPoints()>=10){
+            return MembershipStatus.Silver;
+        } else{
+            return MembershipStatus.Bronze;
+        }
     }
 
     @RequestMapping(

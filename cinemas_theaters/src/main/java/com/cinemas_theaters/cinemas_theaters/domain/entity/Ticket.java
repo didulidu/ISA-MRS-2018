@@ -35,6 +35,10 @@ public class Ticket  implements Serializable {
     @JsonIgnore
     private Reservation reservation;
 
+    @Version
+    @Column(nullable = false)
+    private long version;
+
     public Ticket(){}
 
     public Ticket(Long id, Seat seat, Projection projection) {
@@ -119,5 +123,13 @@ public class Ticket  implements Serializable {
 
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

@@ -24,4 +24,5 @@ public interface ProjectionService {
 
     List<Projection> findAll();
 
+    boolean alreadyReserved(Projection projection, List<String>seatIds);
 }

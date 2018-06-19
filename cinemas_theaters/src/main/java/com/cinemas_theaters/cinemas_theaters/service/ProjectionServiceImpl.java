@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Projection;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
 import com.cinemas_theaters.cinemas_theaters.repository.ProjectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -53,5 +54,16 @@ public class ProjectionServiceImpl implements ProjectionService {
     @Override
     public List<Projection> findAll() {
         return projectionRepository.findAll();
+    }
+
+    @Override
+    public boolean alreadyReserved(Projection projection, List<String> seatIds) {
+        for (String seat: projection.getReservedSeats()){
+            if(seatIds.contains(seat)){
+                return true;
+            }
+        }
+
+        return false;
     }
 }

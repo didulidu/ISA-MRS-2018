@@ -7,6 +7,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TicketReservationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.MembershipStatus;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TheatreRepository;
@@ -78,12 +79,16 @@ public class TicketController {
             // sistemske validacije podataka nisu zadovoljene
             System.out.println(result.getAllErrors());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
-        }else if(ticketReservationDTO.getInvitedFriends().size()>ticketReservationDTO.getSeatIds().size()){
+        }else if(ticketReservationDTO.getInvitedFriends().size()>ticketReservationDTO.getSeatIds().size()) {
             return new ResponseEntity(HttpStatus.FORBIDDEN);
         }
         else {
             System.out.println(ticketReservationDTO.getShowTitle());
             Projection p = this.projectionService.getById(Long.parseLong(ticketReservationDTO.getProjectionId()));
+
+            if(this.projectionService.alreadyReserved(p, ticketReservationDTO.getSeatIds())){
+                return new ResponseEntity(HttpStatus.FORBIDDEN);
+            }
 
             String username = this.jwtService.getUser(userToken).getUsername();
             RegisteredUser user = this.registeredUserService.findByUsername(username);
@@ -125,11 +130,29 @@ public class TicketController {
             this.reservationRepository.save(reservation);
             this.projectionService.save(p);
 
-            this.emailService.sendReservedTicketInfo(user, reservation);
+            //this.emailService.sendReservedTicketInfo(user, reservation);
 
-            this.emailService.sendReservedTicketInfo(user, reservation);
+            user.setPoints(user.getPoints()+1);
+            user.setMembershipStatus(updateUserMembership(user));
+
+            this.registeredUserService.save(user);
 
             return new ResponseEntity<TicketReservationDTO>(ticketReservationDTO, HttpStatus.CREATED);
+            }
+        }
+
+        private MembershipStatus updateUserMembership(RegisteredUser currentUser){
+            if (currentUser.getPoints() < 0){
+                currentUser.setPoints(0);
+                return MembershipStatus.Bronze;
+            }
+
+            if(currentUser.getPoints()>=20){
+                return MembershipStatus.Gold;
+            } else if(currentUser.getPoints()>=10){
+                return MembershipStatus.Silver;
+            } else{
+                return MembershipStatus.Bronze;
             }
         }
 
@@ -160,9 +183,9 @@ public class TicketController {
         List<QuickTicketDTO> sve_brze_karte = new ArrayList<QuickTicketDTO>();
         for(Ticket t : sve_karte){
             LocalDateTime datum_projekcije = ShowController.str2Date(t.getProjection().getDate());
-            if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
-                sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(), Long.parseLong(id)));
-            }
+            //if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
+            //    sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(), Long.parseLong(id)));
+            //}
         }
         return new ResponseEntity<List<QuickTicketDTO>>(sve_brze_karte, headers, HttpStatus.OK);
     }
