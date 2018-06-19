@@ -8,7 +8,7 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!DOCTYPE html>
 <html>
 <head>
-<title>Movie Ticket Booking Widget Flat Responsive Widget Template :: w3layouts</title>
+<title>Cinema Ticket Booking Page</title>
 <!-- for-mobile-apps -->
 <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
 <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
@@ -17,17 +17,29 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 <!-- //for-mobile-apps -->
 <link href='//fonts.googleapis.com/css?family=Kotta+One' rel='stylesheet' type='text/css'>
 <link href='//fonts.googleapis.com/css?family=Open+Sans:400,300,300italic,400italic,600,600italic,700,700italic,800,800italic' rel='stylesheet' type='text/css'>
-<link href="css/seat_selection/style.css" rel="stylesheet" type="text/css" media="all" />
+<link href="css/seat_selection/style.css" rel="stylesheet" type="text/css" media="all"/>
+
+<script type="text/javascript" src="js/misc.js"></script>
 <script src="js/seat_selection/jquery-1.11.0.min.js"></script>
 <script src="js/seat_selection/jquery.seat-charts.js"></script>
 <script src="js/seat_selection.js"></script>
 
+<script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
+<link rel="stylesheet" href="css/toastr/toastr.min.css"/>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+
+<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
+	<!-- Font awesome (ikonice) -->
+<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
+
 </head>
 <body>
 <div class="content">
-	<h1>Movie Ticket Booking Widget</h1>
+	<h1>Cinema Ticket Booking Page</h1>
 	<div class="main">
-		<h2>Multiplex Theatre Showing Screen 1</h2>
+		<h2 id = "theatre-name">Multiplex Theatre Showing Screen 1</h2>
 		<div class="demo">
 			<div id="seat-map">
 				<div class="front">SCREEN</div>					
@@ -48,14 +60,53 @@ License URL: http://creativecommons.org/licenses/by/3.0/
 			
 						
 				<button class="checkout-button" id = "book-ticket-btn">Book Now</button>
+
+				<button class="checkout-button" id = "invite-friends-btn" data-toggle="modal" data-target="#invite-friends-modal">Invite Friends</button>
+
 				<div id="legend"></div>
 			</div>
 			<div style="clear:both"></div>
 	    </div>
-
-
 	</div>
-	<p class="copy_rights">&copy; 2016 Movie Ticket Booking Widget. All Rights Reserved | Design by  <a href="http://w3layouts.com/" target="_blank"> W3layouts</a></p>
+</div>
+
+<!-- Modal -->
+<div class="modal fade" id="invite-friends-modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+	<div class="modal-dialog" role="document">
+		<div class="modal-content">
+			<div class="modal-header">
+				<h5 class="modal-title" id="exampleModalLabel">Invite Friends</h5>
+				<button type="button" class="close" data-dismiss="modal" aria-label="Close">
+					<span aria-hidden="true">&times;</span>
+				</button>
+			</div>
+			<div class="modal-body" id="projection-form">
+				<form class="form-group" id="search-friends-invitation-form">
+					<table id= "search-friends-modal">
+						<tr style="text-align: center;">
+							<td><input type="text" class="form-control" placeholder="Search friends..."></td>
+							<td><button class="btn btn-warning" id="search-friends-invitation-button">
+								<span class="glyphicon glyphicon-search"></span> Search </button></td>
+						</tr>
+					</table>
+				</form>
+				<table id= "friends-invitation-modal">
+					<thead>
+						<th class="col-md-1"> Name </th>
+						<th class="col-md-2"> Surname </th>
+						<th class="col-md-1"> Username </th>
+						<th class="col-md-1"> </th>
+					</thead>
+					<tbody>
+					</tbody>
+				</table>
+			</div>
+			<div class="modal-footer">
+				<button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+				<!--<button type="button" class="btn btn-primary" id='create-projection'>Invite</button>-->
+			</div>
+		</div>
+	</div>
 </div>
 <script src="js/seat_selection/jquery.nicescroll.js"></script>
 <script src="js/seat_selection/scripts.js"></script>

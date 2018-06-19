@@ -10,7 +10,7 @@ var updatedAddress = "";
 var currentUser = "";
 var dataChanged;
 
-function showPersonalData(currentUserParam){
+function displayCurrentUserProfile(currentUserParam){
     currentUser = currentUserParam;
 
     if(currentUser.type == "RegisteredUser"){
@@ -161,6 +161,47 @@ $(document).on('click', '#profile-change-save', function(e){
 
     updateData();
 });
+
+function displayVisitations(){
+    $.ajax({
+        url: 'registeredUser/getAllRegisteredUserVisitations',
+        type: 'GET',
+        dataType: 'json',
+        beforeSend: function(request){
+            request.setRequestHeader('Authorization', localStorage.getItem('currentUserToken'));
+        },
+        success: function(data, textStatus, response){
+            localStorage.setItem('currentUserToken', response.getResponseHeader('Authorization'));
+            renderVisitations(data);
+        },
+        error: function(response){
+            if(response.status == 401)
+                getToastr("Not authorized for this activity", "Error", 3);
+            else
+                getToastr("An error occured while fetchng visitation history! \nStatus: " + response.status, "", 3);
+        }
+    });
+}
+
+function renderVisitations(data){
+    var visitationList = (data == null) ? [] : (data instanceof Array ? data : [data]);
+
+    var reservationTableBody = $('#curr-user-visitations').find("tbody");
+    //$('#reservation-list-table').find("thead").find("tr").append("<th class='col-md-1'> </th>");
+
+    $.each(visitationList, function (index, visitation) {
+        var dateObject = new Date(visitation.projectionDate);
+        var date = dateObject.getDate().toString() + "/" + (dateObject.getMonth() + 1).toString() + "/" + dateObject.getFullYear().toString();
+        //var timeObject = new Date(reservation.startTime);
+        var time = dateObject.getHours().toString() + ":" + dateObject.getMinutes().toString();
+        var trReservation = "<tr>" +
+                "<td>" + visitation.theatreName + "</td>" +
+                "<td>" + visitation.showName + "</td>" +
+                "<td id='dateReservation'>" + visitation.projectionDate + "</td>" +
+            "</tr>";
+        reservationTableBody.append(trReservation);
+    });
+}
 
 $(document).on('click', '#profile-change-reset', function(e){
     e.preventDefault();

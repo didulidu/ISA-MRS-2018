@@ -5,6 +5,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.dto.TheatreDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserLoginDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
+import com.cinemas_theaters.cinemas_theaters.service.TheatreCinemaAdminService;
 import com.cinemas_theaters.cinemas_theaters.service.TheatreService;
 
 import java.util.ArrayList;
@@ -34,6 +35,10 @@ public class TheatreController {
     @Autowired
     private JwtService jwtService;
 
+    @Autowired
+    TheatreCinemaAdminService theatreCinemaAdminService;
+
+
     @RequestMapping(
             value = "/getAllTheatres",
             method = RequestMethod.GET,
@@ -51,13 +56,15 @@ public class TheatreController {
         return new ResponseEntity<List<TheatreDTO>>(theatreDTOS, headers, HttpStatus.OK);
     }
 
+
+
+
+
     @PostMapping(
             value = "/getTheatersByAdmin",
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getTheatersByAdmin(@RequestHeader("Authorization") String adminToken){
-        System.out.println("\n\n\nUSO\n\n\n");
-        //JwtUser user = this.jwtService.getUser(userToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",adminToken);
         String username = this.jwtService.getUser(adminToken).getUsername();
@@ -105,6 +112,30 @@ public class TheatreController {
         }
     }
 
+
+//    @PostMapping(
+//            value = "/edit/{id}",
+//            consumes = MediaType.APPLICATION_JSON_VALUE,
+//            produces = MediaType.APPLICATION_JSON_VALUE
+//    )
+//    public ResponseEntity editTheatre(@RequestHeader("Authorization") String userToken, @RequestBody @Valid TheatreDTO theDTO,@PathVariable("id") Long id, BindingResult result ) {
+//        String username = this.jwtService.getUser(userToken).getUsername();
+//        TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
+//        if (!user.getType().equals(UserType.TheaterAndCinemaAdmin)) {
+//            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+//        }
+//                this.theatreService.save();
+//                ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
+//                for (Projection p : projectionService.getAllProjections(film.getId())) {
+//                    if (p.getExist())
+//                        projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
+//                }
+//                return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);
+//            } else
+//                return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+//        }
+//    }
+//
 
 
     @PostMapping(

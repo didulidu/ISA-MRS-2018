@@ -52,7 +52,10 @@ function login(){
                 localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
                 localStorage.setItem("currentUser", JSON.stringify(data));
                 //window.location.replace("index.html");
+                
+
                 if(data["type"] == "TheaterAndCinemaAdmin"){
+
                     window.setTimeout(function() {window.location.replace("cinema_admin_profile.html");}, 4000);
                 }else
                     window.setTimeout(function() {window.location.replace("index.html");}, 4000);},

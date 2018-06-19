@@ -28,6 +28,7 @@ public class Reservation   implements Serializable {
 
 
     @ManyToOne(optional = false, fetch = FetchType.LAZY)
+    @JsonIgnore
     private RegisteredUser buyer;
 
     @OneToMany(fetch = FetchType.LAZY)
@@ -36,10 +37,21 @@ public class Reservation   implements Serializable {
     @ManyToOne(fetch = FetchType.LAZY)
     private Projection projection;
 
+    @OneToMany(mappedBy = "reservation", fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JsonIgnore
+    private List<Invitation> invitations;
+
     public Reservation() {
     }
 
-
+    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection, List<Invitation> invitations) {
+        this.showTitle = showTitle;
+        this.projectionDate = projectionDate;
+        this.buyer = buyer;
+        this.tickets = tickets;
+        this.projection = projection;
+        this.invitations = invitations;
+    }
 
     public Reservation(Long id, String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets) {
         this.id = id;
@@ -125,5 +137,13 @@ public class Reservation   implements Serializable {
 
     public void setProjection(Projection projection) {
         this.projection = projection;
+    }
+
+    public List<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(List<Invitation> invitations) {
+        this.invitations = invitations;
     }
 }

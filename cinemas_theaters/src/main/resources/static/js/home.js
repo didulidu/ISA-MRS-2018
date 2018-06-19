@@ -1,6 +1,3 @@
-
-
-
 $(document).on('click', '#login-button', function(e){
     e.preventDefault();
     window.location.replace("login.html")
@@ -26,6 +23,11 @@ $(document).on('click', '#reservations-button', function(e){
    window.location.replace("registeredUserReservations.html")
 });
 
+$(document).on('click', '#invitations-button', function(e){
+   e.preventDefault();
+   window.location.replace("registeredUserInvitations.html")
+});
+
 $(document).on('click', '#user-profile-button', function(e){
    e.preventDefault();
    window.location.replace("registeredUserProfile.html")
@@ -35,7 +37,7 @@ $(document).ready(function(){
         if(document.URL.indexOf("friends.html") == -1)
             getTheaters();
         getRegisteredUserData();
-    });
+});
     
 
 function logout()
@@ -131,8 +133,10 @@ function getRegisteredUserData(){
 
                     if(document.URL.indexOf("registeredUserFriends.html") != -1)
                         displayRegisteredUsersFriends(currentUser);
-                    else if (document.URL.indexOf("registeredUserProfile.html") != -1)
-                        showPersonalData(currentUser);
+                    else if (document.URL.indexOf("registeredUserProfile.html") != -1){
+                        displayCurrentUserProfile(currentUser);
+                        displayVisitations();
+                    }
 
                     //if(document.URL.indexOf("index.html") != -1)
                         //setCurrentUsername(currentUser);

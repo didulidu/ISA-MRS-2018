@@ -1,7 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
-import com.cinemas_theaters.cinemas_theaters.domain.enums.FriendshipStatus;
-import com.cinemas_theaters.cinemas_theaters.serializer.CustomFriendSerializer;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 
 import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 
@@ -17,19 +16,17 @@ public class Friendship implements Serializable {
     private Long id;
 
     @ManyToOne
-    @JsonSerialize(using = CustomFriendSerializer.class)
     private RegisteredUser firstUser;
 
     @ManyToOne
-    @JsonSerialize(using = CustomFriendSerializer.class)
     private RegisteredUser secondUser;
 
     @Column
-    private FriendshipStatus status;
+    private InvitationStatus status;
 
     public Friendship() { }
 
-    public Friendship(RegisteredUser firstUser, RegisteredUser secondUser, FriendshipStatus status) {
+    public Friendship(RegisteredUser firstUser, RegisteredUser secondUser, InvitationStatus status) {
         this.firstUser = firstUser;
         this.secondUser = secondUser;
         this.status = status;
@@ -59,11 +56,11 @@ public class Friendship implements Serializable {
         this.secondUser = secondUser;
     }
 
-    public FriendshipStatus getStatus() {
+    public InvitationStatus getStatus() {
         return status;
     }
 
-    public void setStatus(FriendshipStatus status) {
+    public void setStatus(InvitationStatus status) {
         this.status = status;
     }
 }

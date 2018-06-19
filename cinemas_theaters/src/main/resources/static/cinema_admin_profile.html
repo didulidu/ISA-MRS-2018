@@ -4,25 +4,32 @@
 <!--	<meta http-equiv="Content-Type" content="text/html; charset=UTF-8"> -->
     <!--JavaScript-->
     <!--library-->
-    <script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
+
+<!--JavaScript-->
+    <!--library-->
     <!--custom-->
     <script src="lib/jQuery/jquery.min.js"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
-
-    
     <!-- Rating stars -->
-    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>    
-    
-	<script type="text/javascript" src="js/cinema_admin_profile.js"></script>
-	<script type="text/javascript" src="js/theater_profile.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.js"></script>  
+    <script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
 
+    
+    <script type="text/javascript" src="js/misc.js"></script>
+    <script type="text/javascript" src="js/cinema_admin_profile.js"></script>
+    <script type="text/javascript" src="js/theater_profile.js"></script>
     <!--CSS-->
+
     <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" integrity="sha384-WskhaSGFgHYWDcbwN70/dfYBj47jz9qbsMId/iRN3ewGhXQFZCSftd1LZCfmhktB" crossorigin="anonymous">
-    <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
+    <!-- Font awesome (ikonice) -->
+    <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
     <!-- Rating stars -->
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/rateYo/2.3.2/jquery.rateyo.min.css">
-    <!--custom-->
+    <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
+
     <link rel="stylesheet" href="home.css"/>
 
 
@@ -33,6 +40,28 @@
 </head>
 <body>
 	<h3>Administratorski profil</h3>
+
+
+<!-- admin podaci -->
+<div class="cardinfoadmin" style="width: 18rem;">
+  
+  <ul class="list-group list-group-flush" id="admin-info-list">
+    <li>  <h5 class="admin-info">Your info</h5>
+  </li>
+    <li class="list-group-item" id="name-lastname"> Proba probic</li>
+    <li class="list-group-item" id="email">proba.probic@gmail.com</li>
+  </ul>
+    <div>
+        <button id="edit-admin-modal-starter" data-toggle="modal" data-target="#adminInfoModal" type="button" class="btn btn-info btn-sm" id="edit-admin-info-btn" >
+            <i class="fas fa-edit"></i>Edit
+        </button>
+    </div>
+</div>
+
+<hr>
+
+
+
 <h2>Bioskopi:</h2>
 <div class="cards" id = "cinemas" style="display: flex;flex-wrap: wrap;">
     <!--  Single card -->
@@ -58,6 +87,37 @@
         <div id="rateYo"></div>
     </div>
 </div>
+
+
+
+    <div class="modal fade" id="adminInfoModal" tabindex="-1" role="dialog" aria-labelledby="adminInfoModalLabel" aria-hidden="true">
+      <div class="modal-dialog" role="document">
+        <div class="modal-content">
+          <div class="modal-header">
+            <h5 class="modal-title" id="adminInfoModalLabel">Edit personal info</h5>
+            <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+              <span aria-hidden="true">&times;</span>
+            </button>
+          </div>
+          <div class="modal-body" id="settings-form">
+            <label for="admin-name">Name: </label>
+            <input type="text" name="admin-name" id="admin-name"><br>
+            <hr>
+            <label for="admin-description">Last Name: </label>
+            <input type="text" name="admin-description" id="admin-lastname"><br>
+            <hr>
+            <label for="admin-password">Password: </label>
+            <input type="password" name="admin-password" id="admin-password" ><br><br>
+          </div>
+          <div class="modal-footer">
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+            <button type="button" class="btn btn-primary" id='edit-info-btn'>Done</button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+
 
 
 

@@ -15,4 +15,6 @@ public interface TheatreService {
     Theatre findById(Long id);
 
     Theatre findByName(String name);
+
+
 }

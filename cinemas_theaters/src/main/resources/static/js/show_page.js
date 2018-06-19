@@ -24,19 +24,17 @@ $(document).ready(function(){
 });
 
 function getHalls(){
-  alert("hall/getHalls/"+localStorage.getItem("theater"));
   $.ajax({
     url: "projection/getHalls/"+localStorage.getItem("theater"),
-        type: "GET",
-        dataType: "json",
-        success: function(data){
-          alert(JSON.stringify(data))
-          forward_halls(data);
-        },
-        error: function (response) {
-            alert("Ne rade sale: "+ response.status);
-            return null;
-        }
+      type: "GET",
+      dataType: "json",
+      success: function(data){
+        forward_halls(data);
+      },
+      error: function (response) {
+        alert("Ne rade sale: "+ response.status);
+        return null;
+      }
   });
 }
 
@@ -46,11 +44,6 @@ function getHalls(){
 function addAdminWidgets(){
   $('.body').append("<button type='button' class='btn btn-success add-projection' >Add projection</button>")
 }
-
-$(document).on('click',function(){
-
-} )
-
 
 function sendProjection(projectionJson){
       $.ajax({
@@ -79,7 +72,7 @@ function forward_projections(data){
   		if(localStorage.getItem("currentUser")!=undefined && JSON.parse(localStorage.getItem("currentUser"))["type"]=="RegisteredUser")
 			table+="<th>"+" :) "+"</th>"
       else if (localStorage.getItem("currentUser")!=undefined && JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
-      table+="<th>"+"<button type='button' onclick='addNewProjection()' class='btn btn-success add-new-projection' >New</button>"+"</th>"        
+      table+="<th>"+"<button type='button' data-toggle=\"modal\" data-target=\"#exampleModal\" class='btn btn-success add-new-projection' >New</button>"+"</th>"        
       }
 		table+="</tr>"
   	data.forEach(function(projection){
@@ -90,8 +83,9 @@ function forward_projections(data){
 		if(localStorage.getItem("currentUser")!=undefined && JSON.parse(localStorage.getItem("currentUser"))["type"]=="RegisteredUser")
 			table+="<td>"+"<button type='button' onclick='foo("+projection["id"]+")' class='btn btn-success add-reservation' >Reservation</button>"+"</td>"
 		else if(localStorage.getItem("currentUser")!=undefined && JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
-      table+="<td>"+"<button type='button' onclick='editProjection("+projection["id"]+")' class='btn btn-warning edit-projection' >Edit</button>"+"</td>"
+      table+="<td>"+"<button type='button' onclick='editProjectionWrapper("+projection["id"]+")' data-toggle=\"modal\" data-target=\"#editProjectionModal\" class='btn btn-warning edit-projection' >Edit</button>"+"</td>"
       table+="<td>"+"<button type='button' onclick='deleteProjection("+projection["id"]+")' class='btn btn-danger delete-projection' >Delete</button>"+"</td>"
+      table+="<td>"+"<button type='button' onclick='addQuickTicketWrapper("+projection["id"]+")' data-toggle=\"modal\" data-target=\"#addQuickTicketModal\"  class='btn btn-dark delete-projection' >Add Quick Ticket</button>"+"</td>"
     }
 
     table+="</tr>"
@@ -101,11 +95,44 @@ function forward_projections(data){
   	$("#projection-container").append(table);
 }
 
-function forward_halls(data){
-  data.forEach(function(element){
-    $("#hall").append("<option value='"+element["id"]+"'>"+element.name+"</option>")
+
+
+
+function getSeats(){
+  $.ajax({
+    url: "projection/getSeats/"+chosenProjectionId,
+      type: "GET",
+      dataType: "json",
+      beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+      success: function(data){
+        forward_seats(data);
+      },
+      error: function (response) {
+        alert("Ne rade sjedala: "+ response.status);
+        return null;
+      }
   });
 }
+
+
+
+
+
+function forward_halls(data){
+  data.forEach(function(element){
+    $(".hall").append("<option value='"+element["id"]+"'>"+element.name+"</option>")
+  
+  });
+}
+
+function forward_seats(data){
+  data.forEach(function(element){
+    $(".seat").append("<option value ='" + element["id"]+"'>" + element.row+"-" + element.num + "</option>");
+  });
+}
+
 
 
 function foo(id){
@@ -115,16 +142,25 @@ function foo(id){
 	}
 }
 
-function editProjection(id){
-    alert(id)
-    var date = new Date(document.getElementById("date-time").value)
-    if(date.getTime()<=new Date().getTime())
+
+
+$(document).on('click', '#edit-projection',function(e) {
+    var date = new Date(document.getElementById("date-time-edit").value)
+    var hall = $("#hall-edit :selected").val();
+    var priceprj = document.getElementById("price-edit").value;
+    var datetime = document.getElementById("date-time-edit").value;
+  
+    var date = new Date(document.getElementById("date-time-edit").value)
+    if(date.getTime()<=new Date().getTime()){
       getToastr('Please come back in '+new Date(),'Oops! Looks like you live in past!',  3);
-    var podaci = "{\"hallId\": "+$("#hall :selected").val()
-    podaci+=", \"price\": "+document.getElementById("price").value
+      return;
+    }
+    var podaci = "{\"hallId\": "+hall
+    podaci+=", \"price\": "+priceprj
     podaci+=", \"showId\":"+show_id
-    podaci+=", \"date\": \""+document.getElementById("date-time").value+"\"}"
-    var url = "/projection/edit/"+id; 
+    podaci+=", \"date\": \""+datetime+"\"}"
+    var url = "/projection/edit/"+chosenId; 
+
     $.ajax({
       type: "POST",
       url: url,
@@ -135,13 +171,20 @@ function editProjection(id){
         request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
       },
       success: function(data){
+          getToastr('Projection edited','Done!',  1);
+          $('#editProjectionModal').modal('toggle');
           forward_projections(data);
       },
       error: function(response){
-        alert("Termin zauzet")
+        if(response.status == 401){
+          getToastr('you can\'t edit this projection, it\'s not yours!','Oh no!',  3);
+        }
+        if(response.status == 409){
+          getToastr('you can\'t edit this projection, someone has ticket for it!','Oh no!',  3);
+        }
       }
   });
-}
+});
 
 function deleteProjection(id){
   var podaci="{ \"showId\":"+show_id+"}"
@@ -164,6 +207,15 @@ function deleteProjection(id){
   });
 }
 
+var chosenId = undefined;
+function editProjectionWrapper(id) {
+  chosenId =id;
+}
+
+
+
+
+
 $(document).on('click', '#create-projection',function(e) {
     var date = new Date(document.getElementById("date-time").value)
     var hall = $("#hall :selected").val();
@@ -174,7 +226,7 @@ $(document).on('click', '#create-projection',function(e) {
     podaci+=", \"price\": "+priceprj
     podaci+=", \"showId\":"+show_id
     podaci+=", \"date\": \""+datetime+"\"}"
-    var url = "/projection/add";
+    var url = "/projection/save";
 
     if(date.getTime()<=new Date().getTime())
       getToastr('Please come back in '+new Date(),'Oops! Looks like you live in past!',  3);
@@ -192,10 +244,54 @@ $(document).on('click', '#create-projection',function(e) {
         request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
       },
       success: function(data){
+      getToastr('Projection created','Done!',  1);     
+      $('#exampleModal').modal('toggle');   
           forward_projections(data);
       },
       error: function(response){
-        alert("Termin zauzet")
+      getToastr('Hall is already taken by another projection on time you specified','Oops!',  3);
       }
   });}
 });
+
+var chosenProjectionId = null;
+function addQuickTicketWrapper(projection_id){
+  chosenProjectionId = projection_id;
+  getSeats();
+}
+
+
+$(document).on('click', '#create-quick-ticket',function(e) {
+    
+    var seat = $("#seat :selected").val();
+    var discount = document.getElementById("discount").value;
+  
+    var podaci = "{\"projectionId\": "+chosenProjectionId
+    podaci+=", \"discount\": "+discount+"\"}"
+
+    var url = "/quickticket/" + localStorage.getItem("theater");
+
+    if (seat == null || discount == null ){
+      getToastr('Empty Field',"Dont't hurry!", 2);
+    }
+    else{
+    $.ajax({
+      type: "GET",
+      url: url,
+      contentType: "application/json",
+      data: podaci,
+      dataType: "json",
+      beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+      success: function(data){
+      getToastr('Quick ticket created','Done!',  1);     
+      $('#addQuictTicketModal').modal('toggle');   
+          //forward_projections(data);
+      },
+      error: function(response){
+      getToastr('Hall is already taken by another projection on time you specified','Oops!',  3);
+      }
+  });}
+});
+

@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Theatre;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
 import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,6 +25,8 @@ public class TicketServiceImpl implements TicketService {
         return this.ticketRepository.findAll();
     }
 
+
+
     @Override
     public Optional findById(Long id) {
         return this.ticketRepository.findById(id);
@@ -33,4 +36,16 @@ public class TicketServiceImpl implements TicketService {
     public Ticket getById(Long id) {
         return this.ticketRepository.getById(id);
     }
+
+    @Override
+    public List<Ticket> findByTheatre(Theatre theatre) {
+        return this.ticketRepository.findByTheatre(theatre);
+    }
+
+    @Override
+    public Ticket save(Ticket ticket) {
+        return this.ticketRepository.save(ticket);
+    }
+
+
 }

@@ -2,15 +2,21 @@ package com.cinemas_theaters.cinemas_theaters.service;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegUserProfileUpdateDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserVisitationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Invitation;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 
+import java.util.ArrayList;
 import java.util.List;
 
 public interface RegisteredUserService {
     boolean createNewUser(RegisteredUser user);
+
+
+    boolean activateUser(RegisteredUser user);
 
     RegisteredUser findByUsername(String username);
 
@@ -26,9 +32,27 @@ public interface RegisteredUserService {
 
     List<RegisteredUserSearchDTO> findUsers(String username, String parameter);
 
+    List<Reservation> getAllVisitations(RegisteredUser currentUser);
+
     List<Reservation> getAllReservations(RegisteredUser user);
 
     void removeReservation(Reservation reservation);
 
+    boolean isReservationOngoing(Reservation reservation);
+
     boolean updateRegisteredUserProfile(RegisteredUser user, RegUserProfileUpdateDTO updatedInfo);
+
+    ArrayList<RegisteredUser> approveInvitations(List<String> invitedUsers, RegisteredUser inviter);
+
+    ArrayList<Invitation> sendInvitations(List<RegisteredUser> invitedFriends, RegisteredUser sender, Reservation reservation);
+
+    Invitation checkInvitation(RegisteredUser user, Long invitationId, InvitationStatus invitationStatus);
+
+    void acceptInvitation(RegisteredUser user, Invitation invitation);
+
+    void removeInvitation(RegisteredUser user, Invitation invitation);
+
+    void cancelInvitation(RegisteredUser user, Invitation invitation);
+
+    List<Invitation> findRegisteredUserInvitations(Long id);
 }

@@ -2,11 +2,10 @@ package com.cinemas_theaters.cinemas_theaters.controller;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
-import com.cinemas_theaters.cinemas_theaters.service.JwtService;
-import com.cinemas_theaters.cinemas_theaters.service.ProjectionService;
-import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
+import com.cinemas_theaters.cinemas_theaters.service.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 import com.fasterxml.jackson.core.JsonProcessingException;
@@ -23,7 +22,6 @@ import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.ListIterator;
 
@@ -49,6 +47,35 @@ public class RegisteredUserController {
     @Autowired
     private ProjectionService projectionService;
 
+    @Autowired
+    private EmailService emailService;
+
+    @Autowired
+    private TheatreCinemaAdminService theatreCinemaAdminService;
+
+
+
+    @RequestMapping(
+            value = "/activateUser",
+            method = RequestMethod.PUT,
+            consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity activateUser(@RequestBody String token)
+    {
+        JwtUser user = this.jwtService.getUser(token);
+        RegisteredUser registeredUser = this.registeredUserService.findByUsername(user.getUsername());
+
+        if(registeredUser != null) {
+            boolean activationCompleted = this.registeredUserService.activateUser(registeredUser);
+
+            if (activationCompleted)
+                return new ResponseEntity(HttpStatus.OK);
+            else
+                return new ResponseEntity(HttpStatus.BAD_REQUEST);
+        }
+        else
+            return new ResponseEntity(HttpStatus.FORBIDDEN);
+    }
+
     @RequestMapping(
             value = "/registration",
             method = RequestMethod.POST,
@@ -56,34 +83,30 @@ public class RegisteredUserController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity guestRegistration(@RequestBody @Valid UserRegistrationDTO newUser, BindingResult result) {
         if(result.hasErrors()){
-            // sistemske validacije podataka nisu zadovoljene
             System.out.println(result.getAllErrors());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
         }
         else {
             if(!newUser.getPassword().equals(newUser.getRepeatedPassword()))
-                // unosi za lozinku se ne poklapaju
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
 
             RegisteredUser newRegisteredUser = convertDTOToRegisteredUser(newUser);
 
             newRegisteredUser.setType(UserType.RegisteredUser);
-
             newRegisteredUser.setTelephoneNumber("");
             newRegisteredUser.setAddress("");
 
-
             boolean userCreated = this.registeredUserService.createNewUser(newRegisteredUser);
             if(!userCreated)
-                // vec postoji korisnik sa istim korisnickim imenom
                 return new ResponseEntity(HttpStatus.FORBIDDEN);
             else {
-                /**try {
-                    emailService.sendEmailNotification(newRegisteredUser);
+                String token = jwtService.getToken(new JwtUser(newUser.getUsername()));
+                try {
+                    emailService.sendUserActivation(newRegisteredUser, token);
                 }catch( Exception e ){
-                    System.out.println("Error while when sending an email!");
+                    e.printStackTrace();
                     return new ResponseEntity(HttpStatus.CONFLICT);
-                }**/
+                }
                 return new ResponseEntity(HttpStatus.CREATED);
             }
         }
@@ -94,7 +117,7 @@ public class RegisteredUserController {
             method = RequestMethod.PUT,
             consumes = MediaType.TEXT_PLAIN_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegisteredUser> addFriend(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
+    public ResponseEntity<RegisteredUserDTO> addFriend(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
         JwtUser user = this.jwtService.getUser(userToken);
         RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
         HttpHeaders headers = new HttpHeaders();
@@ -116,7 +139,9 @@ public class RegisteredUserController {
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
-                    return new ResponseEntity<>(currentUser, headers, HttpStatus.OK);
+                    RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(currentUser.getName(),currentUser.getLastname(), currentUser.getUsername(), currentUser.getEmail(),
+                            currentUser.getAddress(), currentUser.getTelephoneNumber(), currentUser.getType(), getRegisteredUserFriends(currentUser.getFriendships()));
+                    return new ResponseEntity<RegisteredUserDTO>(registeredUserDTO, headers, HttpStatus.OK);
                 }
                 // korisnik koji je ulogovan i korisnik kom se salje zahtev za prijateljstvo
                 // su vec prijatelji
@@ -133,7 +158,7 @@ public class RegisteredUserController {
             method = RequestMethod.PUT,
             consumes = MediaType.TEXT_PLAIN_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegisteredUser> acceptFriendRequest(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
+    public ResponseEntity<RegisteredUserDTO> acceptFriendRequest(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
         JwtUser user = this.jwtService.getUser(userToken);
         RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
         HttpHeaders headers = new HttpHeaders();
@@ -155,7 +180,9 @@ public class RegisteredUserController {
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
-                    return new ResponseEntity<>(currentUser, headers, HttpStatus.OK);
+                    RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(currentUser.getName(),currentUser.getLastname(), currentUser.getUsername(), currentUser.getEmail(),
+                            currentUser.getAddress(), currentUser.getTelephoneNumber(), currentUser.getType(), getRegisteredUserFriends(currentUser.getFriendships()));
+                    return new ResponseEntity<RegisteredUserDTO>(registeredUserDTO, headers, HttpStatus.OK);
                 }
                 return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
             }
@@ -186,13 +213,12 @@ public class RegisteredUserController {
         return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
     }
 
-
     @RequestMapping(
             value = "/deleteFriend",
             method = RequestMethod.PUT,
             consumes = MediaType.TEXT_PLAIN_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<RegisteredUser> deleteFriend(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
+    public ResponseEntity<RegisteredUserDTO> deleteFriend(@RequestHeader("Authorization") String userToken, @RequestBody String friendUsername){
         JwtUser user = this.jwtService.getUser(userToken);
         RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
         HttpHeaders headers = new HttpHeaders();
@@ -214,7 +240,9 @@ public class RegisteredUserController {
                     } catch (JsonProcessingException e) {
                         e.printStackTrace();
                     }
-                    return new ResponseEntity<>(currentUser, headers, HttpStatus.OK);
+                    RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(currentUser.getName(),currentUser.getLastname(), currentUser.getUsername(), currentUser.getEmail(),
+                            currentUser.getAddress(), currentUser.getTelephoneNumber(), currentUser.getType(), getRegisteredUserFriends(currentUser.getFriendships()));
+                    return new ResponseEntity<>(registeredUserDTO, headers, HttpStatus.OK);
                 }
                 return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
             }
@@ -270,10 +298,46 @@ public class RegisteredUserController {
 
         if(currentUser != null){
             List<RegisteredUserSearchDTO> foundUsers = this.registeredUserService.findUsers(currentUser.getUsername(), parameter);
-            SearchUsersDTO usersDTO = new SearchUsersDTO(foundUsers, convertRegisteredUserToDTO(currentUser));
+            RegisteredUserDTO registeredUserDTO = new RegisteredUserDTO(currentUser.getName(),currentUser.getLastname(), currentUser.getUsername(), currentUser.getEmail(),
+                    currentUser.getAddress(), currentUser.getTelephoneNumber(), currentUser.getType(), getRegisteredUserFriends(currentUser.getFriendships()));
+            SearchUsersDTO usersDTO = new SearchUsersDTO(foundUsers, registeredUserDTO);
             return new ResponseEntity<>(usersDTO, headers, HttpStatus.OK);
         }
         return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    private List<FriendDTO> getRegisteredUserFriends(List<Friendship> friendships){
+        List<FriendDTO> friendDTOS = new ArrayList<FriendDTO>();
+        for (Friendship friendship : friendships) {
+            friendDTOS.add(new FriendDTO( friendship.getSecondUser().getUsername(), friendship.getSecondUser().getName(),
+                    friendship.getSecondUser().getLastname(), friendship.getStatus()));
+        }
+        return friendDTOS;
+    }
+
+    @RequestMapping(
+            value = "/getAllRegisteredUserVisitations",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<List<RegisteredUserVisitationDTO>> getAllRegisteredUserVisitations(@RequestHeader("Authorization") String userToken){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            List<Reservation> userReservations = this.registeredUserService.getAllVisitations(currentUser);
+            List<RegisteredUserVisitationDTO> registeredUserVisitationDTOS = new ArrayList<>();
+
+            for(Reservation r: userReservations){
+                registeredUserVisitationDTOS.add(new RegisteredUserVisitationDTO(r.getProjection().getShow().getTheatre().getName(), r.getProjection().getShow().getTitle(),
+                        r.getProjection().getDate()));
+            }
+
+            return new ResponseEntity<List<RegisteredUserVisitationDTO>>(registeredUserVisitationDTOS, headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<List<RegisteredUserVisitationDTO>>(headers, HttpStatus.UNAUTHORIZED);
     }
 
     @RequestMapping(
@@ -292,6 +356,33 @@ public class RegisteredUserController {
             return new ResponseEntity<RegisteredUserReservationsDTO>(new RegisteredUserReservationsDTO(reservations), headers, HttpStatus.OK);
         }
         return new ResponseEntity<RegisteredUserReservationsDTO>(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/getAllRegisteredUserInvitations",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<List<RegisteredUserInvitationDTO>> getAllRegisteredUserInvitations(@RequestHeader("Authorization") String userToken){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            List<Invitation> invitations = this.registeredUserService.findRegisteredUserInvitations(currentUser.getId());
+
+            List<RegisteredUserInvitationDTO> registeredUserInvitationDTOS = new ArrayList<>();
+
+            for(Invitation invitation: invitations){
+                RegisteredUserInvitationDTO registeredUserInvitationDTO = new RegisteredUserInvitationDTO(invitation.getId(), invitation.getReservation().getId(), invitation.getInvitationSender().getUsername(), invitation.getInvitationSender().getName(), invitation.getInvitationSender().getLastname()
+                ,invitation.getReservation().getProjection().getShow().getTheatre().getName(), invitation.getReservation().getShowTitle(),invitation.getReservation().getProjectionDate(), invitation.getStatus());
+                registeredUserInvitationDTOS.add(registeredUserInvitationDTO);
+            }
+
+            return new ResponseEntity<List<RegisteredUserInvitationDTO>>(registeredUserInvitationDTOS, headers, HttpStatus.OK);
+        }
+        return new ResponseEntity<List<RegisteredUserInvitationDTO>>(headers, HttpStatus.UNAUTHORIZED);
     }
 
     @RequestMapping(
@@ -323,16 +414,15 @@ public class RegisteredUserController {
         headers.add("Authorization", this.jwtService.getToken(user));
 
         if (currentUser != null) {
-            //Reservation reservation = this.registeredUserService.reservationExist(currentUser, Long.parseLong(reservationId));
             Reservation reservation = reservationRepository.getById(Long.parseLong(reservationId));
 
             if(reservation != null){
                 // otkazivanje rezervacije je moguce samo 30min pre njenog pocetka
                 //boolean success = this.registeredUserService.checkReservationExpire(reservation);
-                boolean success = true;
+                boolean notTooLate = registeredUserService.isReservationOngoing(reservation);
 
-                if(success) {
-                    /*for (Invite invited : reservation.getInvites()) {
+                if(notTooLate) {
+                    /*for (Invitation invited : reservation.getInvites()) {
                         try {
                             this.emailService.sendNotification(currentUser, invited.getInvited(), reservation, reservation.getReservationTables().get(0).getRestaurant());
                         }catch( Exception e ){
@@ -356,20 +446,150 @@ public class RegisteredUserController {
                         this.ticketRepository.delete(t);
                     }
 
+                    for(Reservation r: p.getReservations()){
+                        if (r.getId().equals(reservation.getId())){
+                            p.getReservations().remove(r);
+                            break;
+                        }
+                    }
+
                     this.projectionService.save(p);
                     this.registeredUserService.removeReservation(reservation);
                     return new ResponseEntity(headers, HttpStatus.OK);
                 }
                 else
-                    // preostalo je manje ili tacno 30min do pocetka rezervacije
                     return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
             }
             else
-                // rezervacija ne postoji, ili je u pitanju id rezervacije koju je kreirao neko od prijatelja
                 return new ResponseEntity(headers, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
     }
+
+    @RequestMapping(
+            value = "/acceptInvitation",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity<ReservationInvitationDTO> acceptInvitation(@RequestHeader("Authorization") String userToken, @RequestBody String idInvite){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            Invitation invitation = this.registeredUserService.checkInvitation(currentUser, Long.parseLong(idInvite), InvitationStatus.Pending);
+            if(invitation != null) {
+                boolean success = this.registeredUserService.isReservationOngoing(invitation.getReservation());
+
+                if(success) {
+                    this.registeredUserService.acceptInvitation(currentUser, invitation);
+
+                    Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
+                    String date = invitation.getReservation().getProjectionDate();
+                    ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
+                            currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
+
+                    return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
+                }
+                else
+                    return new ResponseEntity(headers, HttpStatus.NOT_ACCEPTABLE);
+            }
+            else
+                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/cancelInvitation",
+            method = RequestMethod.DELETE,
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity cancelInvitation(@RequestHeader("Authorization") String userToken, @RequestBody String idInvite){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            Invitation invitation = this.registeredUserService.checkInvitation(currentUser, Long.parseLong(idInvite), InvitationStatus.Pending);
+            if(invitation != null) {
+                this.registeredUserService.cancelInvitation(currentUser, invitation);
+
+                Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
+                String date = invitation.getReservation().getProjectionDate();
+                ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
+                        currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
+                return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+    @RequestMapping(
+            value = "/removeInvitation",
+            method = RequestMethod.PUT,
+            consumes = MediaType.TEXT_PLAIN_VALUE)
+    public ResponseEntity removeInvitation(@RequestHeader("Authorization") String userToken, @RequestBody String idInvite){
+        JwtUser user = this.jwtService.getUser(userToken);
+        RegisteredUser currentUser = this.registeredUserService.findByUsername(user.getUsername());
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", this.jwtService.getToken(user));
+
+        if(currentUser != null){
+            Invitation invitation = this.registeredUserService.checkInvitation(currentUser, Long.parseLong(idInvite), InvitationStatus.Accepted);
+            if(invitation != null) {
+                this.registeredUserService.removeInvitation(currentUser, invitation);
+
+                Theatre theatre = invitation.getReservation().getProjection().getShow().getTheatre();
+                String date = invitation.getReservation().getProjectionDate();
+                ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
+                        currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
+                return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
+            }
+            else
+                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+        }
+        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+    }
+
+
+    @PostMapping(
+            value = "/admin-edit/{id}",
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity editAdminInfo(@RequestHeader("Authorization") String userToken, @RequestBody @Valid UserLoginDTO userDTO, @PathVariable("id") String id, BindingResult result ) {
+        String username = this.jwtService.getUser(userToken).getUsername();
+        TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
+        if (!user.getType().equals(UserType.TheaterAndCinemaAdmin)) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        System.out.println("EMAIL ------->>"+user.getEmail());
+
+
+        if(!id.equals(user.getId().toString())){
+            System.out.println("NE GLEDAJ U TUDJ TANJIR");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        } else {
+
+            user.setName(userDTO.getName());
+            user.setLastname(userDTO.getLastname());
+            user.setPassword(userDTO.getPassword());
+
+            theatreCinemaAdminService.saveAndFlush(user);
+            return new ResponseEntity<UserLoginDTO>(userDTO, HttpStatus.CREATED);
+        }
+    }
+
+
+
+
+
+
+
 
     private RegisteredUserDTO convertRegisteredUserToDTO(RegisteredUser user){
         ModelMapper mapper = new ModelMapper();

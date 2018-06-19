@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Theatre;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
 import org.springframework.data.repository.query.Param;
 
@@ -16,4 +17,10 @@ public interface TicketService {
 
 
     Ticket getById(Long id);
+
+    List<Ticket> findByTheatre(Theatre theatre);
+
+    Ticket save(Ticket ticket);
+
+
 }

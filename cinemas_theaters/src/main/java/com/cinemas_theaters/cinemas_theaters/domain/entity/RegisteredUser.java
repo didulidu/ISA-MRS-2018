@@ -1,23 +1,15 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
-import com.cinemas_theaters.cinemas_theaters.domain.enums.FriendshipStatus;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
-
-import com.cinemas_theaters.cinemas_theaters.serializer.CustomFriendshipSerializer;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
-import com.fasterxml.jackson.annotation.JsonBackReference;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 public class RegisteredUser extends User implements Serializable {
@@ -43,25 +35,20 @@ public class RegisteredUser extends User implements Serializable {
     private String telephoneNumber;
 
     @OneToMany(mappedBy = "firstUser", cascade = CascadeType.ALL)
-    @JsonSerialize(using = CustomFriendshipSerializer.class)
-    private Map<RegisteredUser, Friendship> friendships;
+    private List<Friendship> friendships;
 
     @OneToMany(mappedBy = "buyer")
     @JsonIgnore
     private  List<Reservation> reservations;
 
-
-    //@OneToMany(mappedBy = "invited", fetch = FetchType.LAZY)
-    //@JsonSerialize(using = CustomInviteUserSerializer.class)
-    //private List<Invite> invites;
+    @OneToMany(mappedBy = "invitedUser", fetch = FetchType.LAZY)
+    private List<Invitation> invitations;
 
     public RegisteredUser() {
         super();
         this.avatarUrl = "";
         this.registrationConfirmed = false;
-        this.friendships = new HashMap<>();
-        //this.invites = new ArrayList<>();
-        //this.personalReservations = new ArrayList<>();
+        this.friendships = new ArrayList<>();
     }
 
     public RegisteredUser(String username, String password, UserType type, String name, String lastname, String email) {
@@ -69,12 +56,10 @@ public class RegisteredUser extends User implements Serializable {
         this.avatarUrl = "";
         this.email = email;
         this.registrationConfirmed = false;
-        this.friendships = new HashMap<>();
-        //this.invites = new ArrayList<>();
-        //this.personalReservations = new ArrayList<>();
+        this.friendships = new ArrayList<>();
     }
 
-    public RegisteredUser(@Email String email, @NotNull String avatarUrl, @NotNull boolean registrationConfirmed, @NotNull String address, @NotNull String telephoneNumber, Map<RegisteredUser, Friendship> friendships, List<Ticket> tickets, List<Reservation> reservations) {
+    public RegisteredUser(@Email String email, @NotNull String avatarUrl, @NotNull boolean registrationConfirmed, @NotNull String address, @NotNull String telephoneNumber, List<Friendship> friendships, List<Ticket> tickets, List<Reservation> reservations) {
         this.email = email;
         this.avatarUrl = avatarUrl;
         this.registrationConfirmed = registrationConfirmed;
@@ -100,11 +85,11 @@ public class RegisteredUser extends User implements Serializable {
         this.email = email;
     }
 
-    public Map<RegisteredUser, Friendship> getFriendships() {
+    public List<Friendship> getFriendships() {
         return friendships;
     }
 
-    public void setFriendships(Map<RegisteredUser, Friendship> friendships) {
+    public void setFriendships(List<Friendship> friendships) {
         this.friendships = friendships;
     }
 
@@ -142,5 +127,13 @@ public class RegisteredUser extends User implements Serializable {
 
     public void setReservations(List<Reservation> reservations) {
         this.reservations = reservations;
+    }
+
+    public List<Invitation> getInvitations() {
+        return invitations;
+    }
+
+    public void setInvitations(List<Invitation> invitations) {
+        this.invitations = invitations;
     }
 }

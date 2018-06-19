@@ -47,10 +47,7 @@
         <button class='btn btn-success' id='create-projection' value="Create">Create</button>
     </div>
         -->         <!-- Button trigger modal -->
-            <button type="button" class="btn btn-success" data-toggle="modal" data-target="#exampleModal">
-              New Projection
-            </button>
-
+            
             <!-- Modal -->
             <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
               <div class="modal-dialog" role="document">
@@ -63,7 +60,7 @@
                   </div>
                   <div class="modal-body" id="projection-form">
                     <label for="hall">Hall: </label>
-                    <select id = "hall" name="hall">
+                    <select id = "hall" class = "hall" name="hall">
                     </select>
                     <hr>
                     <label for="date-time">Time: </label>
@@ -79,6 +76,67 @@
                   </div>
                 </div>
               </div>
-</div>
+            </div>
+
+
+            <!-- Edit projection modal -->
+            <div class="modal fade" id="editProjectionModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Edit Projection</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="projection-form">
+                    <label for="hall">Hall: </label>
+                    <select  class = "hall" id="hall-edit" name="hall">
+                    </select>
+                    <hr>
+                    <label for="date-time">Time: </label>
+                    <input type="datetime-local" name="datetime" id="date-time-edit"><br>
+                    <hr>
+                    <label for="price">Price: </label>
+                    <input type="number" name="price" id="price-edit" ><br><br>
+                    <hr>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id='edit-projection'>Save changes</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+            <!-- quick ticket modal -->
+            <div class="modal fade" id="addQuickTicketModal" tabindex="-1" role="dialog" aria-labelledby="addQuickTicketModal" aria-hidden="true">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h5 class="modal-title" id="addQuickTicketModalLabel">New Quick Ticket</h5>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                      <span aria-hidden="true">&times;</span>
+                    </button>
+                  </div>
+                  <div class="modal-body" id="projection-form">
+                    <label for="seat">Seat: </label>
+                    <select id = "seat" class = "seat" name="seat">
+                    </select>
+                    <hr>
+                    <label for="discount">Discount (%): </label>
+                    <input type="number" name="discount" id="discount" ><br><br>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-primary" id='create-quick-ticket'>Create</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
+
 </body>
 </html>

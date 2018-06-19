@@ -17,4 +17,10 @@ public class TheatreCinemaAdminServiceImpl implements TheatreCinemaAdminService{
     public TheaterAdminUser findByUsername(String username){
         return this.theatreCinemaAdminRepository.findByUsername(username);
     }
+
+    @Override
+    public TheaterAdminUser saveAndFlush(TheaterAdminUser user) {
+        return this.theatreCinemaAdminRepository.saveAndFlush(user);
+    }
+
 }
