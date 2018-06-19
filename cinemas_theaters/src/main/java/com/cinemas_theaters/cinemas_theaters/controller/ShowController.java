@@ -7,6 +7,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.dto.TheatreDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.service.*;
+import org.apache.tomcat.jni.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -17,7 +18,9 @@ import org.springframework.validation.BindingResult;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -40,6 +43,19 @@ public class ShowController {
 
     @Autowired
     private TheatreCinemaAdminService theatreCinemaAdminService;
+
+
+    public static LocalDateTime str2Date(String dateS){
+        DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+        LocalDateTime date;
+        try{
+            date = LocalDateTime.parse(dateS, formatter);
+            return date;
+        }
+        catch (Exception e){
+            return null;
+        }
+    }
 
 
     //{id} je id pozorista za koji se traze show-ovi
@@ -82,10 +98,12 @@ public class ShowController {
 
         //s.getId()
         for (Projection p: projections){
-            if (p.getExist())
+            LocalDateTime datum_projekcije = str2Date(p.getDate());
+            LocalDateTime danas = LocalDateTime.now();
+            if(datum_projekcije == null) System.out.println("DATUM JE NULLL " + p.getDate());
+            if (p.getExist() && danas.isBefore(datum_projekcije))
                 projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
         }
-
         return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, headers, HttpStatus.OK);
     }
 

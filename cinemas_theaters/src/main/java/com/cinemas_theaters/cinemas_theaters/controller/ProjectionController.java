@@ -28,6 +28,10 @@ public class ProjectionController {
     private ShowService showService;
     @Autowired
     private HallService hallService;
+    @Autowired
+    private UserService userService;
+    @Autowired
+    private SeatService seatService;
 
     @Autowired
     private JwtService jwtService;
@@ -85,7 +89,7 @@ public class ProjectionController {
 
 
 
-    public LocalDateTime str2Date(String dateS){
+    public static LocalDateTime str2Date(String dateS){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
         LocalDateTime date;
@@ -107,7 +111,6 @@ public class ProjectionController {
         String username = this.jwtService.getUser(userToken).getUsername();
         TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
         if(!user.getType().equals(UserType.TheaterAndCinemaAdmin)){
-            System.out.println("Ne odgovara tip korisnika *****************88");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         Show film = showService.getById(projDTO.getShowId());
@@ -237,6 +240,37 @@ public class ProjectionController {
         }
         return new ResponseEntity<List<HallDTO>>(hallDTOS, headers, HttpStatus.OK);
     }
+
+
+    @RequestMapping(
+            value = "/getSeats/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getSeats(@RequestHeader("Authorization") String adminToken,@PathVariable Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", adminToken);
+        String username = this.jwtService.getUser(adminToken).getUsername();
+        User user = this.userService.findByUsername(username);
+        if (user != null) {
+
+            Projection p = this.projectionService.getById(id);
+            List<SeatDTO> slobodna_sedista = new ArrayList<SeatDTO>();
+            for(Seat s : p.getHall().getSeats()){
+                System.out.println(s.getChairRow()+"."+s.getChairNumber()+" = " + s.getId());
+                if(!p.getReservedSeats().contains(s.getId().toString())){
+                    slobodna_sedista.add(new SeatDTO(s.getChairRow(),s.getChairNumber(),s.getId()));
+                }else{
+
+                }
+            }
+            return new ResponseEntity<List<SeatDTO>>(slobodna_sedista, headers, HttpStatus.OK);
+        } else {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
+
+
 
 
     public Projection convertDTOToProjection(ProjectionDTO projectionDTO){

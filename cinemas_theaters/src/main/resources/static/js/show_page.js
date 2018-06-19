@@ -24,19 +24,17 @@ $(document).ready(function(){
 });
 
 function getHalls(){
-  alert("hall/getHalls/"+localStorage.getItem("theater"));
   $.ajax({
     url: "projection/getHalls/"+localStorage.getItem("theater"),
-        type: "GET",
-        dataType: "json",
-        success: function(data){
-          alert(JSON.stringify(data))
-          forward_halls(data);
-        },
-        error: function (response) {
-            alert("Ne rade sale: "+ response.status);
-            return null;
-        }
+      type: "GET",
+      dataType: "json",
+      success: function(data){
+        forward_halls(data);
+      },
+      error: function (response) {
+        alert("Ne rade sale: "+ response.status);
+        return null;
+      }
   });
 }
 
@@ -87,6 +85,7 @@ function forward_projections(data){
 		else if(localStorage.getItem("currentUser")!=undefined && JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
       table+="<td>"+"<button type='button' onclick='editProjectionWrapper("+projection["id"]+")' data-toggle=\"modal\" data-target=\"#editProjectionModal\" class='btn btn-warning edit-projection' >Edit</button>"+"</td>"
       table+="<td>"+"<button type='button' onclick='deleteProjection("+projection["id"]+")' class='btn btn-danger delete-projection' >Delete</button>"+"</td>"
+      table+="<td>"+"<button type='button' onclick='addQuickTicketWrapper("+projection["id"]+")' data-toggle=\"modal\" data-target=\"#addQuickTicketModal\"  class='btn btn-dark delete-projection' >Add Quick Ticket</button>"+"</td>"
     }
 
     table+="</tr>"
@@ -96,6 +95,31 @@ function forward_projections(data){
   	$("#projection-container").append(table);
 }
 
+
+
+
+function getSeats(){
+  $.ajax({
+    url: "projection/getSeats/"+chosenProjectionId,
+      type: "GET",
+      dataType: "json",
+      beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+      success: function(data){
+        forward_seats(data);
+      },
+      error: function (response) {
+        alert("Ne rade sjedala: "+ response.status);
+        return null;
+      }
+  });
+}
+
+
+
+
+
 function forward_halls(data){
   data.forEach(function(element){
     $(".hall").append("<option value='"+element["id"]+"'>"+element.name+"</option>")
@@ -103,6 +127,11 @@ function forward_halls(data){
   });
 }
 
+function forward_seats(data){
+  data.forEach(function(element){
+    $(".seat").append("<option value ='" + element["id"]+"'>" + element.row+"-" + element.num + "</option>");
+  });
+}
 
 
 
@@ -184,6 +213,9 @@ function editProjectionWrapper(id) {
 }
 
 
+
+
+
 $(document).on('click', '#create-projection',function(e) {
     var date = new Date(document.getElementById("date-time").value)
     var hall = $("#hall :selected").val();
@@ -215,6 +247,47 @@ $(document).on('click', '#create-projection',function(e) {
       getToastr('Projection created','Done!',  1);     
       $('#exampleModal').modal('toggle');   
           forward_projections(data);
+      },
+      error: function(response){
+      getToastr('Hall is already taken by another projection on time you specified','Oops!',  3);
+      }
+  });}
+});
+
+var chosenProjectionId = null;
+function addQuickTicketWrapper(projection_id){
+  chosenProjectionId = projection_id;
+  getSeats();
+}
+
+
+$(document).on('click', '#create-quick-ticket',function(e) {
+    
+    var seat = $("#seat :selected").val();
+    var discount = document.getElementById("discount").value;
+  
+    var podaci = "{\"projectionId\": "+chosenProjectionId
+    podaci+=", \"discount\": "+discount+"\"}"
+
+    var url = "/quickticket/" + localStorage.getItem("theater");
+
+    if (seat == null || discount == null ){
+      getToastr('Empty Field',"Dont't hurry!", 2);
+    }
+    else{
+    $.ajax({
+      type: "GET",
+      url: url,
+      contentType: "application/json",
+      data: podaci,
+      dataType: "json",
+      beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+      success: function(data){
+      getToastr('Quick ticket created','Done!',  1);     
+      $('#addQuictTicketModal').modal('toggle');   
+          //forward_projections(data);
       },
       error: function(response){
       getToastr('Hall is already taken by another projection on time you specified','Oops!',  3);

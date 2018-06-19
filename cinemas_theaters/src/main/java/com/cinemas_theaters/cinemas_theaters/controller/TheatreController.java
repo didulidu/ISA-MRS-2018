@@ -65,8 +65,6 @@ public class TheatreController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity<?> getTheatersByAdmin(@RequestHeader("Authorization") String adminToken){
-        System.out.println("\n\n\nUSO\n\n\n");
-        //JwtUser user = this.jwtService.getUser(userToken);
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",adminToken);
         String username = this.jwtService.getUser(adminToken).getUsername();
