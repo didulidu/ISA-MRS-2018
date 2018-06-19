@@ -1,10 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
-import com.cinemas_theaters.cinemas_theaters.serializer.CustomFriendshipSerializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
-import com.fasterxml.jackson.databind.annotation.JsonSerialize;
 import org.hibernate.validator.constraints.Email;
 
 import javax.persistence.*;
@@ -12,7 +9,6 @@ import javax.validation.constraints.NotNull;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
 @Entity
 public class TheaterAdminUser extends User implements Serializable {

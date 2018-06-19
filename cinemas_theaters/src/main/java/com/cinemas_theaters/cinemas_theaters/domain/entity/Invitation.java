@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.domain.entity;
 
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.io.Serializable;
@@ -16,9 +17,11 @@ public class Invitation implements Serializable {
     private InvitationStatus status;
 
     @ManyToOne
+    @JsonIgnore
     private RegisteredUser invitationSender;
 
     @ManyToOne
+    @JsonIgnore
     private RegisteredUser invitedUser;
 
     @ManyToOne

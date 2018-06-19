@@ -2,11 +2,11 @@ package com.cinemas_theaters.cinemas_theaters.service;
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegUserProfileUpdateDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserSearchDTO;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserVisitationDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserFriendsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Invitation;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.InvitationStatus;
 
 import java.util.ArrayList;
@@ -32,11 +32,13 @@ public interface RegisteredUserService {
 
     List<RegisteredUserSearchDTO> findUsers(String username, String parameter);
 
+    List<Reservation> getAllVisitations(RegisteredUser currentUser);
+
     List<Reservation> getAllReservations(RegisteredUser user);
 
     void removeReservation(Reservation reservation);
 
-    boolean hasReservationExpired(Reservation reservation);
+    boolean isReservationOngoing(Reservation reservation);
 
     boolean updateRegisteredUserProfile(RegisteredUser user, RegUserProfileUpdateDTO updatedInfo);
 
@@ -48,7 +50,7 @@ public interface RegisteredUserService {
 
     void acceptInvitation(RegisteredUser user, Invitation invitation);
 
-    void rejectInvitation(RegisteredUser user, Invitation invitation);
+    void removeInvitation(RegisteredUser user, Invitation invitation);
 
     void cancelInvitation(RegisteredUser user, Invitation invitation);
 
