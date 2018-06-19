@@ -97,7 +97,7 @@ function forward_projections(data){
 
 
 
-function getSeats(){
+function getSeats(callback){
   $.ajax({
     url: "projection/getSeats/"+chosenProjectionId,
       type: "GET",
@@ -106,7 +106,7 @@ function getSeats(){
         request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
       },
       success: function(data){
-        forward_seats(data);
+        callback(data);
       },
       error: function (response) {
         alert("Ne rade sjedala: "+ response.status);
@@ -120,6 +120,7 @@ function getSeats(){
 
 
 function forward_halls(data){
+  $(".hall").empty();
   data.forEach(function(element){
     $(".hall").append("<option value='"+element["id"]+"'>"+element.name+"</option>")
   
@@ -127,6 +128,7 @@ function forward_halls(data){
 }
 
 function forward_seats(data){
+  $(".seat").empty();
   data.forEach(function(element){
     $(".seat").append("<option id ='" + element["id"]+"' value='"+ element.row+"-" + element.num +"'>" + element.row+"-" + element.num + "</option>");
   });
@@ -256,7 +258,7 @@ $(document).on('click', '#create-projection',function(e) {
 var chosenProjectionId = null;
 function addQuickTicketWrapper(projection_id){
   chosenProjectionId = projection_id;
-  getSeats();
+  getSeats(forward_seats);
 }
 
 
@@ -267,8 +269,8 @@ $(document).on('click', '#create-quick-ticket',function(e) {
   
     var podaci = "{\"projectionId\": "+chosenProjectionId
     
-    podaci+=", \"seatNum\": "+ seat.split('-')[0]
-    podaci+=", \"seatRow\": "+ seat.split('-')[1]
+    podaci+=", \"seatRow\": "+ seat.split('-')[0]
+    podaci+=", \"seatNum\": "+ seat.split('-')[1]
     podaci+=", \"discount\": "+discount+"}"
 
     alert(podaci)
@@ -288,12 +290,14 @@ $(document).on('click', '#create-quick-ticket',function(e) {
         request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
       },
       success: function(data){
-      getToastr('Quick ticket created','Done!',  1);     
-      $('#addQuictTicketModal').modal('toggle');   
-          //forward_projections(data);
+      getToastr('Quick ticket ceeereated','Done!',  1);     
+      alert("jee");
+      $('#addQuickTicketModal').modal('toggle');   
+          forward_seats(data);
+      alert("kraj");
       },
       error: function(response){
-      getToastr('Hall is already taken by another projection on time you specified','Oops!',  3);
+      getToastr('Error while creating quick ticket','Oops!',  3);
       }
   });}
 });

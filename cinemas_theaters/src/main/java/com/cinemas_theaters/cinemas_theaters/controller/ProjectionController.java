@@ -261,12 +261,14 @@ public class ProjectionController {
         String username = this.jwtService.getUser(adminToken).getUsername();
         User user = this.userService.findByUsername(username);
         if (user != null) {
-
             Projection p = this.projectionService.getById(id);
+            System.out.println("A SADA, projekcija koja je u sali:" + p.getHall().getName()+"  a njen id je: "+ p.getId());
+            System.out.println("Sva sedista projekcije: "+p.getId());
             List<SeatDTO> slobodna_sedista = new ArrayList<SeatDTO>();
             for(Seat s : p.getHall().getSeats()){
                 System.out.println(s.getChairRow()+"."+s.getChairNumber()+" = " + s.getId());
                 if(!p.getReservedSeats().contains(s.getId().toString())){
+                    System.out.println("ovo iznad je slobodno");
                     slobodna_sedista.add(new SeatDTO(s.getChairRow(),s.getChairNumber(),s.getId()));
                 }else{
 

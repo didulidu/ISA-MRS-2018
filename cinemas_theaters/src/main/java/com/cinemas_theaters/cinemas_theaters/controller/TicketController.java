@@ -206,12 +206,17 @@ public class TicketController {
         Theatre pozoriste = this.theatreRepository.getById(Long.parseLong(id));
         Projection projekcija = this.projectionService.getById(quickTicketDTO.getProjectionId());
         Seat sediste = null;
+
+        System.out.println("Sediste koje se trazi: "+quickTicketDTO.getSeatRow()+"-"+quickTicketDTO.getSeatNum());
+        System.out.println("Sedista u sali projekcije: " + projekcija.getId());
         for(Seat s : projekcija.getHall().getSeats()){
-            if(s.getChairNumber() == quickTicketDTO.getSeatNum() && s.getChairRow() == quickTicketDTO.getSeatRow()){
+            System.out.println(s.getChairRow()+"-"+s.getChairNumber());
+            if(!projekcija.getReservedSeats().contains(s.getId().toString())  && s.getChairNumber() == quickTicketDTO.getSeatNum() && s.getChairRow() == quickTicketDTO.getSeatRow()){
                 sediste = s;
                 break;
             }
         }
+        System.out.println("kraj :)");
         if(sediste == null){
             System.out.println("ne nalazi sediste");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
@@ -219,7 +224,8 @@ public class TicketController {
 
         QuickTicket newTicket = new QuickTicket(sediste,projekcija,pozoriste,null,quickTicketDTO.getDiscount());
         this.quickTicketService.save(newTicket);
-
+        projekcija.getReservedSeats().add(newTicket.getSeat().getId().toString());
+        this.projectionService.saveAndFlush(projekcija);
         List<QuickTicketDTO> sve_brze_karte = new ArrayList<QuickTicketDTO>();
 
         for(QuickTicket t : quickTicketService.findByProjection(projekcija)){
