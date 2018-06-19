@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.QuickTicketCreatorDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.QuickTicketDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendDTO;
@@ -48,6 +49,9 @@ public class TicketController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private EmailService emailService;
 
     @Autowired
     private HallService hallService;
@@ -119,7 +123,9 @@ public class TicketController {
             p.getReservations().add(reservation);
 
             this.reservationRepository.save(reservation);
-            this.projectionService.saveAndFlush(p);
+            this.projectionService.save(p);
+
+            this.emailService.sendReservedTicketInfo(user, reservation);
 
             this.emailService.sendReservedTicketInfo(user, reservation);
 
