@@ -39,6 +39,9 @@ public class TicketController {
     private UserService userService;
 
     @Autowired
+    private QuickTicketService quickTicketService;
+
+    @Autowired
     private RegisteredUserService registeredUserService;
 
     @Autowired
@@ -55,7 +58,6 @@ public class TicketController {
 
     @Autowired
     private HallService hallService;
-
 
     @Autowired
     private TheatreRepository theatreRepository;
@@ -149,6 +151,12 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         List<Ticket> sve_karte = this.ticketService.findByTheatre(pozoriste);
+        System.out.println("*********************************");
+        for(Ticket t : sve_karte){
+            System.out.println(t.getId());
+        }
+        System.out.println("*********************************");
+
         List<QuickTicketDTO> sve_brze_karte = new ArrayList<QuickTicketDTO>();
         for(Ticket t : sve_karte){
             LocalDateTime datum_projekcije = ShowController.str2Date(t.getProjection().getDate());
@@ -186,14 +194,14 @@ public class TicketController {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
 
-        Ticket newTicket = new QuickTicket(sediste,projekcija,pozoriste,null,quickTicketDTO.getDiscount());
-
-        this.ticketService.save(newTicket);
+        QuickTicket newTicket = new QuickTicket(sediste,projekcija,pozoriste,null,quickTicketDTO.getDiscount());
+        this.quickTicketService.save(newTicket);
 
         List<QuickTicketDTO> sve_brze_karte = new ArrayList<QuickTicketDTO>();
-        for(Ticket t : this.ticketService.findAll()){
+
+        for(QuickTicket t : quickTicketService.findByProjection(projekcija)){
             LocalDateTime datum_projekcije = ShowController.str2Date(t.getProjection().getDate());
-            if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
+            if(datum_projekcije.isAfter(LocalDateTime.now())){
                 sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(),t.getTheatre().getId()));
             }
         }

@@ -4,6 +4,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.dto.*;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.service.*;
+import org.apache.tomcat.jni.Local;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
@@ -40,7 +41,8 @@ public class ProjectionController {
 
     @Autowired TheatreCinemaAdminService theatreCinemaAdminService;
 
-    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    public static DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy HH:mm");
+    public static DateTimeFormatter formatter2 = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 
 //    @RequestMapping(
 //            value = "/getProjection/{id}",
@@ -119,7 +121,7 @@ public class ProjectionController {
         LocalDateTime pocetak, kraj;
         boolean ok = true;
         for(Projection p : projekcijeSale){
-            pocetak = str2Date(p.getDate());
+            pocetak = LocalDateTime.parse(p.getDate(), formatter);
             if (pocetak==null) continue;
             kraj = pocetak.plusMinutes(p.getShow().getDuration());
             LocalDateTime pocetakNovog = str2Date(projDTO.getDate());
@@ -130,12 +132,14 @@ public class ProjectionController {
         }
         System.out.println("Stigo dovdeee ****************************");
         if (ok) {
-            Projection nova = new Projection(projDTO.getDate(), film, sala, projDTO.getPrice());
+            Projection nova = new Projection(LocalDateTime.parse(projDTO.getDate(),formatter2).format(formatter), film, sala, projDTO.getPrice());
             this.projectionService.save(nova);
             projekcijeSale.add(nova);
             ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
             for (Projection p: projectionService.getAllProjections(film.getId())){
-                if (p.getExist())
+                LocalDateTime danas = LocalDateTime.now();
+                LocalDateTime x = ShowController.str2Date(p.getDate());
+                if (p.getExist() && x.isAfter(danas))
                     projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
             }
             return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);
@@ -183,13 +187,15 @@ public class ProjectionController {
                 }
             }
             if (ok) {
-                choosen.setDate(projDTO.getDate());
+                choosen.setDate(LocalDateTime.parse(projDTO.getDate(),formatter2).format(formatter));
                 choosen.setHall(sala);
                 choosen.setPrice(projDTO.getPrice());
                 this.projectionService.saveAndFlush(choosen);
                 ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
-                for (Projection p : projectionService.getAllProjections(film.getId())) {
-                    if (p.getExist())
+                for (Projection p: projectionService.getAllProjections(film.getId())){
+                    LocalDateTime danas = LocalDateTime.now();
+                    LocalDateTime x = ShowController.str2Date(p.getDate());
+                    if (p.getExist() && x.isAfter(danas))
                         projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
                 }
                 return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);
@@ -214,8 +220,10 @@ public class ProjectionController {
             chosen.setExist(false);
             projectionService.saveAndFlush(chosen);
             ArrayList<ProjectionDisplayDTO> projectionDisplayDTOS = new ArrayList<ProjectionDisplayDTO>();
-            for (Projection p : projectionService.getAllProjections(map.get("showId"))) {
-                if (p.getExist())
+            for (Projection p: projectionService.getAllProjections(map.get("showId"))){
+                LocalDateTime danas = LocalDateTime.now();
+                LocalDateTime x = ShowController.str2Date(p.getDate());
+                if (p.getExist() && x.isAfter(danas))
                     projectionDisplayDTOS.add(new ProjectionDisplayDTO(p.getId(), p.getShow().getTitle(), p.getDate(), p.getPrice(), p.getReservedSeats(), p.getHall()));
             }
             return new ResponseEntity<List<ProjectionDisplayDTO>>(projectionDisplayDTOS, HttpStatus.CREATED);

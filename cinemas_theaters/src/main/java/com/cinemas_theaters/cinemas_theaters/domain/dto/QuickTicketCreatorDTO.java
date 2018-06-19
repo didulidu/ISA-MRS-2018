@@ -7,11 +7,15 @@ public class QuickTicketCreatorDTO {
     private Integer seatNum;
     private Integer discount;
 
-    public QuickTicketCreatorDTO(Long projectionId, Integer seatRow, Integer seatNum, Integer discount) {
-        this.projectionId = projectionId;
-        this.seatRow = seatRow;
-        this.seatNum = seatNum;
-        this.discount = discount;
+    public QuickTicketCreatorDTO(String projectionId, String seatRow, String seatNum, String discount) {
+        this.projectionId = Long.parseLong(projectionId);
+        this.seatRow = Integer.parseInt(seatRow);
+        this.seatNum = Integer.parseInt(seatNum);
+        this.discount = Integer.parseInt(discount);
+    }
+
+    public QuickTicketCreatorDTO(){
+
     }
 
     public Long getProjectionId() {

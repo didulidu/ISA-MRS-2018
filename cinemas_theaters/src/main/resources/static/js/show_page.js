@@ -59,8 +59,7 @@ function sendProjection(projectionJson){
                 error: function (response) {
                     alert("Ne radi: "+ response.status)
                 }
-            });        
-
+            }); 
 }
 
 function forward_projections(data){
@@ -129,7 +128,7 @@ function forward_halls(data){
 
 function forward_seats(data){
   data.forEach(function(element){
-    $(".seat").append("<option value ='" + element["id"]+"'>" + element.row+"-" + element.num + "</option>");
+    $(".seat").append("<option id ='" + element["id"]+"' value='"+ element.row+"-" + element.num +"'>" + element.row+"-" + element.num + "</option>");
   });
 }
 
@@ -267,16 +266,20 @@ $(document).on('click', '#create-quick-ticket',function(e) {
     var discount = document.getElementById("discount").value;
   
     var podaci = "{\"projectionId\": "+chosenProjectionId
-    podaci+=", \"discount\": "+discount+"\"}"
+    
+    podaci+=", \"seatNum\": "+ seat.split('-')[0]
+    podaci+=", \"seatRow\": "+ seat.split('-')[1]
+    podaci+=", \"discount\": "+discount+"}"
 
-    var url = "/quickticket/" + localStorage.getItem("theater");
+    alert(podaci)
+    var url = "ticket/quicktickets/" + localStorage.getItem("theater");
 
     if (seat == null || discount == null ){
       getToastr('Empty Field',"Dont't hurry!", 2);
     }
     else{
     $.ajax({
-      type: "GET",
+      type: "POST",
       url: url,
       contentType: "application/json",
       data: podaci,

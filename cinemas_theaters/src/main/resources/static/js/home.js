@@ -85,7 +85,7 @@ function forward_theatres(theaters){
     //     "<div class='card-body' style='height: 140px;'>"+
     //     "<h5 class='card-title'>"+element["name"]+"</h5>"+
     //     "<p class='card-text'>"+element["description"]+"</p></div>"
-    //     "<div id='rateYo'></div></div>"
+    //     "<div id='rateYo'></div></div>" ovo nikad necu uraditi izgleda xD
     theatersJSON = JSON.parse(theaters);
     $card = $(".card").first();
     $(".cards").empty();
