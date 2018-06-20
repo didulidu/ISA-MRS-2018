@@ -162,9 +162,12 @@ public class TicketController {
         headers.add("Authorization",userToken);
         String username = this.jwtService.getUser(userToken).getUsername();
         User user = this.userService.findByUsername(username);
-        if(!user.getType().equals(UserType.RegisteredUser)){
+        if(user == null){
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
+//        if(!user.getType().equals(UserType.RegisteredUser)){
+//            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+//        }
 
         Theatre pozoriste = this.theatreRepository.getById(Long.parseLong(id));
         if(pozoriste == null){
@@ -269,6 +272,7 @@ public class TicketController {
         r.setTickets(tickets);
         (user).getReservations().add(r);
         chosen.setReservation(r);
+        r.setProjection(chosen.getProjection());
         this.reservationRepository.save(r);
 
         this.registeredUserService.save(user);

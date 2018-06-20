@@ -1,23 +1,27 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.domain.dto.GraphDataDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TheaterAdminUserDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TheatreDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserLoginDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
-import com.cinemas_theaters.cinemas_theaters.service.JwtService;
-import com.cinemas_theaters.cinemas_theaters.service.TheatreCinemaAdminService;
-import com.cinemas_theaters.cinemas_theaters.service.TheatreService;
+import com.cinemas_theaters.cinemas_theaters.service.*;
 
+import java.time.LocalDate;
+import java.time.LocalDateTime;
+import java.time.format.DateTimeFormatter;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
-import com.cinemas_theaters.cinemas_theaters.service.UserService;
 import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.integration.support.management.graph.Graph;
 import org.springframework.web.bind.annotation.*;
 
 import javax.validation.Valid;
@@ -38,6 +42,13 @@ public class TheatreController {
     @Autowired
     TheatreCinemaAdminService theatreCinemaAdminService;
 
+    @Autowired
+    ProjectionService projectionService;
+
+    DateTimeFormatter formatter = DateTimeFormatter.ofPattern("dd/MM/yyyy");
+    DateTimeFormatter formatterD3 = DateTimeFormatter.ofPattern("d-MMM-yyyy");
+
+
 
     @RequestMapping(
             value = "/getAllTheatres",
@@ -56,6 +67,57 @@ public class TheatreController {
         return new ResponseEntity<List<TheatreDTO>>(theatreDTOS, headers, HttpStatus.OK);
     }
 
+    @RequestMapping(
+            value = "/info/{id}",
+            method = RequestMethod.GET,
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> getInfo(@RequestHeader("Authorization") String adminToken, @RequestBody Map<String, String> map,@PathVariable Long id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", adminToken);
+        String username = this.jwtService.getUser(adminToken).getUsername();
+        User user = this.userService.findByUsername(username);
+        if (user != null) {
+            Theatre theatre = this.theatreService.findById(id);
+            Double rate = theatre.getRate();
+            String interval = map.get("interval");
+            HashMap<String, Integer> visitations = new HashMap<String, Integer>();
+            LocalDate startDate = LocalDate.now();
+            if(interval.equals("day")) {
+                startDate = LocalDate.now().minusDays(1);
+            }
+            else if(interval.equals("week")){
+                    startDate = LocalDate.now().minusDays(7);
+                }
+                else{
+                startDate = LocalDate.now().minusMonths(1);
+            }
+            HashMap<String, Double> showRates = new HashMap<String, Double>();
+            while(!startDate.isAfter(LocalDate.now())){
+                for(Show s : theatre.getShows()) {
+                    showRates.put(s.getTitle(),s.getAverageRating());
+                    for (Projection p : this.projectionService.getAllProjections(s.getId())) {
+                        LocalDate dateOfProjection = LocalDate.parse(p.getDate(), formatter);
+                        if (dateOfProjection.equals(startDate)) {
+                            int visit_count = 0;
+                            for (Reservation r : p.getReservations()) {
+                                visit_count += r.getTickets().size();
+                            }
+                            visitations.put(startDate.format(formatterD3), visit_count);
+                        }
+                    }
+                }
+                startDate = startDate.plusDays(1);
+            }
+            GraphDataDTO info = new GraphDataDTO(rate,visitations,showRates);
+
+
+            return new ResponseEntity<GraphDataDTO>(info, headers, HttpStatus.OK);
+        } else {
+            System.out.println("ha ha ha ");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+    }
 
 
 

@@ -210,6 +210,7 @@ public class ProjectionController {
             produces = MediaType.APPLICATION_JSON_VALUE
     )
     public ResponseEntity remove(@RequestHeader("Authorization") String userToken,@RequestBody Map<String, Long> map,@PathVariable Long id, BindingResult result ){
+        System.out.println("DSDSDKSDDDDODKO");
         String username = this.jwtService.getUser(userToken).getUsername();
         TheaterAdminUser user = this.theatreCinemaAdminService.findByUsername(username);
         if(!user.getType().equals(UserType.TheaterAndCinemaAdmin)){
