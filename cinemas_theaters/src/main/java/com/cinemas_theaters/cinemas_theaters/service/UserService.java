@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
 import com.cinemas_theaters.cinemas_theaters.domain.entity.User;
+import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 
 
 public interface UserService {
@@ -10,4 +11,6 @@ public interface UserService {
     User findByEmail(String email);
 
     Boolean validateUserCredentials(String username, String password);
+
+    User addAdmin(String email, UserType type);
 }

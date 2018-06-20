@@ -42,6 +42,9 @@ public class ItemController {
     @Autowired
     private BidService bidService;
 
+    @Autowired
+    private EmailService emailService;
+
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             value = "/user"
@@ -352,6 +355,10 @@ public class ItemController {
 
         this.itemService.acceptUserItem(id);
 
+        Item item = this.itemService.findById(id);
+
+        this.emailService.sendOfferAccepted((RegisteredUser)((UserItem)item).getUser(), item);
+
         return ResponseEntity.ok(null);
     }
 
@@ -374,6 +381,10 @@ public class ItemController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         this.itemService.rejectUserItem(id);
+
+        Item item = this.itemService.findById(id);
+
+        this.emailService.sendOfferRejected((RegisteredUser) ((UserItem)item).getUser(), item);
 
         return ResponseEntity.ok(null);
     }

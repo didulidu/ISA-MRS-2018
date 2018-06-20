@@ -1,5 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import com.cinemas_theaters.cinemas_theaters.domain.dto.AdminDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.FriendDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.RegisteredUserDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Friendship;
@@ -8,6 +9,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.TheaterAdminUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.User;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
+import com.cinemas_theaters.cinemas_theaters.service.EmailService;
 import com.cinemas_theaters.cinemas_theaters.service.JwtService;
 import com.cinemas_theaters.cinemas_theaters.service.UserService;
 import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
@@ -37,6 +39,9 @@ public class UserController {
 
     @Autowired
     private JwtService jwtService;
+
+    @Autowired
+    private EmailService emailService;
 
     @RequestMapping(
             value = "/login",
@@ -107,6 +112,27 @@ public class UserController {
                     friendship.getSecondUser().getLastname(), friendship.getStatus()));
         }
         return friendDTOS;
+    }
+
+    @PostMapping(
+            value = "/admin/registration",
+            consumes = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity addAdmin(@RequestHeader("Authorization") String token, @RequestBody AdminDTO admin){
+
+        if(token.split("\\.").length != 3)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        String username = this.jwtService.getUser(token).getUsername();
+        User user = this.userService.findByUsername(username);
+
+        if (user.getType() != UserType.SystemAdmin)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        User adminUser = this.userService.addAdmin(admin.getEmail(), admin.getType());
+        String adminToken = jwtService.getToken(new JwtUser(adminUser.getUsername()));
+        this.emailService.sendAdminActivation((RegisteredUser)adminUser, adminToken);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
 

@@ -1,9 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
-import com.cinemas_theaters.cinemas_theaters.domain.entity.JwtUser;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
-import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.mail.MailException;
 import org.springframework.mail.SimpleMailMessage;
@@ -14,6 +11,62 @@ import org.springframework.stereotype.Service;
 public class EmailService {
     @Autowired
     private JavaMailSender mailSender;
+
+    public void sendAdminActivation(RegisteredUser admin, String token) throws MailException{
+        SimpleMailMessage mail = new SimpleMailMessage();
+        String activationLink = "http://localhost:8080/admin/registration/"+token;
+
+        mail.setTo(admin.getEmail());
+        mail.setFrom("isamrs2018@gmail.com");
+        mail.setSubject("Activate your account");
+        mail.setText("Follow the lin below to proceed with registration: " + "\n\n" + activationLink);
+
+        mailSender.send(mail);
+    }
+
+    public void sendBidRejected(RegisteredUser user, Bid bid) throws MailException{
+        SimpleMailMessage mail = new SimpleMailMessage();
+
+        mail.setTo(user.getEmail());
+        mail.setFrom("isamrs2018@gmail.com");
+        mail.setSubject("Your bid has been rejected");
+        mail.setText("Your bid for item " + bid.getItem().getName() + " has been rejected.");
+
+        mailSender.send(mail);
+    }
+
+    public void sendBidAccepted(RegisteredUser user, Bid bid) throws MailException{
+        SimpleMailMessage mail = new SimpleMailMessage();
+
+        mail.setTo(user.getEmail());
+        mail.setFrom("isamrs2018@gmail.com");
+        mail.setSubject("Your bid has been accepted");
+        mail.setText("Your bid for item " + bid.getItem().getName() + " has been accepted!");
+
+        mailSender.send(mail);
+    }
+
+    public void sendOfferAccepted(RegisteredUser user, Item item) throws MailException{
+        SimpleMailMessage mail = new SimpleMailMessage();
+
+        mail.setTo(user.getEmail());
+        mail.setFrom("isamrs2018@gmail.com");
+        mail.setSubject("Your item has been accepted");
+        mail.setText("Your item " + item.getName() + " has been accepted!");
+
+        mailSender.send(mail);
+    }
+
+    public void sendOfferRejected(RegisteredUser user, Item item) throws MailException{
+        SimpleMailMessage mail = new SimpleMailMessage();
+
+        mail.setTo(user.getEmail());
+        mail.setFrom("isamrs2018@gmail.com");
+        mail.setSubject("Your item has been rejected");
+        mail.setText("Your item " + item.getName() + " has been rejected!");
+
+        mailSender.send(mail);
+    }
 
     public  void sendUserActivation(RegisteredUser registeredUser, String token) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();

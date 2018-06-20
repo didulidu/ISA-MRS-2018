@@ -5,10 +5,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.BidStatus;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserItemStatus;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
-import com.cinemas_theaters.cinemas_theaters.service.BidService;
-import com.cinemas_theaters.cinemas_theaters.service.ItemService;
-import com.cinemas_theaters.cinemas_theaters.service.JwtService;
-import com.cinemas_theaters.cinemas_theaters.service.UserService;
+import com.cinemas_theaters.cinemas_theaters.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -34,6 +31,9 @@ public class BidController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private EmailService emailService;
 
     @PostMapping
     public ResponseEntity makeBid(@RequestBody OfferDTO offerDTO,
@@ -163,11 +163,15 @@ public class BidController {
 
         for(Bid b : bids){
             if (b != bid){
-                if(b.getStatus() == BidStatus.PENDING)
+                if(b.getStatus() == BidStatus.PENDING) {
                     this.bidService.rejectBid(b);
+                    this.emailService.sendBidRejected((RegisteredUser)bid.getUser(), bid);
+                }
+
             }
         }
 
+        this.emailService.sendBidAccepted((RegisteredUser)bid.getUser(), bid);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
@@ -198,6 +202,7 @@ public class BidController {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
         this.bidService.rejectBid(bid);
+        this.emailService.sendBidRejected((RegisteredUser) bid.getUser(), bid);
         return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 

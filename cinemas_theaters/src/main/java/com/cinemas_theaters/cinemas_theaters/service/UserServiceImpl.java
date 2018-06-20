@@ -4,6 +4,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.TheaterAdminUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.User;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
+import com.cinemas_theaters.cinemas_theaters.repository.RegisteredUserRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.UserRepository;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -15,6 +16,9 @@ public class UserServiceImpl implements  UserService {
 
     @Autowired
     private UserRepository userRepository;
+
+    @Autowired
+    private RegisteredUserRepository registeredUserRepository;
 
     @Override
     @Transactional(readOnly = true)
@@ -42,5 +46,18 @@ public class UserServiceImpl implements  UserService {
             return user.getPassword().equals(password);
         }
         return false;
+    }
+
+    @Override
+    public User addAdmin(String email, UserType type){
+
+        RegisteredUser user = new RegisteredUser();
+        user.setEmail(email);
+        user.setType(type);
+        user.setRegistrationConfirmed(false);
+
+        this.registeredUserRepository.save(user);
+
+        return user;
     }
 }
