@@ -157,13 +157,13 @@ public class TicketController {
     @GetMapping(
             value = "/quicktickets/{id}",
             produces = MediaType.APPLICATION_JSON_VALUE
-    )public ResponseEntity<?> getQuickTickets(@RequestHeader("Authorization") String userToken, @PathVariable("id") String id, BindingResult result){
+    )public ResponseEntity<?> getQuickTickets(@RequestHeader("Authorization") String userToken, @PathVariable("id") String id){
         HttpHeaders headers = new HttpHeaders();
         headers.add("Authorization",userToken);
         String username = this.jwtService.getUser(userToken).getUsername();
         User user = this.userService.findByUsername(username);
-        if(!user.getType().equals(UserType.TheaterAndCinemaAdmin)){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        if(!user.getType().equals(UserType.RegisteredUser)){
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
         }
 
         Theatre pozoriste = this.theatreRepository.getById(Long.parseLong(id));
@@ -171,19 +171,20 @@ public class TicketController {
             System.out.println("ne valja id pozoristas");
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        List<Ticket> sve_karte = this.ticketService.findByTheatre(pozoriste);
+        List<QuickTicket> sve_karte = this.quickTicketService.findByTheatre(pozoriste);
+        if(sve_karte == null ){return ResponseEntity.status(HttpStatus.I_AM_A_TEAPOT).body(null);}
         System.out.println("*********************************");
-        for(Ticket t : sve_karte){
+        for(QuickTicket t : sve_karte){
             System.out.println(t.getId());
         }
         System.out.println("*********************************");
 
         List<QuickTicketDTO> sve_brze_karte = new ArrayList<QuickTicketDTO>();
-        for(Ticket t : sve_karte){
+        for(QuickTicket t : sve_karte){
             LocalDateTime datum_projekcije = ShowController.str2Date(t.getProjection().getDate());
-            //if(t instanceof QuickTicket && datum_projekcije.isAfter(LocalDateTime.now())){
-            //    sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),((QuickTicket)t).getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(), Long.parseLong(id)));
-            //}
+            if(datum_projekcije.isAfter(LocalDateTime.now()) && t.getVersion() == 0 ){
+                sve_brze_karte.add(new QuickTicketDTO(t.getProjection().getHall().getName(),t.getProjection().getDate(),t.getDiscount(),t.getProjection().getShow().getTitle(),t.getProjection().getPrice(),t.getId(),t.getSeat().getChairNumber(),t.getSeat().getChairRow(), Long.parseLong(id)));
+            }
         }
         return new ResponseEntity<List<QuickTicketDTO>>(sve_brze_karte, headers, HttpStatus.OK);
     }
@@ -234,6 +235,48 @@ public class TicketController {
         }
         return new ResponseEntity<List<QuickTicketDTO>>(sve_brze_karte, headers, HttpStatus.OK);
     }
+
+    @PutMapping(
+            value = "/quicktickets/{id}",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity<?> buyQuickTicket(@RequestHeader("Authorization") String userToken, @PathVariable("id") String id) {
+        HttpHeaders headers = new HttpHeaders();
+        headers.add("Authorization", userToken);
+        String username = this.jwtService.getUser(userToken).getUsername();
+        User user2 = this.userService.findByUsername(username);
+        if (!user2.getType().equals(UserType.RegisteredUser)) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+        }
+        RegisteredUser user = (RegisteredUser)user2;
+        QuickTicket chosen = this.quickTicketService.findById(Long.parseLong(id));
+        if(chosen == null){
+            System.out.println("BRZA JE NULL");
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+        if (chosen.getVersion() == 1){
+            return ResponseEntity.status(HttpStatus.CONFLICT).body(null);
+        }
+        List<Reservation> vlasnik = new ArrayList<Reservation>();
+
+        Reservation r = new Reservation();
+        r.setProjectionDate(chosen.getProjection().getDate());
+        r.setShowTitle(chosen.getProjection().getShow().getTitle());
+
+        List<Ticket> tickets = new ArrayList<Ticket>();
+        tickets.add(chosen);
+        r.setBuyer(user);
+        r.setTickets(tickets);
+        (user).getReservations().add(r);
+        chosen.setReservation(r);
+        this.reservationRepository.save(r);
+
+        this.registeredUserService.save(user);
+
+        this.quickTicketService.saveAndFlush(chosen);
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+    }
+
 
 
 

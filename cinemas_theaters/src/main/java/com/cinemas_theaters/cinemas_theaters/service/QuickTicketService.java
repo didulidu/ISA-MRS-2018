@@ -2,6 +2,7 @@ package com.cinemas_theaters.cinemas_theaters.service;
 
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Projection;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.QuickTicket;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Theatre;
 import com.sun.xml.internal.bind.v2.model.annotation.Quick;
 
 import java.util.List;
@@ -16,8 +17,9 @@ public interface QuickTicketService {
 
     QuickTicket saveAndFlush(QuickTicket quickTicket);
 
-    Optional findById(Long id);
+    QuickTicket findById(Long id);
 
     List<QuickTicket> findByProjection(Projection projection);
 
+    List<QuickTicket> findByTheatre(Theatre theatre);
 }

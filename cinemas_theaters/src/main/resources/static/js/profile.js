@@ -6,7 +6,6 @@ function addTheaterAdminWidgets(){
     if(localStorage.getItem("currentUser") !=undefined){
         if(JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
             $("#nav-repertoire").append("<button id=\"add-show\" type='button' data-toggle=\"modal\" data-target=\"#exampleModal\" class='btn btn-success add-new-projection' >New</button>")
-            $("#nav-tab").append("<a class=\"nav-item nav-link\" id=\"nav-profile-tab\" data-toggle=\"tab\" href=\"#nav-profile\" role=\"tab\" aria-controls=\"nav-profile\" aria-selected=\"false\">Hall configuration</a>");
         }
     }
 }
@@ -32,8 +31,11 @@ $(document).ready(function(){
             e.preventDefault()
             addTheaterAdminWidgets();
             getAllShows(id, showRepertoire);
+            getQuickTickets(id, forward_quicks);           
             $(this).tab('show')
-        })
+        });
+
+
 });
 
 // // OVO MENJAJ
@@ -49,7 +51,48 @@ $(document).ready(function(){
 //     return false;
 // });
 
+function getQuickTickets(id, callback){
+    $.ajax({
+    url: "/ticket/quicktickets/"+id,
+    type: "GET",
+    dataType: "json",
+    beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+    success: function(data){
+        callback(data);
+    },
+    error: function (response) {
+     getToastr("Some strange uncovered error","jeez...", 3);
+    }
+    });
+}
 
+
+function forward_quicks(data){
+    $("#quick-ticket-table").empty();
+    $("#quick-ticket-table").append("<tr><th>Show</th><th>Date and time</th><th>Hall</th><th>Seat</th><th>Price</th><th>Discount</th><th>Buy</th></tr>");
+    data.forEach(function(ticket){
+        $('#quick-ticket-table').append("<tr><td>"+ticket["title"]+"</td><td>"+ticket["projectionDate"]+"</td><td>"+ticket["hallName"]+"</td><td>"+ticket["seatNumber"]+"-"+ticket["rowNumber"]+"</td><td>"+ticket["price"]+"</td> <td>"+ticket["discount"]+"</td>"+"<td><button onclick='buyQuickTicket("
+            +ticket['id']+")' class='btn btn-success'>Buy</button></td>"+" </tr>")
+    });
+}
+
+function buyQuickTicket(id){
+    $.ajax({
+    url: "/ticket/quicktickets/"+id,
+    type: "PUT",
+    beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+    success: function(data){
+        getQuickTickets(localStorage.getItem("theater"),forward_quicks);
+    },
+    error: function (response) {
+     getToastr("Some strange uncovered error","jeez...", 3);
+    }
+    });
+}
 $(document).on('click', '#home-btn',function(e){
             e.preventDefault();
                 if(localStorage.getItem("currentUser")!=undefined)
