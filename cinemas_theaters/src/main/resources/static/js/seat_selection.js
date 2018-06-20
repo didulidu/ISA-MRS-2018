@@ -169,6 +169,10 @@ $(document).on("click", "#book-ticket-btn", function(){
                 getToastr("Not authorized for the selected activity!", "Error", 3);
             else if (response.status == 403)
                 getToastr("Number of invited friends exceeds the number of reserved tickets!", "Error", 3);
+            else if (response.status == 409){
+                getToastr("Seat(s) already taken!", "Error", 3);
+                setTimeout(function() {location.reload();}, 1000);
+            }
             else
                 getToastr("Seats couldn't be fetched! \nStatus: " + response.status, "", 3);
         }

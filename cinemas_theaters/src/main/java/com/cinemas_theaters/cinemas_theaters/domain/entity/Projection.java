@@ -48,9 +48,10 @@ public class Projection  implements Serializable {
     @JsonIgnore
     private List<Reservation> reservations;
 
+    /*
     @Version
     @Column(nullable = false)
-    private long version;
+    private long version;*/
 
 
     public Projection(){reservedSeats = new ArrayList<>();
@@ -152,12 +153,12 @@ public class Projection  implements Serializable {
         this.reservations = reservations;
     }
 
-    public long getVersion() {
+    /*public long getVersion() {
         return version;
     }
 
     public void setVersion(long version) {
         this.version = version;
-    }
+    }*/
 }
 

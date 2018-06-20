@@ -1,10 +1,13 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
+import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Theatre;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Ticket;
+import com.cinemas_theaters.cinemas_theaters.repository.ReservationRepository;
 import com.cinemas_theaters.cinemas_theaters.repository.TicketRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -15,7 +18,11 @@ public class TicketServiceImpl implements TicketService {
     @Autowired
     private TicketRepository ticketRepository;
 
+    @Autowired
+    private ReservationRepository reservationRepository;
+
     @Override
+    @Transactional
     public void add(Ticket ticket) {
         this.ticketRepository.save(ticket);
     }
@@ -25,6 +32,11 @@ public class TicketServiceImpl implements TicketService {
         return this.ticketRepository.findAll();
     }
 
+    @Override
+    @Transactional
+    public void saveReservation(Reservation r) {
+        this.reservationRepository.save(r);
+    }
 
 
     @Override

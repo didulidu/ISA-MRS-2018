@@ -1,7 +1,7 @@
 #registered users
-insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Petar', 'Peric', 'pera', '123', 'pera@gmail.com', 'RegisteredUser', "Kikinda, Random ulica 2", "12312312", true, 151, 'url', 0, "Bronze");
-insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Vladimir', 'Antonic', 'vlada1', '321', 'vlada@gmail.com', 'RegisteredUser', "Adice, Random ulica 3", "12312312", true, 152, 'url', 0, "Bronze");
-insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Marko', 'Balenovic', 'balenko', '111', 'balenko@gmail.com', 'RegisteredUser', "Novi Sad, Random ulica 4", "12312312", true, 153, 'url', 0, "Bronze");
+insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Petar', 'Peric', 'pera', '123', 'pera@gmail.com', 'RegisteredUser', "Kikinda, Random ulica 2", "12312312", true, 151, 'url', 0, 0);
+insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Vladimir', 'Antonic', 'vlada1', '321', 'vlada@gmail.com', 'RegisteredUser', "Adice, Random ulica 3", "12312312", true, 152, 'url', 0, 0);
+insert into registered_user(name, lastname, username, password, email, type, address, telephone_number, registration_confirmed, id, avatar_url, points, membership_status) values ('Marko', 'Balenovic', 'balenko', '111', 'balenko@gmail.com', 'RegisteredUser', "Novi Sad, Random ulica 4", "12312312", true, 153, 'url', 0, 0);
 
 #theatre admins
 insert into theater_admin_user(name, lastname, username, password, email, type, registration_confirmed, id) values ('Vladimir', 'Antonic', 'vlada', '1234', 'vla@gmail.com', 'TheaterAndCinemaAdmin', true, 666);
@@ -19,12 +19,12 @@ insert into `show`(title, genre, duration, average_rating, number_of_rates, show
 
 
 #projections
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(10, 350,"08/05/2018 20:00", 5, 231,true);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(11, 450,"09/05/2018 20:00", 5, 231,true);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(12, 400,"10/05/2018 20:00", 6, 231,true);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(13, 250,"08/05/2018 20:00", 7, 231,true);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(14, 350,"08/05/2018 20:00", 5, 231,true);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(15, 300,"10/10/2018 19:00", 6, 233,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(10, 350,"08/05/2018 20:00", 5, 231,true, 0);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(11, 450,"09/05/2018 20:00", 5, 231,true, 0);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(12, 400,"10/05/2018 20:00", 6, 231,true, 0);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(13, 250,"08/05/2018 20:00", 7, 231,true, 0);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(14, 350,"08/05/2018 20:00", 5, 231,true, 0);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(15, 300,"10/10/2018 19:00", 6, 233,true, 0);
 
 
 #halls

@@ -5,6 +5,7 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.Reservation;
 import com.cinemas_theaters.cinemas_theaters.repository.ProjectionRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -17,6 +18,7 @@ public class ProjectionServiceImpl implements ProjectionService {
 
 
     @Override
+    @Transactional
     public void save(Projection show) {
         this.projectionRepository.save(show);
     }

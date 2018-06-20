@@ -52,6 +52,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     }
 
     @Override
+    @Transactional
     public void save(RegisteredUser registeredUser) {
         this.registeredUserRepository.save(registeredUser);
     }
