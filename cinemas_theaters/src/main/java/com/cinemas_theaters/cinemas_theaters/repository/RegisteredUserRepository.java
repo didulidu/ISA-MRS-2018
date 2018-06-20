@@ -16,8 +16,15 @@ public interface RegisteredUserRepository extends JpaRepository<RegisteredUser, 
 
     RegisteredUser findByUsername(String username);
 
+    RegisteredUser findByEmail(String email);
+
     @Query("SELECT r.name AS name, r.lastname AS lastname, r.username AS username " +
             "FROM RegisteredUser r WHERE r.username <> :username AND lower(concat(r.name, ' ', r.lastname))" +
             "LIKE concat('%', lower(:parameter), '%')")
     List<RegisteredUserSearchDTO> findUsers(@Param("username") String username, @Param("parameter") String parameter);
+
+    @Query("SELECT r.name AS name, r.lastname AS lastname, r.email AS email " +
+            "FROM RegisteredUser r WHERE r.email <> :email AND lower(concat(r.name, ' ', r.lastname))" +
+            "LIKE concat('%', lower(:parameter), '%')")
+    List<RegisteredUserSearchDTO> getUsers(@Param("email") String email, @Param("parameter") String parameter);
 }

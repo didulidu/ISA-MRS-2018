@@ -1,6 +1,7 @@
 package com.cinemas_theaters.cinemas_theaters.service;
 
 import com.cinemas_theaters.cinemas_theaters.domain.entity.RegisteredUser;
+import com.cinemas_theaters.cinemas_theaters.domain.entity.TheaterAdminUser;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.User;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.repository.UserRepository;
@@ -22,13 +23,21 @@ public class UserServiceImpl implements  UserService {
     }
 
     @Override
-    public Boolean authenticate(String username, String password){
-        User user = findByUsername(username);
+    @Transactional(readOnly = true)
+    public User findByEmail(String email){
+        return this.userRepository.findByEmail(email);
+    }
+
+    @Override
+    public Boolean validateUserCredentials(String email, String password){
+        User user = findByEmail(email);
         if(user != null){
             if(user.getType().equals(UserType.RegisteredUser)){
                 if(((RegisteredUser) user).getRegistrationConfirmed())
                     return user.getPassword().equals(password);
                 return false;
+            } else if(user.getType().equals((UserType.TheaterAndCinemaAdmin))){
+                    return user.getPassword().equals(password);
             }
             return user.getPassword().equals(password);
         }

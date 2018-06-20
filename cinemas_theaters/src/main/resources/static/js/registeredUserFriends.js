@@ -2,60 +2,9 @@ var currentUser;
 
 function displayRegisteredUsersFriends(user){
     currentUser = user;
-    showFriends();
-}
-
-function sortFriendByName(direction){
-    currentUser.friendships.sort(function(f1,f2) {
-        if(direction == "asc") {
-            if (f1.firstname.toLowerCase() < f2.firstname.toLowerCase())
-                return -1;
-            if (f1.firstname.toLowerCase() > f2.firstname.toLowerCase())
-                return 1;
-        }
-        else if(direction == "desc"){
-            if (f1.firstname.toLowerCase() > f2.firstname.toLowerCase())
-                return -1;
-            if (f1.firstname.toLowerCase() < f2.firstname.toLowerCase())
-                return 1;
-        }
-    });
-    showFriends();
-}
-
-function sortByLastname(direction){
-    currentUser.friendships.sort(function(f1,f2) {
-        if(direction == "asc") {
-            if (f1.lastname.toLowerCase() < f2.lastname.toLowerCase())
-                return -1;
-            if (f1.lastname.toLowerCase() > f2.lastname.toLowerCase())
-                return 1;
-        }
-        else if(direction == "desc"){
-            if (f1.lastname.toLowerCase() > f2.lastname.toLowerCase())
-                return -1;
-            if (f1.lastname.toLowerCase() < f2.lastname.toLowerCase())
-                return 1;
-        }
-    });
-    showFriends();
-}
-
-function sortByUsername(direction){
-    currentUser.friendships.sort(function(f1,f2) {
-        if(direction == "asc") {
-            if (f1.username.toLowerCase() < f2.username.toLowerCase())
-                return -1;
-            if (f1.username.toLowerCase() > f2.username.toLowerCase())
-                return 1;
-        }
-        else if(direction == "desc"){
-            if (f1.username.toLowerCase() > f2.username.toLowerCase())
-                return -1;
-            if (f1.username.toLowerCase() < f2.username.toLowerCase())
-                return 1;
-        }
-    });
+    $("#friends-list-container").show();
+    $("#friend-request-container").hide();
+    $("#friend-search-container").hide();
     showFriends();
 }
 
@@ -357,26 +306,20 @@ $(document).on('click', '#delete-request-button', function(e){
     deleteRequest(friendUsername);
 });
 
-$(document).on('click', '#sort-friend-name-asc', function(){
-    sortFriendByName("asc");
+$(document).on('click', "#friend-list-link", function(){
+    $("#friends-list-container").show();
+    $("#friend-request-container").hide();
+    $("#friend-search-container").hide();
 });
 
-$(document).on('click', '#sort-friend-name-desc', function(){
-    sortFriendByName("desc");
+$(document).on('click', "#friend-request-link", function(){
+    $("#friends-list-container").hide();
+        $("#friend-request-container").show();
+        $("#friend-search-container").hide();
 });
 
-$(document).on('click', '#sort-friend-lastname-asc', function(){
-    sortByLastname("asc");
-});
-
-$(document).on('click', '#sort-friend-lastname-desc', function(){
-    sortByLastname("desc");
-});
-
-$(document).on('click', '#sort-friend-username-asc', function(){
-    sortByUsername("asc");
-});
-
-$(document).on('click', '#sort-friend-username-desc', function(){
-    sortByUsername("desc");
+$(document).on('click', "#friend-search-link", function(){
+    $("#friends-list-container").hide();
+        $("#friend-request-container").hide();
+        $("#friend-search-container").show();
 });

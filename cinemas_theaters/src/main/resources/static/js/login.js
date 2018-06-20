@@ -1,13 +1,10 @@
 function activateUser(token)
 {
-    var tokenJson = {
-        jwtToken:token
-    };
     $.ajax({
-        url: "/registeredUser/activation",
+        url: "/registeredUser/activateUser",
         type: "PUT",
         contentType: "application/json",
-        data: JSON.stringify(tokenJson),
+        data: token,
         error: function (response) {
             if(response.status == 400)
                 getToastr("Account already activated!", "", 2);
@@ -20,10 +17,10 @@ function activateUser(token)
 }
 
 function validateLoginData(formData){
-    var username = formData["username"];
+    var email = formData["email"];
     var password = formData["password"];
 
-    if(username.trim() == "") {
+    if(email.trim() == "") {
         getToastr("Username can't be empty!", "Username is a required field", 2);
         return false;
     }
@@ -51,14 +48,15 @@ function login(){
             success: function(data, textStatus, response){
                 localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
                 localStorage.setItem("currentUser", JSON.stringify(data));
-                //window.location.replace("index.html");
-                
+                window.location.href = "index.html";
+
+                getToastr("Login successful!", "Success", 1);
 
                 if(data["type"] == "TheaterAndCinemaAdmin"){
 
-                    window.setTimeout(function() {window.location.replace("cinema_admin_profile.html");}, 4000);
+                    window.setTimeout(function() {window.location.href = "cinema_admin_profile.html";}, 1000);
                 }else
-                    window.setTimeout(function() {window.location.replace("index.html");}, 4000);},
+                    window.setTimeout(function() {window.location.href = "index.html";}, 1000);},
             error: function (response) {
                 if(response.status == 401)
                     getToastr("Unknown username/password!", "Error", 3);
@@ -83,5 +81,5 @@ $(document).ready(function(){
         activateUser(token);
     }
     if(localStorage.getItem("currentUserToken") != null)
-        window.location.replace("index.html");
+        window.location.href = "index.html";
 });

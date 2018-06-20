@@ -7,5 +7,7 @@ public interface UserService {
 
     User findByUsername(String id);
 
-    Boolean authenticate(String username, String password);
+    User findByEmail(String email);
+
+    Boolean validateUserCredentials(String username, String password);
 }

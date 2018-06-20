@@ -7,9 +7,10 @@ import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
+@Inheritance(strategy = InheritanceType.TABLE_PER_CLASS)
 public class Ticket  implements Serializable {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @GeneratedValue(strategy = GenerationType.AUTO)
     @Column(name = "ticket_id")
     private Long id;
 
@@ -33,6 +34,10 @@ public class Ticket  implements Serializable {
     @ManyToOne
     @JsonIgnore
     private Reservation reservation;
+
+    @Version
+    @Column(nullable = false)
+    private long version;
 
     public Ticket(){}
 
@@ -118,5 +123,13 @@ public class Ticket  implements Serializable {
 
     public void setReservation(Reservation reservation) {
         this.reservation = reservation;
+    }
+
+    public long getVersion() {
+        return version;
+    }
+
+    public void setVersion(long version) {
+        this.version = version;
     }
 }

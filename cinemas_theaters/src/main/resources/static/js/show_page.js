@@ -59,8 +59,7 @@ function sendProjection(projectionJson){
                 error: function (response) {
                     alert("Ne radi: "+ response.status)
                 }
-            });        
-
+            }); 
 }
 
 function forward_projections(data){
@@ -98,7 +97,7 @@ function forward_projections(data){
 
 
 
-function getSeats(){
+function getSeats(callback){
   $.ajax({
     url: "projection/getSeats/"+chosenProjectionId,
       type: "GET",
@@ -107,7 +106,7 @@ function getSeats(){
         request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
       },
       success: function(data){
-        forward_seats(data);
+        callback(data);
       },
       error: function (response) {
         alert("Ne rade sjedala: "+ response.status);
@@ -121,6 +120,7 @@ function getSeats(){
 
 
 function forward_halls(data){
+  $(".hall").empty();
   data.forEach(function(element){
     $(".hall").append("<option value='"+element["id"]+"'>"+element.name+"</option>")
   
@@ -128,8 +128,9 @@ function forward_halls(data){
 }
 
 function forward_seats(data){
+  $(".seat").empty();
   data.forEach(function(element){
-    $(".seat").append("<option value ='" + element["id"]+"'>" + element.row+"-" + element.num + "</option>");
+    $(".seat").append("<option id ='" + element["id"]+"' value='"+ element.row+"-" + element.num +"'>" + element.row+"-" + element.num + "</option>");
   });
 }
 
@@ -138,7 +139,7 @@ function forward_seats(data){
 function foo(id){
 	if(localStorage.getItem("currentUser")!=undefined){
         if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "RegisteredUser")
-            window.location.replace("seat_selection.html?id=" + id);  
+            window.location.href = "seat_selection.html?id=" + id;
 	}
 }
 
@@ -257,7 +258,7 @@ $(document).on('click', '#create-projection',function(e) {
 var chosenProjectionId = null;
 function addQuickTicketWrapper(projection_id){
   chosenProjectionId = projection_id;
-  getSeats();
+  getSeats(forward_seats);
 }
 
 
@@ -267,16 +268,20 @@ $(document).on('click', '#create-quick-ticket',function(e) {
     var discount = document.getElementById("discount").value;
   
     var podaci = "{\"projectionId\": "+chosenProjectionId
-    podaci+=", \"discount\": "+discount+"\"}"
+    
+    podaci+=", \"seatRow\": "+ seat.split('-')[0]
+    podaci+=", \"seatNum\": "+ seat.split('-')[1]
+    podaci+=", \"discount\": "+discount+"}"
 
-    var url = "/quickticket/" + localStorage.getItem("theater");
+    alert(podaci)
+    var url = "ticket/quicktickets/" + localStorage.getItem("theater");
 
     if (seat == null || discount == null ){
       getToastr('Empty Field',"Dont't hurry!", 2);
     }
     else{
     $.ajax({
-      type: "GET",
+      type: "POST",
       url: url,
       contentType: "application/json",
       data: podaci,
@@ -285,13 +290,16 @@ $(document).on('click', '#create-quick-ticket',function(e) {
         request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
       },
       success: function(data){
-      getToastr('Quick ticket created','Done!',  1);     
-      $('#addQuictTicketModal').modal('toggle');   
-          //forward_projections(data);
+      getToastr("Click <a href='registeredUserReservations.html.html'><b>here</b> to view your list of quick tickets</a>",'Quick ticket created!',  1);     
+      alert("jee");
+      $('#addQuickTicketModal').modal('toggle');   
+          forward_seats(data);
+      alert("kraj");
       },
       error: function(response){
-      getToastr('Hall is already taken by another projection on time you specified','Oops!',  3);
+      getToastr('Error while creating quick ticket','Oops!',  3);
       }
   });}
 });
+
 

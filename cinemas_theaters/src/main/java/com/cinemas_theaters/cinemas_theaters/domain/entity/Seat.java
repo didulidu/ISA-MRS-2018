@@ -24,7 +24,7 @@ public class Seat  implements Serializable {
 
     @ManyToOne
     //@JoinColumn(name = "hall_id")
-    @JsonBackReference
+    @JsonIgnore
     private Hall hall;
 
     @OneToOne(fetch = FetchType.LAZY)

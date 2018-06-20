@@ -6,7 +6,6 @@ function addTheaterAdminWidgets(){
     if(localStorage.getItem("currentUser") !=undefined){
         if(JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
             $("#nav-repertoire").append("<button id=\"add-show\" type='button' data-toggle=\"modal\" data-target=\"#exampleModal\" class='btn btn-success add-new-projection' >New</button>")
-            $("#nav-tab").append("<a class=\"nav-item nav-link\" id=\"nav-profile-tab\" data-toggle=\"tab\" href=\"#nav-profile\" role=\"tab\" aria-controls=\"nav-profile\" aria-selected=\"false\">Hall configuration</a>");
         }
     }
 }
@@ -17,6 +16,30 @@ $(document).on('click', ".show-card", function(){
 });
 
 
+function getTheatreInfo(callback){
+    var id = localStorage.getItem("theater");
+  var podaci="{ \"interval\":\"day\"}"
+
+    $.ajax({
+    url: "/theatre/info/"+id,
+    type: "GET",
+    dataType: "json",
+    contentType: "application/json",
+    data: podaci,
+    beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+    success: function(data){
+        alert(JSON.stringify(data));
+        callback(data);
+    },
+    error: function (response) {
+     getToastr("Some strange uncovered error","jeez...", 3);
+    }
+    });
+
+}
+
 
 $(document).ready(function(){
     
@@ -24,16 +47,20 @@ $(document).ready(function(){
     if(localStorage.getItem("currentUser") !=undefined){
         if(JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
             $("#nav-tab").append("<button type='button' class='btn btn-warning' id='settings-btn'data-toggle=\"modal\" data-target=\"#settingsModal\"><i class=\"fab fa-whmcs\"></i> Settings</button>")
+            $("#nav-tab").append("<button  type=\"button\" onclick='getTheatreInfo(showGraph)' class=\"btn btn-info btn-sm\" id=\"info-btn\"  data-toggle=\"modal\" data-target=\"#infoModal\"><i class=\"fas fa-poo\"></i>Info</button>");
+
         }
     }
        // localStorage.setItem("theater", undefined);
         getProfileData(id, forward_profile);
         $('#nav-tab a').on('click', function (e) {
             e.preventDefault()
-            addTheaterAdminWidgets();
             getAllShows(id, showRepertoire);
+            getQuickTickets(id, forward_quicks);           
             $(this).tab('show')
-        })
+        });
+
+
 });
 
 // // OVO MENJAJ
@@ -49,7 +76,64 @@ $(document).ready(function(){
 //     return false;
 // });
 
+function getQuickTickets(id, callback){
+    $.ajax({
+    url: "/ticket/quicktickets/"+id,
+    type: "GET",
+    dataType: "json",
+    beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+    success: function(data){
+        callback(data);
+    },
+    error: function (response) {
+     getToastr("Some strange uncovered error","jeez...", 3);
+    }
+    });
+}
 
+
+function forward_quicks(data){
+    $("#quick-ticket-table").empty();
+    $("#quick-ticket-table").append("<tr><th>Show</th><th>Date and time</th><th>Hall</th><th>Seat</th><th>Price</th><th>Discount</th><th>Buy</th></tr>");
+    var funkcija = "";
+    var naziv_dugmeta = "";
+    var tip = "";
+    if(localStorage.getItem("currentUser") !=undefined){
+        if(JSON.parse(localStorage.getItem("currentUser"))["type"]=="TheaterAndCinemaAdmin"){
+            funkcija = "removeQuickTicket";
+            naziv_dugmeta = "Remove";
+            tip = "danger";
+        }else{
+            funkcija = "buyQuickTicket"
+            naziv_dugmeta = "Buy";
+            tip = "success";
+        }
+    
+    data.forEach(function(ticket){
+        $('#quick-ticket-table').append("<tr><td>"+ticket["title"]+"</td><td>"+ticket["projectionDate"]+"</td><td>"+ticket["hallName"]+"</td><td>"+ticket["seatNumber"]+"-"+ticket["rowNumber"]+"</td><td>"+ticket["price"]+"</td> <td>"+ticket["discount"]+"</td>"+"<td><button onclick='"+funkcija+"("
+            +ticket['id']+")' class='btn btn-"+tip+"'>"+naziv_dugmeta+"</button></td>"+" </tr>")
+    });
+    }
+}
+
+function buyQuickTicket(id){
+    $.ajax({
+    url: "/ticket/quicktickets/"+id,
+    type: "PUT",
+    beforeSend: function(request){
+        request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
+      },
+    success: function(data){
+        getQuickTickets(localStorage.getItem("theater"),forward_quicks);
+        getToastr("Check your list of reservations <a href='registeredUserReservations.html'><b>here</b></a>")
+    },
+    error: function (response) {
+     getToastr("Some strange uncovered error","jeez...", 3);
+    }
+    });
+}
 $(document).on('click', '#home-btn',function(e){
             e.preventDefault();
                 if(localStorage.getItem("currentUser")!=undefined)

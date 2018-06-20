@@ -27,7 +27,7 @@ function getToastr(text1, text2, flag){
 function getFormData(dom_query){
     var formData = {};
     var s_data = $(dom_query).serializeArray();
-    //transformacija u jednostavne kljuc/vrednost objekte
+
     for(var i = 0; i<s_data.length; i++){
         var record = s_data[i];
         formData[record.name] = record.value;

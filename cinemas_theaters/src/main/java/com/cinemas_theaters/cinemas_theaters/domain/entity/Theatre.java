@@ -56,7 +56,12 @@ public class Theatre implements Serializable {
 
     @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
     @JsonIgnoreProperties("theatre")
+    @JsonIgnore
     private List<Ticket> tickets;
+
+    @OneToMany(mappedBy = "theatre", fetch = FetchType.LAZY)
+    @JsonIgnoreProperties("theatre")
+    private List<QuickTicket> quickTickets;
 
 
     @Column(nullable = false)
@@ -96,6 +101,22 @@ public class Theatre implements Serializable {
         this.halls = halls;
         this.type = type;
         this.theaterAdminUser = owner;
+    }
+
+    public List<Ticket> getTickets() {
+        return tickets;
+    }
+
+    public void setTickets(List<Ticket> tickets) {
+        this.tickets = tickets;
+    }
+
+    public List<QuickTicket> getQuickTickets() {
+        return quickTickets;
+    }
+
+    public void setQuickTickets(List<QuickTicket> quickTickets) {
+        this.quickTickets = quickTickets;
     }
 
     public Long getId() {

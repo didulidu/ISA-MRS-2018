@@ -52,6 +52,12 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     }
 
     @Override
+    @Transactional
+    public void save(RegisteredUser registeredUser) {
+        this.registeredUserRepository.save(registeredUser);
+    }
+
+    @Override
     @Transactional(readOnly = false)
     public boolean activateUser(RegisteredUser user)
     {
@@ -66,6 +72,11 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Override
     public RegisteredUser findByUsername(String username){
         return this.registeredUserRepository.findByUsername(username);
+    }
+
+    @Override
+    public RegisteredUser findByEmail(String email) {
+        return this.registeredUserRepository.findByEmail(email);
     }
 
     @Override

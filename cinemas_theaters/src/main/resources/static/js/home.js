@@ -1,36 +1,47 @@
 $(document).on('click', '#login-button', function(e){
     e.preventDefault();
-    window.location.replace("login.html")
+   window.location.href = "login.html";
 });
+
+$(document).on('click', '#logout-button', function(e){
+    e.preventDefault();
+    logout();
+});
+
 
 $(document).on('click', '#sign-up-button', function(e){
     e.preventDefault();
-    window.location.replace("registration.html")
+    window.location.href = "registration.html";
 });
 
 $(document).on('click', '#shop-button', function(e){
    e.preventDefault();
-   window.location.replace("shop.html")
+  window.location.href = "shop.html";
 });
 
 $(document).on('click', '#friends-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserFriends.html")
+   window.location.href = "registeredUserFriends.html";
 });
 
 $(document).on('click', '#reservations-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserReservations.html")
+   window.location.href = "registeredUserReservations.html";
 });
 
 $(document).on('click', '#invitations-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserInvitations.html")
+   window.location.href = "registeredUserInvitations.html";
 });
 
 $(document).on('click', '#user-profile-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserProfile.html")
+   window.location.href = "registeredUserProfile.html";
+});
+
+$(document).on('click', '#home-button', function(e){
+   e.preventDefault();
+   window.location.href = "index.html";
 });
 
 $(document).ready(function(){
@@ -50,7 +61,7 @@ function logout()
             localStorage.removeItem("currentUserToken");
         },
         success: function() {
-            window.location.replace("index.html");
+            window.location.href = "index.html";
         },
         error: function(response){
             if(response.status == 401)
@@ -85,7 +96,7 @@ function forward_theatres(theaters){
     //     "<div class='card-body' style='height: 140px;'>"+
     //     "<h5 class='card-title'>"+element["name"]+"</h5>"+
     //     "<p class='card-text'>"+element["description"]+"</p></div>"
-    //     "<div id='rateYo'></div></div>"
+    //     "<div id='rateYo'></div></div>" ovo nikad necu uraditi izgleda xD
     theatersJSON = JSON.parse(theaters);
     $card = $(".card").first();
     $(".cards").empty();
@@ -123,6 +134,13 @@ function getRegisteredUserData(){
             },
             success: function(data, textStatus, response){
                 var currentUser = data;
+
+                if (response.status == 404){
+                    formUnregisteredUserMenu();
+                    return;
+                }
+
+
                 localStorage.setItem("currentUserToken",response.getResponseHeader("Authorization"));
                 localStorage.setItem("currentUserRole", currentUser.type);
 
@@ -130,6 +148,7 @@ function getRegisteredUserData(){
 
                 if(currentUser.type == "RegisteredUser") {
                     openConnectionFriends(currentUser);
+                    formRegisteredUserMenu();
 
                     if(document.URL.indexOf("registeredUserFriends.html") != -1)
                         displayRegisteredUsersFriends(currentUser);
@@ -137,15 +156,44 @@ function getRegisteredUserData(){
                         displayCurrentUserProfile(currentUser);
                         displayVisitations();
                     }
-
-                    //if(document.URL.indexOf("index.html") != -1)
-                        //setCurrentUsername(currentUser);
-
-
-
                 }
+            },
+            error: function(response){
+            if(document.URL.indexOf("index.html") == -1){
+                window.location.href = "index.html";
+                getToastr("Unauthorized access!", "Error", 3);
+                return
+            }
+            if (response.status == 404){
+                formUnregisteredUserMenu();
+                return;
+            }
             }
     });
+}
+
+function formUnregisteredUserMenu(){
+    $("#shop-button").hide();
+    $("#logout-button").hide();
+    $("#login-button").show();
+    $("#sign-up-button").show();
+    $("#friends-button").hide();
+    $("#reservations-button").hide();
+    $("#invitations-button").hide();
+    $("#user-profile-button").hide();
+    $("#home-button").show();
+}
+
+function formRegisteredUserMenu(){
+    $("#shop-button").show();
+    $("#logout-button").show();
+    $("#login-button").hide();
+    $("#sign-up-button").hide();
+    $("#friends-button").show();
+    $("#reservations-button").show();
+    $("#invitations-button").show();
+    $("#user-profile-button").show();
+    $("#home-button").show();
 }
 
 function openConnectionFriends(currentUser){
