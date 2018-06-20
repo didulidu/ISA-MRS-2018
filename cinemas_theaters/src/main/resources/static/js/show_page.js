@@ -290,7 +290,7 @@ $(document).on('click', '#create-quick-ticket',function(e) {
         request.setRequestHeader("Authorization", localStorage.getItem("currentUserToken"));
       },
       success: function(data){
-      getToastr("Click <a href='fast_reservation.html'><b>here</b> to view your list of quick tickets</a>",'Quick ticket created!',  1);     
+      getToastr("Click <a href='registeredUserReservations.html.html'><b>here</b> to view your list of quick tickets</a>",'Quick ticket created!',  1);     
       alert("jee");
       $('#addQuickTicketModal').modal('toggle');   
           forward_seats(data);

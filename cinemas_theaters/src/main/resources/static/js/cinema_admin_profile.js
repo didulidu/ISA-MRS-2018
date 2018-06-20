@@ -60,7 +60,6 @@ $(document).on('click', '#edit-info-btn', function(e){
         }
 
 
-        // OVO GOVNO NECE DA ME SLUSA. NECE DA UPDATUJE localstorage ......prso sam... ode tri sata
         localStorage.setItem('currentUser', JSON.stringify(user));
         document.getElementById("name-lastname").innerHTML = data["name"]+ " " + data["lastname"];
       },
@@ -119,10 +118,10 @@ function forward_admins_theaters(theaters){
     });
 
         if(element["type"] == "Cinema"){
-                    $("#cinemas").append($card);
-                }else{
-                    $("#theaters").append($card);
-                }
+            $("#cinemas").append($card);
+        }else{
+            $("#theaters").append($card);
+        }
         $card = $(".card").first().clone();
     });
 }

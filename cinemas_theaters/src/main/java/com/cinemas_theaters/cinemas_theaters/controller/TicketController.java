@@ -100,7 +100,7 @@ public class TicketController {
 
                 ArrayList<RegisteredUser> invitedFriends = this.registeredUserService.approveInvitations(ticketReservationDTO.getInvitedFriends(), user);
 
-                Reservation reservation = new Reservation(ticketReservationDTO.getShowTitle(), ticketReservationDTO.getProjectionDate(), user);
+                Reservation reservation = new Reservation(ticketReservationDTO.getShowTitle(), ticketReservationDTO.getProjectionDate(), user, "regular");
                 List<Invitation> invitations = this.registeredUserService.sendInvitations(invitedFriends, user, reservation);
 
                 reservation.setInvitations(invitations);
@@ -272,7 +272,7 @@ public class TicketController {
         Reservation r = new Reservation();
         r.setProjectionDate(chosen.getProjection().getDate());
         r.setShowTitle(chosen.getProjection().getShow().getTitle());
-
+        r.setType("quick");
         List<Ticket> tickets = new ArrayList<Ticket>();
         tickets.add(chosen);
         r.setBuyer(user);

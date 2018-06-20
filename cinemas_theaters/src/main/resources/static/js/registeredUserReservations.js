@@ -7,8 +7,7 @@ function getPersonalReservation(){
             request.setRequestHeader('Authorization', localStorage.getItem('currentUserToken'));
         },
         success: function(data, textStatus, response){
-            localStorage.setItem('currentUserToken', response.getResponseHeader('Authorization'));
-            renderPersonalReservation(data);
+             renderPersonalReservation(data);
         },
         error: function(response){
             if(response.status == 401)
@@ -26,7 +25,11 @@ function renderPersonalReservation(data){
     $('#reservation-list-table').find("thead").find("tr").append("<th class='col-md-1'> </th>");
 
     $.each(reservationList, function (index, reservation) {
-        var dateObject = new Date(reservation.projectionDate);
+        var day = reservation.projectionDate.split("/")[1];
+        var month = reservation.projectionDate.split("/")[0];
+        var datum  = day+"/"+month+"/"+reservation.projectionDate.split("/")[2];
+        var dateObject = new Date(datum);
+
         var date = dateObject.getDate().toString() + "/" + (dateObject.getMonth() + 1).toString() + "/" + dateObject.getFullYear().toString();
         //var timeObject = new Date(reservation.startTime);
         var time = dateObject.getHours().toString() + ":" + dateObject.getMinutes().toString();
@@ -38,11 +41,14 @@ function renderPersonalReservation(data){
                 "<td id='timeReservation'>" + time + "</td>" +
                 "<td>" +
                     "<form>" +
-                        "<input type='hidden' value='" + reservation.id + "'>" +
-                        "<button class='btn btn-danger reservation-remove-button'>" +
+                        "<input type='hidden' value='" + reservation.id + "'>" ;
+                        if(reservation.type === "regular"){
+                            alert("reguraran je");
+                        trReservation+="<button class='btn btn-danger reservation-remove-button'>" +
                             "<span class='glyphicon glyphicon-remove'></span> Cancel" +
-                        "</button>" +
-                    "</form>" +
+                        "</button>";
+                        }
+                    trReservation+="</form>" +
                 "</td>" +
             "</tr>";
         reservationTableBody.append(trReservation);

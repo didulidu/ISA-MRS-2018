@@ -20,6 +20,11 @@ public class Reservation   implements Serializable {
     @Column(nullable = false)
     private String projectionDate;
 
+
+    @Column(nullable = false)
+    private String type;
+
+
     //@Column(nullable = false)
     //private String issueDate;
 
@@ -41,54 +46,70 @@ public class Reservation   implements Serializable {
     @JsonIgnore
     private List<Invitation> invitations;
 
+
+
     public Reservation() {
     }
 
-    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection, List<Invitation> invitations) {
+    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection, List<Invitation> invitations, String type) {
         this.showTitle = showTitle;
         this.projectionDate = projectionDate;
         this.buyer = buyer;
         this.tickets = tickets;
         this.projection = projection;
         this.invitations = invitations;
+        this.type = type;
     }
 
-    public Reservation(Long id, String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets) {
+    public Reservation(Long id, String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, String type) {
         this.id = id;
         this.showTitle = showTitle;
         this.projectionDate = projectionDate;
         this.buyer = buyer;
         this.tickets = tickets;
+        this.type = type;
     }
 
-    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer) {
+    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, String type) {
         this.showTitle = showTitle;
         this.projectionDate = projectionDate;
         this.buyer = buyer;
+        this.type = type;
     }
 
-    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets) {
+    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, String type) {
         this.showTitle = showTitle;
         this.projectionDate = projectionDate;
         this.buyer = buyer;
         this.tickets = tickets;
+        this.type = type;
     }
 
-    public Reservation(Long id, String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection) {
+    public Reservation(Long id, String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection, String type) {
         this.id = id;
         this.showTitle = showTitle;
         this.projectionDate = projectionDate;
         this.buyer = buyer;
         this.tickets = tickets;
         this.projection = projection;
+        this.type = type;
     }
 
-    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection) {
+    public Reservation(String showTitle, String projectionDate, RegisteredUser buyer, List<Ticket> tickets, Projection projection, String type) {
         this.showTitle = showTitle;
         this.projectionDate = projectionDate;
         this.buyer = buyer;
         this.tickets = tickets;
         this.projection = projection;
+        this.type =type;
+    }
+
+    public String getType() {
+        return type;
+    }
+
+    public void setType(String type) {
+        this.type = type;
     }
 
     public Long getId() {
