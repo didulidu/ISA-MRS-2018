@@ -101,7 +101,8 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Override
     @Transactional(readOnly = false)
     public boolean acceptFriendRequest(RegisteredUser user, RegisteredUser friend){
-        if(alreadyFriends(user, friend) || getRegisteredUserFriendship(user, friend).getStatus() != InvitationStatus.Undefined) {
+        if((alreadyFriends(user, friend) && getRegisteredUserFriendship(user, friend).getStatus() != InvitationStatus.Undefined)
+                || getRegisteredUserFriendship(user, friend).getStatus() != InvitationStatus.Undefined) {
             return false;
         }
         getRegisteredUserFriendship(user, friend).setStatus(InvitationStatus.Accepted);
@@ -115,7 +116,7 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     @Override
     @Transactional(readOnly = false)
     public boolean deleteFriendRequest(RegisteredUser user, RegisteredUser friend){
-        if(alreadyFriends(user, friend) || getRegisteredUserFriendship(user, friend).getStatus() != InvitationStatus.Undefined) {
+        if(!alreadyFriends(user, friend) || getRegisteredUserFriendship(user, friend).getStatus() != InvitationStatus.Undefined) {
             return false;
         }
         Friendship user_friend_friendsip = getRegisteredUserFriendship(user, friend);
