@@ -12,7 +12,7 @@ function addTheaterAdminWidgets(){
 $(document).on('click', ".show-card", function(){
     var show_id = $(this).attr('id');
     var title = $(this).find('.card-title').html();
-    window.location.href = show_page.html?id="+show_id+"&title="+title;
+    window.location.href = "show_page.html?id="+show_id+"&title="+title;
 });
 
 
