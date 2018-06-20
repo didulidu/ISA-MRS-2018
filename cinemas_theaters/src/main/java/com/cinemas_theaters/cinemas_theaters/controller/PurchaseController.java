@@ -49,8 +49,10 @@ public class PurchaseController {
 
         Item item = itemService.findById(item_id);
         if(item != null){
-            purchaseService.add(item, user);
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+            if(purchaseService.add(item, user))
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+            else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
         return ResponseEntity.status(HttpStatus.NOT_ACCEPTABLE).body(null);
     }

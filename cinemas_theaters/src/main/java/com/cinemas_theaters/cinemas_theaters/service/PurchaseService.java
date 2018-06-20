@@ -5,5 +5,5 @@ import com.cinemas_theaters.cinemas_theaters.domain.entity.User;
 
 public interface PurchaseService {
 
-    void add(Item item, User user);
+    Boolean add(Item item, User user);
 }
