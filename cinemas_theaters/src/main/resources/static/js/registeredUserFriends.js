@@ -255,7 +255,7 @@ function showUsers(users){
                 }
                 trUser += "</td>" +
             "</tr>";
-        $("#search-friends-table).find("tbody").append(trUser);
+        $("#search-friends-table").find("tbody").append(trUser);
     });
 }
 
