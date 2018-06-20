@@ -11,6 +11,8 @@
     <!--custom-->
     <script src="lib/jQuery/jquery.min.js"></script>
 
+    <script src="https://maps.googleapis.com/maps/api/js?v=3.exp&libraries=drawing&key=AIzaSyAjVNNphxxiSd4X5OBSSKI-rGXSv6PElBQ"></script>
+
     <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
     <script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
     <!-- Rating stars -->
@@ -55,6 +57,19 @@ path {
     shape-rendering: crispEdges;
 }
 
+#map_holder {
+    border: 1px solid black;
+    width: 300px;
+    height: 300px;
+
+    position: fixed;
+    display: none;
+}
+
+.location:hover {
+    color: blue;
+}
+
 </style>
 
 </head>
@@ -78,6 +93,7 @@ path {
             <p id="cinema-text"></p>
             <br>
             <p id="cinema-address"></p>
+            <div id="map_holder"></div>
 
         </div>
         <div class="tab-pane fade" id="nav-profile" role="tabpanel" aria-labelledby="nav-profile-tab">...</div>
@@ -218,6 +234,59 @@ path {
 
 
 <script>
+
+    $(document).ready( function() {
+
+        var cancel = false;
+        $("#map_holder").hide();
+
+        $(document).on('click', ".location", function (e) {
+
+
+            cancel = (cancel) ? false : true;
+
+            if (!cancel) {
+                $("#map_holder").hide();
+            } else if (cancel) {
+
+                getMap($(this).text());
+
+                $("#map_holder").show();
+            }
+        });
+
+        function initMap( $map, lat, lng )
+        {
+            var myOptions = {
+                center: new google.maps.LatLng( lat, lng ),
+                zoom: 15,
+            };
+            var drawingManager = new google.maps.drawing.DrawingManager();
+            var map = new google.maps.Map( $map[0], myOptions );
+            drawingManager.setMap( map );
+
+        }
+
+
+        function getMap(loc){
+
+            $.ajax({
+                type : 'GET',
+                url : 'https://maps.googleapis.com/maps/api/geocode/json?address=' + loc,
+
+                success : function(data){
+
+                    var lat = data.results[0].geometry.location.lat;
+                    var lng = data.results[0].geometry.location.lng;
+
+                    initMap( $("#map_holder") , lat, lng);
+                },
+                error : function(XMLHttpRequest, textStatus, errorThrown){
+                    alert("AJAX ERROR: " + errorThrown);
+                }
+            });
+        }
+    });
 
 // Set the dimensions of the canvas / graph
 var margin = {top: 30, right: 20, bottom: 30, left: 50},

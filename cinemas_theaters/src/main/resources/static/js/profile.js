@@ -193,7 +193,7 @@ function forward_profile(data){
 function fillProfileWithInfo(data){
     document.getElementById("cinema-name").innerHTML=dataJSON["name"];
     document.getElementById("cinema-text").innerHTML=dataJSON["description"];
-    document.getElementById("cinema-address").innerHTML=dataJSON["address"];
+    document.getElementById("cinema-address").innerHTML="<span class='location'>" + dataJSON["address"] + "</span>";
 
 }
 
