@@ -12,5 +12,7 @@ import java.util.List;
 @Component
 public interface UserItemRepository extends JpaRepository<UserItem, Long> {
 
-    List<UserItem> findByStatus(UserItemStatus status);
+    UserItem findByIdAndStatus(Long id, UserItemStatus status);
+    List<UserItem> findAllByStatusAndActive(UserItemStatus status, Boolean active);
+    List<UserItem> findByUserAndStatusAndActive(User user, UserItemStatus status, Boolean active);
 }

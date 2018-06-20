@@ -23,6 +23,7 @@ public class UserItem extends Item {
         super(name, description);
         this.user = user;
         this.duration = duration;
+        this.status = UserItemStatus.PENDING;
     }
 
     public UserItem(String name, String description, User user, Duration duration, String imagePath) {
@@ -36,13 +37,15 @@ public class UserItem extends Item {
     public UserItem(String name, String description, Duration duration){
         super(name, description);
         this.duration = duration;
+        this.status = UserItemStatus.PENDING;
     }
 
-    public UserItem(String name, String description, Duration duration, Date dateTime, User user, String imagePath){
+    public UserItem(String name, String description, Date dateTime, User user, String imagePath){
         super(name, description, imagePath);
         this.duration = duration;
         this.dataTime = dateTime;
         this.user = user;
+        this.status = UserItemStatus.PENDING;
     }
 
 

@@ -1,13 +1,13 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
+import ch.qos.logback.core.pattern.util.RegularEscapeUtil;
+import com.cinemas_theaters.cinemas_theaters.domain.dto.AllItemsDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TheatreItemDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserItemDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.entity.*;
 import com.cinemas_theaters.cinemas_theaters.domain.enums.UserType;
 import com.cinemas_theaters.cinemas_theaters.repository.ItemSpecificationsBuilder;
-import com.cinemas_theaters.cinemas_theaters.service.JwtService;
-import com.cinemas_theaters.cinemas_theaters.service.RegisteredUserService;
-import com.cinemas_theaters.cinemas_theaters.service.UserService;
+import com.cinemas_theaters.cinemas_theaters.service.*;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.jpa.domain.Specification;
 import org.springframework.http.HttpStatus;
@@ -17,9 +17,12 @@ import org.springframework.http.MediaType;
 
 
 import com.cinemas_theaters.cinemas_theaters.domain.dto.ItemDTO;
-import com.cinemas_theaters.cinemas_theaters.service.ItemService;
 
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.List;
+import java.util.Locale;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -36,12 +39,14 @@ public class ItemController {
     @Autowired
     private UserService userService;
 
+    @Autowired
+    private BidService bidService;
 
     @PostMapping(
             consumes = MediaType.APPLICATION_JSON_VALUE,
             value = "/user"
     )
-    public ResponseEntity add(@RequestHeader("Authorization") String token, @RequestBody UserItemDTO item){
+    public ResponseEntity addUserItem(@RequestHeader("Authorization") String token, @RequestBody UserItemDTO item){
         Boolean success;
 
         if(token.split("\\.").length != 3)
@@ -57,8 +62,22 @@ public class ItemController {
         if (user.getType() != UserType.RegisteredUser)
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
 
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+
+        Date date;
+        try {
+            date = format.parse(item.getDuration());
+            Date now = new Date();
+
+            if (!now.before(date))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
         success = this.itemService.addUserItem(item.getName(), item.getDescription(),
-                item.getDuration(), user, item.getImagePath());
+                date, user, item.getImagePath());
 
 
         if (success){
@@ -67,6 +86,86 @@ public class ItemController {
         else{
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+    }
+
+
+    @PutMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            value = "/user/{id}"
+    )
+    public ResponseEntity modifyUserItem(@PathVariable("id") final Long id, @RequestBody UserItemDTO item,
+                                         @RequestHeader("Authorization") String token){
+
+        if (token.split("\\.").length != 3)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        String username = this.jwtService.getUser(token).getUsername();
+        User user = this.userService.findByUsername(username);
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        UserItem userItem = this.itemService.findUserItemById(id);
+
+        if (userItem == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        if (userItem.getUser() != user)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        DateFormat format = new SimpleDateFormat("yyyy-MM-dd HH:mm", Locale.ENGLISH);
+
+        Date date;
+        try{
+            date = format.parse(item.getDuration());
+
+            Date now = new Date();
+
+            if (!now.before(date))
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }catch(Exception e){
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+        }
+
+        userItem.setName(item.getName());
+        userItem.setDescription(item.getDescription());
+        userItem.setImagePath(item.getImagePath());
+        this.itemService.modifyUserItem(userItem);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+    }
+
+
+    @PutMapping(
+            consumes = MediaType.APPLICATION_JSON_VALUE,
+            value = "/theatre/{id}"
+    )
+    public ResponseEntity modifyTheatreItem(@PathVariable("id") final Long id, @RequestBody TheatreItemDTO item,
+                                            @RequestHeader("Authorization") String token){
+
+        if (token.split("\\.").length != 3)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        String username = this.jwtService.getUser(token).getUsername();
+        User user = this.userService.findByUsername(username);
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        if (user.getType() != UserType.FanzoneAdmin)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        TheatreItem theatreItem = this.itemService.findTheatreItemById(id);
+
+        theatreItem.setName(item.getName());
+        theatreItem.setDescription(item.getDescription());
+        theatreItem.setImagePath(item.getImagePath());
+        theatreItem.setPrice(item.getPrice());
+        theatreItem.setQuantity(item.getQuantity());
+
+        this.itemService.modifyTheatreItem(theatreItem);
+
+        return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
     }
 
 
@@ -108,8 +207,11 @@ public class ItemController {
     @GetMapping(
             produces = MediaType.APPLICATION_JSON_VALUE
     )
-    public List<UserItem> findAll(){
-        return this.itemService.findAllUserItems();
+    public AllItemsDTO findAll(){
+        AllItemsDTO items = new AllItemsDTO();
+        items.setUserItems( this.itemService.findAllUserItems() );
+        items.setTheatreItems( this.itemService.findAllTheatreItems() );
+        return items;
     }
 
     @GetMapping(
@@ -129,14 +231,43 @@ public class ItemController {
     @DeleteMapping(
             value = "/{id}"
     )
-    public ResponseEntity deleteById(@PathVariable final Long id){
-        Boolean success = this.itemService.deleteById(id);
-        if (success != null){
-            return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+    public ResponseEntity deleteById(@PathVariable final Long id,
+                                     @RequestHeader("Authorization") String token){
+
+        if(token.split("\\.").length != 3)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        String username = this.jwtService.getUser(token).getUsername();
+        User user = this.userService.findByUsername(username);
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        Item item = this.itemService.findById(id);
+
+        if (item instanceof UserItem){
+            if(user.getType() != UserType.RegisteredUser)
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+            if (user != ((UserItem)item).getUser())
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+            if(this.itemService.deleteById(id))
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+            else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
-        else {
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(null);
+        else if (item instanceof TheatreItem){
+            if (user.getType() != UserType.FanzoneAdmin)
+                return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+            if(this.itemService.deleteById(id))
+                return ResponseEntity.status(HttpStatus.ACCEPTED).body(null);
+            else
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
         }
+
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
     }
 
     @PutMapping(
@@ -245,5 +376,77 @@ public class ItemController {
         this.itemService.rejectUserItem(id);
 
         return ResponseEntity.ok(null);
+    }
+
+    @GetMapping(
+            value = "/myoffers",
+            produces = MediaType.APPLICATION_JSON_VALUE
+    )
+    public ResponseEntity getAllItemsByUser(@RequestHeader("Authorization") String token){
+
+        if (token.split("\\.").length != 3)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        String username = this.jwtService.getUser(token).getUsername();
+        User user = this.userService.findByUsername(username);
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        if (user.getType() != UserType.RegisteredUser)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        List<UserItem> items = this.itemService.findAllItemsByUser(user);
+
+        return ResponseEntity.ok(items);
+    }
+
+
+    @GetMapping(
+        value = "/myoffers/bids/{id}"
+    )
+    public ResponseEntity getAllBidsForItem(@PathVariable("id") final Long id,
+                                            @RequestHeader("Authorization") String token){
+
+        if(token.split("\\.").length != 3)
+            return ResponseEntity.status(HttpStatus.NO_CONTENT).body(null);
+
+        String username = this.jwtService.getUser(token).getUsername();
+        User user = this.userService.findByUsername(username);
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        Item item = this.itemService.findById(id);
+
+        if (item == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        List<Bid> bids = this.bidService.findByItem(item);
+
+        return ResponseEntity.ok(bids);
+    }
+
+    @GetMapping(
+            produces = MediaType.APPLICATION_JSON_VALUE,
+            value = "/theatre"
+    )
+    public ResponseEntity getAllTheatreItems(@RequestHeader("Authorization") String token){
+
+        if(token.split("\\.").length != 3)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        String username = this.jwtService.getUser(token).getUsername();
+        User user = this.userService.findByUsername(username);
+
+        if (user == null)
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(null);
+
+        if (user.getType() != UserType.FanzoneAdmin)
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);
+
+        List<TheatreItem> items = this.itemService.findAllTheatreItems();
+
+        return ResponseEntity.status(HttpStatus.OK).body(items);
     }
 }

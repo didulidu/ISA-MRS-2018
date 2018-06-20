@@ -12,17 +12,19 @@ public class TheatreItemDTO {
     private Long theatreId;
     private Double price;
     private Long quantity;
+    private String imagePath;
 
     public TheatreItemDTO(){}
 
     public TheatreItemDTO(String name, String description, Set<Category> categories,
-                          Long theatreId, Long quantity){
+                          Long theatreId, Long quantity, String imagePath){
 
         this.name = name;
         this.description = description;
         this.categories = categories;
         this.theatreId = theatreId;
         this.quantity = quantity;
+        this.imagePath = imagePath;
     }
 
     public String getName(){return this.name;}
@@ -42,4 +44,7 @@ public class TheatreItemDTO {
 
     public Long getQuantity(){return this.quantity;}
     public void setQuantity(Long quantity){this.quantity = quantity;}
+
+    public String getImagePath(){return this.imagePath;}
+    public void setImagePath(String imagePath){this.imagePath = imagePath;}
 }

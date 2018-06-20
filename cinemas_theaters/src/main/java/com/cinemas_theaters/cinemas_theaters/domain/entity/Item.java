@@ -27,11 +27,16 @@ public class Item  implements Serializable {
 
     private Set categories = new LinkedHashSet();
 
+    private Boolean active;
+
+    private Long version;
+
     public Item(){}
 
     public Item(String name, String description) {
         this.name = name;
         this.description = description;
+        this.active = true;
 
     }
 
@@ -39,6 +44,7 @@ public class Item  implements Serializable {
         this.name = name;
         this.description = description;
         this.categories = categories;
+        this.active = true;
     }
 
     public Item(String name, String description, Set categories, String imagePath) {
@@ -46,6 +52,7 @@ public class Item  implements Serializable {
         this.description = description;
         this.categories = categories;
         this.imagePath = imagePath;
+        this.active = true;
     }
 
     public Item(String name, String description, String imagePath) {
@@ -53,6 +60,7 @@ public class Item  implements Serializable {
         this.name = name;
         this.description = description;
         this.imagePath = imagePath;
+        this.active = true;
     }
 
 
@@ -100,4 +108,14 @@ public class Item  implements Serializable {
     public String getImagePath(){return this.imagePath;}
 
     public void setImagePath(String imagePath){this.imagePath = imagePath;}
+
+    @Column
+    public Boolean getActive(){return this.active;}
+    public void setActive(Boolean active){this.active = active;}
+
+    @Version
+    @Column(nullable = false)
+    public Long getVersion(){return this.version;}
+    public void setVersion(Long version){this.version = version;}
+
 }
