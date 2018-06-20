@@ -66,9 +66,6 @@ public class TicketController {
     @Autowired
     private ReservationRepository reservationRepository;
 
-
-
-
     @RequestMapping(
             value = "/reservation",
             method = RequestMethod.POST,
@@ -78,9 +75,12 @@ public class TicketController {
         try {
             if (result.hasErrors()) {
                 return new ResponseEntity(HttpStatus.BAD_REQUEST);
-            } else if (ticketReservationDTO.getInvitedFriends().size() > ticketReservationDTO.getSeatIds().size()) {
-                return new ResponseEntity(HttpStatus.FORBIDDEN);
-            } else {
+            } else if (ticketReservationDTO.getInvitedFriends().size() + 1 > ticketReservationDTO.getSeatIds().size() && ticketReservationDTO.getInvitedFriends().size()!=0) {
+                return new ResponseEntity(HttpStatus.CONFLICT);
+            }else if(ticketReservationDTO.getSeatIds().size() == 0){
+                return new ResponseEntity(HttpStatus.CONFLICT);
+            }
+            else {
                 System.out.println(ticketReservationDTO.getShowTitle());
                 Projection p = this.projectionService.getById(Long.parseLong(ticketReservationDTO.getProjectionId()));
 
@@ -105,7 +105,7 @@ public class TicketController {
 
                 reservation.setInvitations(invitations);
 
-                this.reservationRepository.save(reservation);
+                this.ticketService.saveReservation(reservation);
 
                 ArrayList<Ticket> tickets = new ArrayList<>();
                 for (String s : ticketReservationDTO.getSeatIds()) {
@@ -127,14 +127,14 @@ public class TicketController {
                 this.ticketService.saveReservation(reservation);
                 this.projectionService.save(p);
 
-                for(Ticket t: tickets){
-
-                }
-
-                //this.emailService.sendReservedTicketInfo(user, reservation);
+                this.emailService.sendReservedTicketInfo(user, reservation);
 
                 user.setPoints(user.getPoints() + 1);
                 user.setMembershipStatus(updateUserMembership(user));
+
+                for (Invitation invitation: invitations){
+                    emailService.sendInvitationInfo(user, invitation);
+                }
 
                 this.registeredUserService.save(user);
 
@@ -146,20 +146,20 @@ public class TicketController {
         }
         }
 
-        private MembershipStatus updateUserMembership(RegisteredUser currentUser){
-            if (currentUser.getPoints() < 0){
-                currentUser.setPoints(0);
-                return MembershipStatus.Bronze;
-            }
-
-            if(currentUser.getPoints()>=20){
-                return MembershipStatus.Gold;
-            } else if(currentUser.getPoints()>=10){
-                return MembershipStatus.Silver;
-            } else{
-                return MembershipStatus.Bronze;
-            }
+    private MembershipStatus updateUserMembership(RegisteredUser currentUser){
+        if (currentUser.getPoints() < 0){
+            currentUser.setPoints(0);
+            return MembershipStatus.Bronze;
         }
+
+        if(currentUser.getPoints()>=20){
+            return MembershipStatus.Gold;
+        } else if(currentUser.getPoints()>=10){
+            return MembershipStatus.Silver;
+        } else{
+            return MembershipStatus.Bronze;
+        }
+    }
 
     @GetMapping(
             value = "/quicktickets/{id}",

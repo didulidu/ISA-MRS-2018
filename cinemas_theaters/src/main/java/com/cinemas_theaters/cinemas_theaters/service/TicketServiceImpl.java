@@ -34,17 +34,24 @@ public class TicketServiceImpl implements TicketService {
 
     @Override
     @Transactional
+    public Reservation getReservation(Long id) {
+        return this.reservationRepository.getById(id);
+    }
+
+    @Override
+    @Transactional
     public void saveReservation(Reservation r) {
         this.reservationRepository.save(r);
     }
 
-
     @Override
+    @Transactional
     public Optional findById(Long id) {
         return this.ticketRepository.findById(id);
     }
 
     @Override
+    @Transactional
     public Ticket getById(Long id) {
         return this.ticketRepository.getById(id);
     }

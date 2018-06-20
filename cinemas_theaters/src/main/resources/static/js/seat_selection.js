@@ -167,11 +167,12 @@ $(document).on("click", "#book-ticket-btn", function(){
         error: function(response){
             if(response.status == 401)
                 getToastr("Not authorized for the selected activity!", "Error", 3);
-            else if (response.status == 403)
-                getToastr("Number of invited friends exceeds the number of reserved tickets!", "Error", 3);
-            else if (response.status == 409){
+            else if (response.status == 403){
                 getToastr("Seat(s) already taken!", "Error", 3);
-                setTimeout(function() {location.reload();}, 1000);
+                setTimeout(function() {location.reload();}, 2000);
+             }
+            else if (response.status == 409){
+                getToastr("Number of invited friends exceeds the number of reserved tickets!", "Error", 3);
             }
             else
                 getToastr("Seats couldn't be fetched! \nStatus: " + response.status, "", 3);
@@ -326,8 +327,9 @@ function showUsers(users){
                 "<td>";
                 trUser += "<form class='form-group form-add-friend'>" +
                     "<input type='hidden' value='" + user.username + "'>" +
-                    "<button id='invite-friend-button'>" +
-                    " Invite </button>" +
+                    "<button id = 'invite-friend-button' class='btn btn-success reservation-remove-button'>" +
+                        "<i class='fas fa-check-circle'></i>" +
+                    "</button>" +
                 "</form>";
 
                 trUser += "</td>" +
@@ -347,8 +349,8 @@ $(document).on('click', '#invite-friend-button',function(e){
 
     $(this).remove();
     parentForm.append(
-        "<button id = 'reject-friend-invitation'>" +
-            "<span class='glyphicon glyphicon-minus'></span> Reject " +
+        "<button id = 'reject-friend-invitation' class='btn btn-danger reservation-remove-button'>" +
+            "<i class='fas fa-minus-circle'></i>" +
         "</button>"
     );
 });
@@ -359,8 +361,8 @@ $(document).on('click', '#reject-friend-invitation', function(e) {
     var parentForm = $(this).parent();
     $(this).remove();
     parentForm.append(
-        "<button id = 'invite-friend-button'>" +
-        "<span class='glyphicon glyphicon-plus'></span> Invite " +
+        "<button id = 'invite-friend-button' class='btn btn-success reservation-remove-button'>" +
+            "<i class='fas fa-check-circle'></i>" +
         "</button>"
     );
     var username = parentForm.find('input[type=hidden]').val();

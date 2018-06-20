@@ -19,13 +19,14 @@ insert into `show`(title, genre, duration, average_rating, number_of_rates, show
 
 
 #projections
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(10, 350,"08/05/2018 20:00", 5, 231,true, 0);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(11, 450,"09/05/2018 20:00", 5, 231,true, 0);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(12, 400,"10/05/2018 20:00", 6, 231,true, 0);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(13, 250,"08/05/2018 20:00", 7, 231,true, 0);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(14, 350,"08/05/2018 20:00", 5, 231,true, 0);
-insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist, version) values(15, 300,"10/10/2018 19:00", 6, 233,true, 0);
-
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(10, 350,"08/05/2018 20:00", 5, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(11, 450,"09/05/2018 20:00", 5, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(12, 400,"10/05/2018 20:00", 6, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(13, 250,"08/05/2018 20:00", 7, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(14, 350,"08/05/2018 20:00", 5, 231,true);
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(15, 300,"10/10/2018 19:00", 6, 233,true);
+#istorijska projekcija
+insert into projection (projection_id,price,`date`,hall_hall_id, show_show_id, exist) values(16, 300,"01/01/2018 15:00", 5, 231,true);
 
 #halls
 insert into hall (hall_id, name, theatre_theatre_id) values (5, 1, 132);
@@ -62,6 +63,10 @@ insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1024, 1
 insert into seat (seat_id, chair_number, chair_row, hall_hall_id) values(1025, 2, 4, 6);
 
 
+insert into reservation (reservation_id, projection_date, show_title, buyer_id, projection_projection_id) values(35, "01/01/2018 15:00", "Deadpool", 151, 16);
+insert into ticket(ticket_id, version, reservation_reservation_id, projection_projection_id, seat_seat_id, theatre_theatre_id) values (47,0,35, 16, 1000, 132);
+insert into reserved_seats(projection_projection_id, reserved_seats) values (16, 1000);
+insert into reservation_tickets(reservation_reservation_id, tickets_ticket_id) values (35, 47);
 
 
 

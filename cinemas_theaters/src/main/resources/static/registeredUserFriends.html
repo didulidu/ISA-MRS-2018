@@ -3,14 +3,12 @@
 <head>
     <meta http-equiv="Content-Type" content="text/html; charset=UTF-8">
 
-    <!--JavaScript-->
-    <!--library-->
+
     <script type="text/javascript" src="lib/jQuery/jquery.min.js"></script>
     <script type="text/javascript" src="lib/toastr/toastr.min.js"></script>
     <script type="text/javascript" src="lib/webSocket/sockjs.min.js"></script>
     <script type="text/javascript" src="lib/webSocket/stomp.min.js"></script>
 
-    <!--custom-->
     <script type="text/javascript" src="js/misc.js"></script>
     <script type="text/javascript" src="js/home.js"></script>
     <script type="text/javascript" src="js/registeredUserFriends.js"></script>
@@ -22,17 +20,18 @@
     <!-- Font awesome (ikonice) -->
     <link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.12/css/all.css" integrity="sha384-G0fIWCsCzJIMAVNQPfjH08cyYaUtMwjJwqiRKxxE/rx96Uroj1BtIQ6MLJuheaO9" crossorigin="anonymous">
 
-
-    <!--CSS-->
     <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
-    <!--custom
-    <link rel="stylesheet" href="css/style.css"/>-->
+    <link rel="stylesheet" href="css/style.css"/>
     <link rel="stylesheet" href="shop.css"/>
-
+    <link rel="stylesheet" href="home.css"/>
 
     <title>Friends</title>
 </head>
 <body>
+
+<div class="header",id="header1">
+    <button class="btn header-button" id ="home-button">Home</button>
+</div>
 
 <div id="nav-bar">
     <ul>
@@ -87,7 +86,7 @@
             </tr>
         </table>
     </form>
-    <table class="table table-hover table-condensed" id="modal-search-user-table">
+    <table class="table table-hover table-condensed" id="search-friends-table">
         <thead>
         <th class="col-md-1"> Name </th>
         <th class="col-md-1"> Last name </th>

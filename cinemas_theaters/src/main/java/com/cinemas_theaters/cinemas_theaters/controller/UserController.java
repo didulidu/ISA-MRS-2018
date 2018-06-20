@@ -49,7 +49,6 @@ public class UserController {
             consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity login(@RequestBody UserLoginDTO userLoginDTO){
         User user = this.userService.findByEmail(userLoginDTO.getEmail());
-        System.out.println("             ----->>>>>>>>"+user.getPassword()+ " " + user.getUsername());
         UserLoginDTO userDTO = new UserLoginDTO(user.getUsername(),user.getPassword(),user.getType(), user.getId(), user.getName(), user.getLastname(), user.getEmail());
         Boolean userExist = this.userService.validateUserCredentials(userLoginDTO.getEmail(), userLoginDTO.getPassword());
 

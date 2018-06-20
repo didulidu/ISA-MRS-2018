@@ -10,6 +10,11 @@ var updatedAddress = "";
 var currentUser = "";
 var dataChanged;
 
+$(document).on('click', '#home-button', function(e){
+   e.preventDefault();
+   window.location.href = "index.html";
+});
+
 function displayCurrentUserProfile(currentUserParam){
     currentUser = currentUserParam;
     $("#current-user-visitation-container").hide();
@@ -40,7 +45,7 @@ function updateData()
     }
 
     $.ajax({
-        url: "/registeredUser/updateDataAndPassword",
+        url: "/registeredUser/updateRegisteredUserData",
         type: "PUT",
         contentType: "application/json",
         data: JSON.stringify(updatedData),

@@ -54,6 +54,15 @@ public class UserLoginDTO implements Serializable {
 
     }
 
+    public UserLoginDTO(String email, String username, String password, UserType type, Long id) {
+        this.email = email;
+        this.username = username;
+        this.password = password;
+        this.type = type;
+        this.id = id;
+
+    }
+
     public UserLoginDTO(String username, String password, UserType type, Long id, String name, String lastname, String email) {
         this.username = username;
         this.password = password;
@@ -70,6 +79,10 @@ public class UserLoginDTO implements Serializable {
         this.password = password;
     }
 
+    public UserLoginDTO(String password, String email) {
+        this.password = password;
+        this.email = email;
+    }
 
     public String getUsername() {
         return username;

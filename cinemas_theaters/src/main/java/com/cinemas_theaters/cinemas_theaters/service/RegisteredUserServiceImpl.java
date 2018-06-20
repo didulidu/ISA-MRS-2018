@@ -366,9 +366,9 @@ public class RegisteredUserServiceImpl implements RegisteredUserService {
     }
 
 
-    private boolean alreadyFriends(RegisteredUser user, RegisteredUser friends){
+    private boolean alreadyFriends(RegisteredUser user, RegisteredUser friend){
         for(Friendship f: user.getFriendships()){
-            if (f.getSecondUser().getId().equals(user.getId())){
+            if (f.getSecondUser().getId().equals(friend.getId())){
                 return true;
             }
         }

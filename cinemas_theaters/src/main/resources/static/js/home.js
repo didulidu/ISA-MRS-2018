@@ -208,23 +208,6 @@ function openConnectionFriends(currentUser){
             var friendUsername = message.friendUsername;
             var friendLastname = message.friendLastname;
 
-            notificationNumber++;
-            $('#user-notifications').find("b").empty();
-
-            if(localStorage.getItem("notificationNumber") == null)
-                localStorage.setItem("notificationNumber", notificationNumber);
-
-            else{
-                notificationNumber = notificationNumber + parseInt(localStorage.getItem("notificationNumber"));
-                localStorage.setItem("notificationNumber", notificationNumber);
-            }
-            $('#user-notifications').find("b").append(notificationNumber);
-
-            if(localStorage.getItem("notifications") == null){
-                var notifications = [];
-                localStorage.setItem("notifications", JSON.stringify(notifications));
-            }
-
             if(event == "addFriend") {
 
                 if (document.URL.indexOf('friends.html') != -1) {
@@ -252,7 +235,6 @@ function openConnectionFriends(currentUser){
                     requestTable.find("tbody").append(trFriendRequest);
 
                     var tr = userTableBody.find("tr[id=" + friendUsername +"]");
-                    console.log(tr);
                     var td = tr.children().last();
                     td.empty();
                     td.append("Request response required!");

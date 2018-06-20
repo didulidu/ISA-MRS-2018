@@ -39,6 +39,7 @@ public class ProjectionServiceImpl implements ProjectionService {
     }
 
     @Override
+    @Transactional
     public Projection getById(Long id) {
         return this.projectionRepository.getById(id);
     }

@@ -57,7 +57,7 @@ function deleteFriend(friendUsername, td){
                 td.append("<form class='form-group form-add-friend'>" +
                         "<input type='hidden' value='" + friendUsername + "'>" +
                         "<button class='btn btn-warning btn-add-friend' id='add-friend-button'>" +
-                            "<span class='glyphicon glyphicon-plus'></span> Add " +
+                            "<i class='fas fa-minus-circle'></i>" +
                         "</button>" +
                     "</form>");
             }
@@ -177,7 +177,7 @@ function showFriends(){
                     "<form class='form-group form-delete-friend'>" +
                         "<input type='hidden' value='" + friend.username + "'>" +
                         "<button class='btn btn-danger btn-delete-friend' id='delete-friend-button'>" +
-                        "<span class='glyphicon glyphicon-remove'></span> Remove </button>" +
+                        "<i class='fas fa-minus-circle'></i>" + "</button>" +
                     "</form>" +
                 "</td>" +
             "</tr>";
@@ -185,7 +185,7 @@ function showFriends(){
         }
         else if(friend.status == "Pending"){
             var trWaiting = "<tr id='" + friend.username + "'>" +
-                    "<td>" + friend.firstname + "</td>" +
+                    "<td>" + friend.name + "</td>" +
                     "<td>" + friend.lastname + "</td>" +
                     "<td>" + friend.username + "</td>" +
                     "<td> Waiting for a response </td>" +
@@ -194,20 +194,20 @@ function showFriends(){
         }
         else {
             var trFriendRequest = "<tr id='" + friend.username + "'>" +
-                    "<td>" + friend.firstname + "</td>" +
+                    "<td>" + friend.name + "</td>" +
                     "<td>" + friend.lastname + "</td>" +
                     "<td>" + friend.username + "</td>" +
-                    "<td>" +
-                        "<form class='form-inline form-accept-request'>" +
-                            "<div class='form-group' style='margin-right: 2%;'>" +
+                    "<td >" +
+                        "<form class='form-inline form-accept-request' style='display:inline-block;'>" +
+                            "<div class='form-group' style=display:inline-block;'>" +
                                 "<input type='hidden' value='" + friend.username + "'>" +
-                                "<button class='btn btn-warning btn-accept-friend-request' id='accept-request-button'>" +
-                                    "<span class='glyphicon glyphicon-check'></span> Accept </button>" +
+                                "<button class='btn btn-success btn-accept-friend-request' id='accept-request-button'>" +
+                                    "<i class='fas fa-check-circle'></i>" + "</button>" +
                             "</div>" +
-                            "<div class='form-group'>" +
+                            "<div class='form-group' display:inline-block;>" +
                                 "<input type='hidden' value='" + friend.username + "'>" +
                                 "<button class='btn btn-danger btn-delete-friend-request' id='delete-request-button'>" +
-                                    "<span class='glyphicon glyphicon-remove'></span> Remove </button>" +
+                                    "<i class='fas fa-minus-circle'></i>" + "</button>" +
                             "</div>"
                         "</form>" +
                     "</td>" +
@@ -238,8 +238,8 @@ function showUsers(users){
                 if(!alreadyFriends)
                    trUser += "<form class='form-group form-add-friend'>" +
                         "<input type='hidden' value='" + user.username + "'>" +
-                        "<button class='btn btn-warning btn-add-friend' id='add-friend-button'>" +
-                        "<span class='glyphicon glyphicon-plus'></span> Add </button>" +
+                        "<button class='btn btn-success btn-add-friend' id='add-friend-button'>" +
+                        "<i class='fas fa-check-circle'></i>" + "</button>" +
                     "</form>";
                 else {
                     if(status == null)
@@ -250,12 +250,12 @@ function showUsers(users){
                         trUser += "<form class='form-group form-delete-friend'>" +
                             "<input type='hidden' value='" + user.username + "'>" +
                             "<button class='btn btn-danger btn-delete-friend btn-search-delete-friend' id='delete-friend-button'>" +
-                            "<span class='glyphicon glyphicon-remove'></span> Remove </button>" +
+                            "<i class='fas fa-minus-circle'></i>" + "</button>" +
                         "</form>";
                 }
                 trUser += "</td>" +
             "</tr>";
-        $("#modal-search-user-table").find("tbody").append(trUser);
+        $("#search-friends-table).find("tbody").append(trUser);
     });
 }
 
@@ -263,15 +263,10 @@ $(document).on('click', '#search-user-button', function(e){
     e.preventDefault();
     var form = $(this).parent("form");
     var parameter = $("#search-user-form :text").val();
-    $("#modal-search-user-table").find("tbody").empty();
+    $("#search-friends-table").find("tbody").empty();
     if(parameter.trim() != "") {
         searchUsers(parameter);
     }
-});
-
-$(document).on('click', '#close-modal-search-users', function(){
-    $("#modal-search-user-table").find("tbody").empty();
-    $("#search-user-form :text").val("");
 });
 
 $(document).on('click', '#add-friend-button', function(e){
@@ -322,4 +317,9 @@ $(document).on('click', "#friend-search-link", function(){
     $("#friends-list-container").hide();
         $("#friend-request-container").hide();
         $("#friend-search-container").show();
+});
+
+$(document).on('click', '#home-button', function(e){
+   e.preventDefault();
+   window.location.href = "index.html";
 });

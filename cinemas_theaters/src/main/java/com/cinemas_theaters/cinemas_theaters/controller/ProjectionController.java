@@ -89,8 +89,6 @@ public class ProjectionController {
     }
 
 
-
-
     public static LocalDateTime str2Date(String dateS){
         DateTimeFormatter formatter = DateTimeFormatter.ofPattern("yyyy-MM-dd'T'HH:mm");
 

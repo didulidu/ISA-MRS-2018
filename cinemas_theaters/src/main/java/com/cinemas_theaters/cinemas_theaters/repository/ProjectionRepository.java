@@ -2,10 +2,12 @@ package com.cinemas_theaters.cinemas_theaters.repository;
 
 import com.cinemas_theaters.cinemas_theaters.domain.entity.Projection;
 import org.springframework.data.jpa.repository.JpaRepository;
+import org.springframework.data.jpa.repository.Lock;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import javax.persistence.LockModeType;
 import java.util.List;
 import java.util.Optional;
 
@@ -21,11 +23,12 @@ public interface ProjectionRepository extends JpaRepository<Projection, Long> {
     @Query("SELECT p FROM Projection p WHERE hall_hall_id = :hall_id")
     List<Projection> findProjectionsByHall(@Param("hall_id") Long hall_id);
 
-
-
-
     Optional findById(Long id);
 
+    @Lock(LockModeType.PESSIMISTIC_READ)
     Projection getById(Long id);
+
+    @Lock(LockModeType.PESSIMISTIC_WRITE)
+    Projection save(Projection projection);
 
 }

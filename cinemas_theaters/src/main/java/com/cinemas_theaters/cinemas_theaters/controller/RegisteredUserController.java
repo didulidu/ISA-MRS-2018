@@ -52,9 +52,10 @@ public class RegisteredUserController {
     private EmailService emailService;
 
     @Autowired
+    private TicketService ticketService;
+
+    @Autowired
     private TheatreCinemaAdminService theatreCinemaAdminService;
-
-
 
     @RequestMapping(
             value = "/activateUser",
@@ -82,7 +83,7 @@ public class RegisteredUserController {
             method = RequestMethod.POST,
             produces = MediaType.APPLICATION_JSON_VALUE,
             consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity guestRegistration(@RequestBody @Valid UserRegistrationDTO newUser, BindingResult result) {
+    public ResponseEntity registration(@RequestBody @Valid UserRegistrationDTO newUser, BindingResult result) {
         if(result.hasErrors()){
             System.out.println(result.getAllErrors());
             return new ResponseEntity(HttpStatus.BAD_REQUEST);
@@ -148,7 +149,6 @@ public class RegisteredUserController {
                 // su vec prijatelji
                 return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
             }
-            // dodavanje nepostojeceg korisnika za prijatelja
             return new ResponseEntity<>(headers, HttpStatus.FORBIDDEN);
         }
         return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
@@ -387,7 +387,7 @@ public class RegisteredUserController {
     }
 
     @RequestMapping(
-            value = "/updateDataAndPassword",
+            value = "/updateRegisteredUserData",
             method = RequestMethod.PUT,
             consumes = MediaType.APPLICATION_JSON_VALUE,
             produces = MediaType.APPLICATION_JSON_VALUE)
@@ -415,22 +415,12 @@ public class RegisteredUserController {
         headers.add("Authorization", this.jwtService.getToken(user));
 
         if (currentUser != null) {
-            Reservation reservation = reservationRepository.getById(Long.parseLong(reservationId));
+            Reservation reservation = ticketService.getReservation(Long.parseLong(reservationId));
 
             if(reservation != null){
-                // otkazivanje rezervacije je moguce samo 30min pre njenog pocetka
-                //boolean success = this.registeredUserService.checkReservationExpire(reservation);
                 boolean notTooLate = registeredUserService.isReservationOngoing(reservation);
 
                 if(notTooLate) {
-                    /*for (Invitation invited : reservation.getInvites()) {
-                        try {
-                            this.emailService.sendNotification(currentUser, invited.getInvited(), reservation, reservation.getReservationTables().get(0).getRestaurant());
-                        }catch( Exception e ){
-                            System.out.println("Greska u slanju e-maila!");
-                        }
-                    }*/
-
                     Projection p = this.projectionService.getById(reservation.getProjection().getId());
 
 
@@ -511,15 +501,15 @@ public class RegisteredUserController {
                     ReservationInvitationDTO reservationInvitationDTO = new ReservationInvitationDTO(currentUser.getUsername(),
                             currentUser.getName(), currentUser.getLastname(), theatre.getName(), invitation.getReservation().getShowTitle(), date);
 
-                    return new ResponseEntity(reservationInvitationDTO,headers, HttpStatus.OK);
+                    return new ResponseEntity<>(reservationInvitationDTO,headers, HttpStatus.OK);
                 }
                 else
-                    return new ResponseEntity(headers, HttpStatus.NOT_ACCEPTABLE);
+                    return new ResponseEntity<>(headers, HttpStatus.NOT_ACCEPTABLE);
             }
             else
-                return new ResponseEntity(headers, HttpStatus.BAD_REQUEST);
+                return new ResponseEntity<>(headers, HttpStatus.BAD_REQUEST);
         }
-        return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
+        return new ResponseEntity<>(headers, HttpStatus.UNAUTHORIZED);
     }
 
     @RequestMapping(
@@ -576,7 +566,6 @@ public class RegisteredUserController {
         return new ResponseEntity(headers, HttpStatus.UNAUTHORIZED);
     }
 
-
     @PostMapping(
             value = "/admin-edit/{id}",
             consumes = MediaType.APPLICATION_JSON_VALUE,
@@ -605,13 +594,6 @@ public class RegisteredUserController {
             return new ResponseEntity<UserLoginDTO>(userDTO, HttpStatus.CREATED);
         }
     }
-
-
-
-
-
-
-
 
     private RegisteredUserDTO convertRegisteredUserToDTO(RegisteredUser user){
         ModelMapper mapper = new ModelMapper();

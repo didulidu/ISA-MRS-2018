@@ -13,10 +13,11 @@ public interface TicketService {
 
     List<Ticket> findAll();
 
+    Reservation getReservation(Long id);
+
     void saveReservation(Reservation r);
 
     Optional findById(Long id);
-
 
     Ticket getById(Long id);
 

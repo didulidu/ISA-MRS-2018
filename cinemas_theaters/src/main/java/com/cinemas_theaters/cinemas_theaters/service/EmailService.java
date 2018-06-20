@@ -71,7 +71,6 @@ public class EmailService {
     public  void sendUserActivation(RegisteredUser registeredUser, String token) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
 
-
         String activationLink = "http://localhost:8080/login.html?activate="+token;
 
         mail.setTo("isamrstest@gmail.com");
@@ -100,6 +99,26 @@ public class EmailService {
                      "Projection date: " + reservation.getProjectionDate() + "\n" +
                      "Hall: " + reservation.getProjection().getHall().getName() + "\n" +
                      "Seat: " + seats
+        );
+
+        mailSender.send(mail);
+    }
+
+    public void sendInvitationInfo (RegisteredUser registeredUser, Invitation invitation) throws MailException {
+        SimpleMailMessage mail = new SimpleMailMessage();
+
+        String invitationLink = "http://localhost:8080/registeredUserInvitations.html";
+
+        mail.setTo("isamrstest@gmail.com");
+        mail.setFrom("isamrs2018@gmail.com");
+        mail.setSubject("You have an invitation from " + invitation.getInvitationSender().getName() + " " + invitation.getInvitationSender().getLastname()
+                + " for " + invitation.getReservation().getProjection().getShow().getTitle());
+        mail.setText("Invitation info: \n\n" +
+                "Theatre name: " + invitation.getReservation().getProjection().getShow().getTheatre().getName() + "\n" +
+                "Show name: " + invitation.getReservation().getProjection().getShow().getTitle() +  "\n" +
+                "Projection date: " + invitation.getReservation().getProjectionDate() + "\n" +
+                "Hall: " + invitation.getReservation().getProjection().getHall().getName() + "\n\n" +
+                "You can accept or decline the invitation via the link below \n\n" + invitationLink
         );
 
         mailSender.send(mail);

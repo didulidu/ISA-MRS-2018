@@ -1,4 +1,9 @@
-function getPersonalReservation(){
+$(document).on('click', '#home-button', function(e){
+   e.preventDefault();
+   window.location.href = "index.html";
+});
+
+function getCurrentUserReservations(){
     $.ajax({
         url: 'registeredUser/getAllRegisteredUserReservations',
         type: 'GET',
@@ -7,7 +12,8 @@ function getPersonalReservation(){
             request.setRequestHeader('Authorization', localStorage.getItem('currentUserToken'));
         },
         success: function(data, textStatus, response){
-             renderPersonalReservation(data);
+            localStorage.setItem('currentUserToken', response.getResponseHeader('Authorization'));
+            renderCurrentUserReservations(data);
         },
         error: function(response){
             if(response.status == 401)
@@ -18,7 +24,7 @@ function getPersonalReservation(){
     });
 }
 
-function renderPersonalReservation(data){
+function renderCurrentUserReservations(data){
     var reservationList = (data.reservations == null) ? [] : (data.reservations instanceof Array ? data.reservations : [data.reservations]);
 
     var reservationTableBody = $('#reservation-list-tickets').find("tbody");
@@ -30,6 +36,7 @@ function renderPersonalReservation(data){
         var datum  = day+"/"+month+"/"+reservation.projectionDate.split("/")[2];
         var dateObject = new Date(datum);
 
+        var currentDate = new Date();
         var date = dateObject.getDate().toString() + "/" + (dateObject.getMonth() + 1).toString() + "/" + dateObject.getFullYear().toString();
         //var timeObject = new Date(reservation.startTime);
         var time = dateObject.getHours().toString() + ":" + dateObject.getMinutes().toString();
@@ -39,18 +46,18 @@ function renderPersonalReservation(data){
                 "<td>" + reservation.tickets.length + "</td>" +
                 "<td id='dateReservation'>" + date + "</td>" +
                 "<td id='timeReservation'>" + time + "</td>" +
-                "<td>" +
-                    "<form>" +
-                        "<input type='hidden' value='" + reservation.id + "'>" ;
-                        if(reservation.type === "regular"){
-                            alert("reguraran je");
-                        trReservation+="<button class='btn btn-danger reservation-remove-button'>" +
-                            "<span class='glyphicon glyphicon-remove'></span> Cancel" +
-                        "</button>";
-                        }
-                    trReservation+="</form>" +
-                "</td>" +
-            "</tr>";
+                "<td id='timeReservation'>" + time + "</td>";
+                if(dateObject>currentDate){
+                    trReservation+="<td>" +
+                                       "<form>" +
+                                           "<input type='hidden' value='" + reservation.id + "'>" +
+                                           "<button id = 'reservation-remove-button' class='btn btn-danger reservation-remove-button'>" +
+                                               "<i class='fas fa-minus-circle'></i>" +
+                                           "</button>" +
+                                       "</form>" +
+                                   "</td>";
+                }
+                trReservation += "</tr>";
         reservationTableBody.append(trReservation);
     });
 }
@@ -75,7 +82,7 @@ function removeReservation(reservationId, tr){
             else if(response.status == 401)
                 getToastr("Not authorized for this activity!", "Warning", 3);
             else if(response.status == 403)
-                getToastr("Nepostojeća rezervacija u listi Vaših ličnih rezervacija", "Warning", 3);
+                getToastr("Reservation doesen't exist!", "Warning", 3);
             else
                 getToastr("Reservation not successfully canceled! \nStatus: " + response.status, "", 3);
         }
@@ -101,14 +108,7 @@ function datecompare(date1, sign, date2) {
     }
 }
 
-$(document).on('click', '.reservation-details-button', function(e){
-    e.preventDefault();
-    var form = $(this).parents("form");
-    var reservationId = form.find("input[type=hidden]").val();
-    window.location.href = "personalReservation.html?id=" + reservationId;
-});
-
-$(document).on('click', '.reservation-remove-button', function(e){
+$(document).on('click', '#reservation-remove-button', function(e){
     e.preventDefault();
     var form = $(this).parents("form");
     var tr = form.parents("tr");
@@ -162,5 +162,5 @@ function datecompare(date1, sign, date2) {
 
 
 $(document).ready(function(){
-    getPersonalReservation();
+    getCurrentUserReservations();
 });
