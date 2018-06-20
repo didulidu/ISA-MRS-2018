@@ -1,6 +1,6 @@
 $(document).on('click', '#login-button', function(e){
     e.preventDefault();
-    window.location.replace("login.html")
+   window.location.href = "login.html";
 });
 
 $(document).on('click', '#logout-button', function(e){
@@ -11,37 +11,37 @@ $(document).on('click', '#logout-button', function(e){
 
 $(document).on('click', '#sign-up-button', function(e){
     e.preventDefault();
-    window.location.replace("registration.html")
+    window.location.href = "registration.html";
 });
 
 $(document).on('click', '#shop-button', function(e){
    e.preventDefault();
-   window.location.replace("shop.html")
+  window.location.href = "shop.html";
 });
 
 $(document).on('click', '#friends-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserFriends.html")
+   window.location.href = "registeredUserFriends.html";
 });
 
 $(document).on('click', '#reservations-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserReservations.html")
+   window.location.href = "registeredUserReservations.html";
 });
 
 $(document).on('click', '#invitations-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserInvitations.html")
+   window.location.href = "registeredUserInvitations.html";
 });
 
 $(document).on('click', '#user-profile-button', function(e){
    e.preventDefault();
-   window.location.replace("registeredUserProfile.html")
+   window.location.href = "registeredUserProfile.html";
 });
 
 $(document).on('click', '#home-button', function(e){
    e.preventDefault();
-   window.location.replace("index.html")
+   window.location.href = "index.html";
 });
 
 $(document).ready(function(){
@@ -61,7 +61,7 @@ function logout()
             localStorage.removeItem("currentUserToken");
         },
         success: function() {
-            window.location.replace("index.html");
+            window.location.href = "index.html";
         },
         error: function(response){
             if(response.status == 401)
@@ -159,10 +159,15 @@ function getRegisteredUserData(){
                 }
             },
             error: function(response){
-                if (response.status == 404){
-                    formUnregisteredUserMenu();
-                    return;
-                }
+            if(document.URL.indexOf("index.html") == -1){
+                window.location.href = "index.html";
+                getToastr("Unauthorized access!", "Error", 3);
+                return
+            }
+            if (response.status == 404){
+                formUnregisteredUserMenu();
+                return;
+            }
             }
     });
 }

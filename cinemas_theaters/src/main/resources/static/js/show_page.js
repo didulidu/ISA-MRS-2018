@@ -139,7 +139,7 @@ function forward_seats(data){
 function foo(id){
 	if(localStorage.getItem("currentUser")!=undefined){
         if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "RegisteredUser")
-            window.location.replace("seat_selection.html?id=" + id);  
+            window.location.href = "seat_selection.html?id=" + id;
 	}
 }
 

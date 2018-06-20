@@ -2,6 +2,9 @@ var currentUser;
 
 function displayRegisteredUsersFriends(user){
     currentUser = user;
+    $("#friends-list-container").show();
+    $("#friend-request-container").hide();
+    $("#friend-search-container").hide();
     showFriends();
 }
 
@@ -301,4 +304,22 @@ $(document).on('click', '#delete-request-button', function(e){
     var form = $(this).parents("form");
     var friendUsername = form.find("input[type=hidden]").val();
     deleteRequest(friendUsername);
+});
+
+$(document).on('click', "#friend-list-link", function(){
+    $("#friends-list-container").show();
+    $("#friend-request-container").hide();
+    $("#friend-search-container").hide();
+});
+
+$(document).on('click', "#friend-request-link", function(){
+    $("#friends-list-container").hide();
+        $("#friend-request-container").show();
+        $("#friend-search-container").hide();
+});
+
+$(document).on('click', "#friend-search-link", function(){
+    $("#friends-list-container").hide();
+        $("#friend-request-container").hide();
+        $("#friend-search-container").show();
 });

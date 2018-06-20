@@ -99,7 +99,7 @@ $(document).on('click', '.reservation-details-button', function(e){
     e.preventDefault();
     var form = $(this).parents("form");
     var reservationId = form.find("input[type=hidden]").val();
-    window.location.replace("personalReservation.html?id=" + reservationId);
+    window.location.href = "personalReservation.html?id=" + reservationId;
 });
 
 $(document).on('click', '.reservation-remove-button', function(e){

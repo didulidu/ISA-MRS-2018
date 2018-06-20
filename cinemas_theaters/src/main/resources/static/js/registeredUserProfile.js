@@ -12,7 +12,7 @@ var dataChanged;
 
 function displayCurrentUserProfile(currentUserParam){
     currentUser = currentUserParam;
-
+    $("#current-user-visitation-container").hide();
     if(currentUser.type == "RegisteredUser"){
         $('#div-profile-email').show();
         $("#profile-user-email").val(currentUser.email);

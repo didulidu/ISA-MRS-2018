@@ -4,7 +4,7 @@ $(document).on('click', '.theater-card',function(e){
     var id = this.id.split("theater_id_")[1];
     localStorage.setItem("theater",id);
     alert("ID poz: " + id)
-    window.location.replace("profile.html")
+    window.location.href = "profile.html";
 
 });
 

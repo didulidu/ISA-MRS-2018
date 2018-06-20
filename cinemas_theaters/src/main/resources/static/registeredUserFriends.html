@@ -25,17 +25,25 @@
 
     <!--CSS-->
     <link rel="stylesheet" href="css/toastr/toastr.min.css"/>
-    <!--custom-->
-    <link rel="stylesheet" href="css/style.css"/>
+    <!--custom
+    <link rel="stylesheet" href="css/style.css"/>-->
+    <link rel="stylesheet" href="shop.css"/>
+
 
     <title>Friends</title>
 </head>
 <body>
 
+<div id="nav-bar">
+    <ul>
+        <li><a id = "friend-list-link">Friend list</a></li>
+        <li><a id = "friend-request-link">Friend requests</a></li>
+        <li><a id = "friend-search-link">Add friends</a></li>
+    </ul>
+</div>
 
-<div class="header" id="header"></div>
 
-<div class="container friends-container" style="text-align: center; width: 70%">
+<div id = "friends-list-container" class="container friends-container" style="text-align: center; width: 70%">
     <div style="text-align: center;">
         <strong style="font-size: large;"> Friends list </strong>
     </div>
@@ -53,7 +61,7 @@
     </table>
 </div>
 
-<div class="container friend-request-container" style="text-align: center; width: 70%;">
+<div id = "friend-request-container" class="container friend-request-container" style="text-align: center; width: 70%;">
     <div style="text-align: center;">
         <strong style="font-size: large;"> Friend requests </strong>
     </div>
@@ -68,37 +76,28 @@
     </table>
 </div>
 
-<div class="modal-dialog" role="document">
-        <div class="modal-content">
-            <div class="modal-header" style="text-align: center;">
-                <h3 class="modal-title">Search friends</h3>
-            </div>
-            <div class="modal-body" id="modal-search-body">
-                <form class="form-group" id="search-user-form">
-                    <table>
-                        <tr style="text-align: center;">
-                            <td><input type="text" class="form-control" placeholder="Search friends..."></td>
-                            <td><button class="btn btn-warning" id="search-user-button">
-                                <span class="glyphicon glyphicon-search"></span> Search </button></td>
-                        </tr>
-                    </table>
-                </form>
-                <table class="table table-hover table-condensed" id="modal-search-user-table">
-                    <thead>
-                    <th class="col-md-1"> Name </th>
-                    <th class="col-md-2"> Last name </th>
-                    <th class="col-md-1"> Username </th>
-                    <th class="col-md-1"> </th>
-                    </thead>
-                    <tbody>
-                    </tbody>
-                </table>
-            </div>
-            <div class="modal-footer" style="text-align: center;">
-                <button type="button" class="btn btn-danger" data-dismiss="modal" id="close-modal-search-users">Close</button>
-            </div>
-        </div>
-    </div>
+
+<div class="container friend-search-container" id="friend-search-container">
+    <form class="form-group" id="search-user-form">
+        <table>
+            <tr style="text-align: center;">
+                <td><input type="text" class="form-control" placeholder="Search friends..."></td>
+                <td><button class="btn btn-warning" id="search-user-button">
+                    <span class="glyphicon glyphicon-search"></span> Search </button></td>
+            </tr>
+        </table>
+    </form>
+    <table class="table table-hover table-condensed" id="modal-search-user-table">
+        <thead>
+        <th class="col-md-1"> Name </th>
+        <th class="col-md-1"> Last name </th>
+        <th class="col-md-1"> Username </th>
+        <th class="col-md-1"> </th>
+        </thead>
+        <tbody>
+        </tbody>
+    </table>
+</div>
 
 </body>
 </html>

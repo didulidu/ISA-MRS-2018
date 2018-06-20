@@ -1,6 +1,6 @@
 package com.cinemas_theaters.cinemas_theaters.controller;
 
-import com.cinemas_theaters.cinemas_theaters.domain.dto.GraphDataDTO;
+//import com.cinemas_theaters.cinemas_theaters.domain.dto.GraphDataDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TheaterAdminUserDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.TheatreDTO;
 import com.cinemas_theaters.cinemas_theaters.domain.dto.UserLoginDTO;
@@ -109,10 +109,11 @@ public class TheatreController {
                 }
                 startDate = startDate.plusDays(1);
             }
-            GraphDataDTO info = new GraphDataDTO(rate,visitations,showRates);
+            //GraphDataDTO info = new GraphDataDTO(rate,visitations,showRates);
 
 
-            return new ResponseEntity<GraphDataDTO>(info, headers, HttpStatus.OK);
+            //return new ResponseEntity<GraphDataDTO>(info, headers, HttpStatus.OK);
+            return new ResponseEntity<>(headers, HttpStatus.OK);
         } else {
             System.out.println("ha ha ha ");
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body(null);

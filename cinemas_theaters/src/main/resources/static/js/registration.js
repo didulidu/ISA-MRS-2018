@@ -12,7 +12,7 @@ function registration(){
             dataType: 'json',
             success: function(){
                 getToastr(formData["name"] + " " + formData["lastname"] + ", \nan activation has been sent to your e-mail adress!", "", 1);
-                window.setTimeout(function() {window.location.replace("index.html");}, 4000);
+                window.setTimeout(function() {window.location.href = "index.html";}, 4000);
             },
             error: function (response) {
                 if(response.status == 409){
@@ -32,7 +32,7 @@ function registration(){
                 else if(response.status == 201)
                 {
                     getToastr(formData["name"] + " " + formData["lastname"] + ", \nan activation has been sent to your e-mail adress!", "", 1);
-                    window.setTimeout(function() {window.location.replace("index.html");}, 4000);
+                    window.setTimeout(function() {window.location.href = "index.html";}, 4000);
                 }
                 else
                     getToastr("Registration unsuccessful! \nStatus: " + response.status, "", 3);
@@ -47,9 +47,7 @@ function registration(){
 $(document).on('click', '#home', function(e){
     e.preventDefault();
     if(localStorage.getItem("currentUserToken") == null)
-        window.location.replace("index.html");
-    else
-        window.location.replace("home.html");
+        window.location.href = "index.html";
 });
 
 $(document).on('click', '#registrationForm :button', function(e){

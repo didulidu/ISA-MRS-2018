@@ -12,7 +12,7 @@ function addTheaterAdminWidgets(){
 $(document).on('click', ".show-card", function(){
     var show_id = $(this).attr('id');
     var title = $(this).find('.card-title').html();
-    window.location.replace("show_page.html?id="+show_id+"&title="+title);
+    window.location.href = show_page.html?id="+show_id+"&title="+title;
 });
 
 
@@ -68,11 +68,11 @@ $(document).ready(function(){
 //     e.preventDefault();
 //     if(localStorage.getItem("currentUser")!=undefined)
 //         if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "TheaterAndCinemaAdmin")
-//             window.location.replace("cinema_admin_profile.html");
+//             window.location.href = "cinema_admin_profile.html";
 //         else
-//             window.location.replace("index.html");
+//             window.location.href = "index.html";
 //     else
-//         window.location.replace("index.html");
+//         window.location.href = index.html";
 //     return false;
 // });
 
@@ -138,11 +138,11 @@ $(document).on('click', '#home-btn',function(e){
             e.preventDefault();
                 if(localStorage.getItem("currentUser")!=undefined)
                     if(JSON.parse(localStorage.getItem("currentUser"))["type"] == "TheaterAndCinemaAdmin")
-                        window.location.replace("cinema_admin_profile.html");
+                        window.location.href = "cinema_admin_profile.html";
                     else
-                        window.location.replace("index.html");
+                        window.location.href = "index.html";
             else
-                window.location.replace("index.html");
+                window.location.href = "index.html";
             return false;
         });
 
