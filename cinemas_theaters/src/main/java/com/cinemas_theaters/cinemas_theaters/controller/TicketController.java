@@ -84,12 +84,16 @@ public class TicketController {
                 System.out.println(ticketReservationDTO.getShowTitle());
                 Projection p = this.projectionService.getById(Long.parseLong(ticketReservationDTO.getProjectionId()));
 
-                if (this.projectionService.alreadyReserved(p, ticketReservationDTO.getSeatIds())) {
+                if (this.projectionService.alreadyReserved(p, ticketReservationDTO.getSeatIds()) || p == null) {
                     return new ResponseEntity(HttpStatus.FORBIDDEN);
                 }
 
                 String username = this.jwtService.getUser(userToken).getUsername();
                 RegisteredUser user = this.registeredUserService.findByUsername(username);
+
+                if (user==null){
+                    return new ResponseEntity(HttpStatus.UNAUTHORIZED);
+                }
 
                 List<String> ids = p.getReservedSeats();
                 for (String seatID : ticketReservationDTO.getSeatIds()) {
