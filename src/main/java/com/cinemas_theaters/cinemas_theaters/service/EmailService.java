@@ -14,7 +14,7 @@ public class EmailService {
 
     public void sendAdminActivation(RegisteredUser admin, String token) throws MailException{
         SimpleMailMessage mail = new SimpleMailMessage();
-        String activationLink = "http://localhost:8080/admin/registration/"+token;
+        String activationLink = "https://theatres.herokuapp.com/admin/registration/"+token;
 
         mail.setTo(admin.getEmail());
         mail.setFrom("isamrs2018@gmail.com");
@@ -71,7 +71,7 @@ public class EmailService {
     public  void sendUserActivation(RegisteredUser registeredUser, String token) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
 
-        String activationLink = "http://localhost:8080/login.html?activate="+token;
+        String activationLink = "https://bioskopi.herokuapp.com/login.html?activate="+token;
 
         mail.setTo("isamrstest@gmail.com");
         mail.setFrom("isamrs2018@gmail.com");
@@ -107,7 +107,7 @@ public class EmailService {
     public void sendInvitationInfo (RegisteredUser registeredUser, Invitation invitation) throws MailException {
         SimpleMailMessage mail = new SimpleMailMessage();
 
-        String invitationLink = "http://localhost:8080/registeredUserInvitations.html";
+        String invitationLink = "https://bioskopi.herokuapp.com/registeredUserInvitations.html";
 
         mail.setTo("isamrstest@gmail.com");
         mail.setFrom("isamrs2018@gmail.com");
