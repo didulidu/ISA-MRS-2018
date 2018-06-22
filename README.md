@@ -11,7 +11,7 @@ Uputstvo za pokretanje aplikacije na localhost-u:
 NAPOMENA: u tabeli "theater_admin_user" promeniti vrednost e-mail-a iz "vlada@gmail.com" u bilo sta drugo, zato sto greskom postoji isti takav mail u tabeli sa registrovanim korisnicima
 4. posetiti localhost:8080
 
-Link deploy-ovane aplikacije: https://theatres2.herokuapp.com/
+Link deploy-ovane aplikacije: https://theatres.herokuapp.com/index.html
 
 Uputstvo za deploy aplikacije:
 
