@@ -12,6 +12,7 @@ NAPOMENA: u tabeli "theater_admin_user" promeniti vrednost e-mail-a iz "vlada@gm
 4. posetiti localhost:8080
 
 Link deploy-ovane aplikacije: https://theatres.herokuapp.com/index.html
+Napomena: mejlovi za aktiviranje registracije, detalje o rezervacije i pozivi za rezervaciju stizu na isamrstest@gmail.com, sifra je pass12word
 
 Uputstvo za deploy aplikacije:
 
