@@ -10,10 +10,6 @@ Uputstvo za pokretanje aplikacije na localhost-u:
 3. Iz fajla "data.sql" pokrenuti skriptu u MySQL workbench-u. Oznaciti "springdb" bazu pre toga.
 NAPOMENA: u tabeli "theater_admin_user" promeniti vrednost e-mail-a iz "vlada@gmail.com" u bilo sta drugo, zato sto greskom postoji isti takav mail u tabeli sa registrovanim korisnicima
 4. posetiti localhost:8080
-
-Link deploy-ovane aplikacije: https://theatres.herokuapp.com/index.html
-Napomena: mejlovi za aktiviranje registracije, detalje o rezervacije i pozivi za rezervaciju stizu na isamrstest@gmail.com, sifra je pass12word
-
 Uputstvo za deploy aplikacije:
 
 -preduslov je instalacija Heroku CLI-a
